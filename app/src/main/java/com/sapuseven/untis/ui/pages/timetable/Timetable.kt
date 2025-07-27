@@ -266,14 +266,12 @@ fun Timetable(
 		exit = fullscreenDialogAnimationExit()
 	) {
 		TimetableItemDetailsDialog(
-			timetableRepository = viewModel.timetableRepository,
 			periodItems = remember {
 				viewModel.timetableItemDetailsDialog?.first?.mapNotNull { it.data } ?: emptyList()
 			},
 			initialPage = remember {
 				viewModel.timetableItemDetailsDialog?.second ?: 0
 			},
-			masterDataRepository = viewModel.masterDataRepository,
 			onDismiss = {
 				viewModel.timetableItemDetailsDialog = null
 				it?.let { viewModel.showElement(it) }

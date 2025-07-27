@@ -22,7 +22,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.runtime.snapshots.SnapshotStateMap
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -110,7 +109,7 @@ fun DebugDesclaimerAction() {
 @Composable
 fun DebugTimetableItemDetailsAction(
 	timegridItems: List<PeriodItem>,
-	periodDataMap: SnapshotStateMap<Long, PeriodData?>
+	periodDataMap: Map<Long, PeriodData>
 ) {
 	DebugInfoAction(
 		title = { Text("Raw lesson details") }

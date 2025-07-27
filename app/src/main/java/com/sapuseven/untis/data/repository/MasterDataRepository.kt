@@ -9,6 +9,7 @@ import com.sapuseven.untis.persistence.entity.UserWithData
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
@@ -18,12 +19,129 @@ import javax.inject.Singleton
 
 interface MasterDataRepository {
 	val user: User?
+
+	@Deprecated("Use the specific flows for user data.")
 	val userData: UserWithData?
 
+	/**
+	 * This flow provides all active classes for the active user, sorted by name.
+	 *
+	 * Typical usage in a ViewModel:
+	 *
+	 * ```kotlin
+	 * val classes = repository.classes.stateIn(
+	 *     scope = viewModelScope,
+	 *     started = SharingStarted.WhileSubscribed(5_000),
+	 *     initialValue = emptyList()
+	 * )
+	 * ```
+	 *
+	 * And in a Composable:
+	 *
+	 * ```kotlin
+	 * val classes by viewModel.classes.collectAsStateWithLifecycle()
+	 * ```
+	 *
+	 * @see [timetableElements]
+	 */
 	val classes: Flow<List<ElementEntity>>
+
+	/**
+	 * This flow provides all active teachers for the active user, sorted by name.
+	 *
+	 * Typical usage in a ViewModel:
+	 *
+	 * ```kotlin
+	 * val teachers = repository.teachers.stateIn(
+	 *     scope = viewModelScope,
+	 *     started = SharingStarted.WhileSubscribed(5_000),
+	 *     initialValue = emptyList()
+	 * )
+	 * ```
+	 *
+	 * And in a Composable:
+	 *
+	 * ```kotlin
+	 * val teachers by viewModel.teachers.collectAsStateWithLifecycle()
+	 * ```
+	 *
+	 * @see [timetableElements]
+	 */
 	val teachers: Flow<List<ElementEntity>>
+
+	/**
+	 * This flow provides all active subjects for the active user, sorted by name.
+	 *
+	 * Typical usage in a ViewModel:
+	 *
+	 * ```kotlin
+	 * val subjects = repository.subjects.stateIn(
+	 *     scope = viewModelScope,
+	 *     started = SharingStarted.WhileSubscribed(5_000),
+	 *     initialValue = emptyList()
+	 * )
+	 * ```
+	 *
+	 * And in a Composable:
+	 *
+	 * ```kotlin
+	 * val subjects by viewModel.subjects.collectAsStateWithLifecycle()
+	 * ```
+	 *
+	 * @see [timetableElements]
+	 */
 	val subjects: Flow<List<ElementEntity>>
+
+	/**
+	 * This flow provides all active rooms for the active user, sorted by name.
+	 *
+	 * Typical usage in a ViewModel:
+	 *
+	 * ```kotlin
+	 * val rooms = repository.rooms.stateIn(
+	 *     scope = viewModelScope,
+	 *     started = SharingStarted.WhileSubscribed(5_000),
+	 *     initialValue = emptyList()
+	 * )
+	 * ```
+	 *
+	 * And in a Composable:
+	 *
+	 * ```kotlin
+	 * val rooms by viewModel.rooms.collectAsStateWithLifecycle()
+	 * ```
+	 *
+	 * @see [timetableElements]
+	 */
 	val rooms: Flow<List<ElementEntity>>
+
+	/**
+	 * This flow combines [classes], [teachers], [subjects] and [rooms] in a single flow.
+	 *
+	 * It will emit an empty map if all lists are empty or no user is active.
+	 *
+	 * Typical usage in a ViewModel:
+	 *
+	 * ```kotlin
+	 * val elements = repository.timetableElements.stateIn(
+	 *     scope = viewModelScope,
+	 *     started = SharingStarted.WhileSubscribed(5_000),
+	 *     initialValue = emptyMap()
+	 * )
+	 * ```
+	 *
+	 * And in a Composable:
+	 *
+	 * ```kotlin
+	 * val elements by viewModel.elements.collectAsStateWithLifecycle()
+	 * ```
+	 *
+	 * @see [classes]
+	 * @see [teachers]
+	 * @see [subjects]
+	 * @see [rooms]
+	 */
+	val timetableElements: Flow<Map<ElementType, List<ElementEntity>>>
 
 	fun getElement(id: Long, type: ElementType): ElementEntity?
 }
@@ -37,6 +155,8 @@ class DefaultMasterDataRepository : MasterDataRepository {
 	override val teachers: Flow<List<ElementEntity>> = flowOf(emptyList())
 	override val subjects: Flow<List<ElementEntity>> = flowOf(emptyList())
 	override val rooms: Flow<List<ElementEntity>> = flowOf(emptyList())
+
+	override val timetableElements: Flow<Map<ElementType, List<ElementEntity>>> = flowOf(emptyMap())
 
 	override fun getElement(id: Long, type: ElementType): ElementEntity? = null
 }
@@ -79,6 +199,23 @@ class UntisMasterDataRepository @Inject constructor(
 		.flatMapLatest { id ->
 			id?.let { userDao.getActiveRoomsFlow(it) } ?: flowOf(emptyList())
 		}
+
+	override val timetableElements: Flow<Map<ElementType, List<ElementEntity>>> = combine(
+		classes,
+		teachers,
+		subjects,
+		rooms
+	) { classes, teachers, subjects, rooms ->
+		if (classes.isEmpty() && teachers.isEmpty() && subjects.isEmpty() && rooms.isEmpty())
+			emptyMap()
+		else
+			mapOf(
+				ElementType.CLASS to classes,
+				ElementType.TEACHER to teachers,
+				ElementType.SUBJECT to subjects,
+				ElementType.ROOM to rooms
+			)
+	}
 
 	override fun getElement(id: Long, type: ElementType): ElementEntity? {
 		// TODO well, now this can only be called from a location where we have this state.

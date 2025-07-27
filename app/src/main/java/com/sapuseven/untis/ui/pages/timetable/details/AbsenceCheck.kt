@@ -16,11 +16,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.sapuseven.untis.R
 import com.sapuseven.untis.api.model.untis.Person
 import com.sapuseven.untis.api.model.untis.timetable.Period
@@ -32,8 +32,6 @@ import com.sapuseven.untis.ui.common.SmallCircularProgressIndicator
 import com.sapuseven.untis.ui.dialogs.TimePickerDialog
 import com.sapuseven.untis.ui.functional.insetsPaddingValues
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.launch
-import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
@@ -59,8 +57,8 @@ data class AbsenceCheckState(
 	val detailedPerson: Person?
 		get() = _detailedPerson
 
-	internal var newAbsenceStartDateTime: LocalDateTime? by mutableStateOf(null)
-	internal var newAbsenceEndDateTime: LocalDateTime? by mutableStateOf(null)
+	internal var newAbsenceStart: LocalDateTime? by mutableStateOf(null)
+	internal var newAbsenceEnd: LocalDateTime? by mutableStateOf(null)
 
 	fun show(period: Period, periodData: PeriodData) {
 		_period = period
@@ -74,8 +72,8 @@ data class AbsenceCheckState(
 	}
 
 	fun showDetailed(student: Person) {
-		newAbsenceStartDateTime = _period?.startDateTime
-		newAbsenceEndDateTime = _period?.endDateTime
+		newAbsenceStart = _period?.startDateTime
+		newAbsenceEnd = _period?.endDateTime
 		_detailedPerson = student
 	}
 
@@ -114,38 +112,22 @@ data class AbsenceCheckState(
 	}
 }
 
-@Composable
-fun rememberAbsenceCheckState(
-	studentData: Set<Person>,
-	timetableRepository: TimetableRepository,
-	scope: CoroutineScope = rememberCoroutineScope(),
-	onPeriodDataUpdate: (PeriodData) -> Unit
-): AbsenceCheckState {
-	// TODO: Add rememberSavable support and use that one instead
-	return remember {
-		AbsenceCheckState(
-			studentData = studentData,
-			timetableRepository = timetableRepository,
-			scope = scope,
-			onPeriodDataUpdate = onPeriodDataUpdate
-		)
-	}
-}
-
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 internal fun AbsenceCheck(
-	state: AbsenceCheckState,
-	modifier: Modifier = Modifier
+	modifier: Modifier = Modifier,
+	viewModel: AbsenceCheckViewModel = hiltViewModel()
 ) {
+	val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+
 	BackHandler(
-		enabled = state.visible,
+		enabled = uiState.visible,
 	) {
-		state.hide()
+		viewModel.hide()
 	}
 
 	AnimatedVisibility(
-		visible = state.visible,
+		visible = uiState.visible,
 		enter = fullscreenDialogAnimationEnter(),
 		exit = fullscreenDialogAnimationExit()
 	) {
@@ -153,15 +135,8 @@ internal fun AbsenceCheck(
 			modifier = modifier,
 			contentPadding = insetsPaddingValues()
 		) {
-			val students = state.periodData!!.studentIds?.let { studentIds ->
-				studentIds
-					.mapNotNull { studentId -> state.studentData.find { it.id == studentId } }
-					.sortedBy { it.fullName() }
-			} ?: emptyList()
-
-			items(students) { student ->
-				var loading by remember { mutableStateOf(false) }
-				val existingAbsence = state.periodData!!.absences?.findLast { it.studentId == student.id }
+			items(uiState.studentsForPeriod) { student ->
+				val existingAbsence = uiState.existingAbsenceFor(student.id)
 
 				ListItem(
 					headlineContent = {
@@ -173,7 +148,7 @@ internal fun AbsenceCheck(
 						}
 					},
 					leadingContent = {
-						if (loading)
+						if (uiState.loadingStudents.contains(student.id))
 							SmallCircularProgressIndicator()
 						else if (existingAbsence != null)
 							Icon(
@@ -188,20 +163,14 @@ internal fun AbsenceCheck(
 					},
 					modifier = Modifier.combinedClickable(
 						onClick = {
-							state.scope.launch {
-								existingAbsence?.let {
-									loading = true
-									state.deleteAbsence(it.id)
-									loading = false
-								} ?: let {
-									loading = true
-									state.createAbsence(student.id)
-									loading = false
-								}
+							existingAbsence?.let {
+								viewModel.deleteAbsence(student.id, it.id)
+							} ?: let {
+								viewModel.createAbsence(student.id)
 							}
 						},
 						onLongClick = {
-							state.showDetailed(student)
+							viewModel.showDetailed(student)
 						}
 					),
 					/*trailingContent = {
@@ -225,28 +194,19 @@ internal fun AbsenceCheck(
 	}
 
 	AnimatedVisibility(
-		visible = state.detailedPerson != null,
+		visible = uiState.detailedPerson != null,
 		enter = fullscreenDialogAnimationEnter(),
 		exit = fullscreenDialogAnimationExit()
 	) {
-		var studentName by rememberSaveable { mutableStateOf<String?>(null) }
-		studentName = state.detailedPerson?.fullName()
-
 		BackHandler(
-			enabled = state.detailedPerson != null,
+			enabled = uiState.detailedPerson != null,
 		) {
-			state.hideDetailed()
-			studentName = null
+			viewModel.hideDetailed()
 		}
 
 		Column(
 			modifier = modifier
 		) {
-			val newAbsenceStartTime =
-				state.newAbsenceStartDateTime?.toLocalTime() ?: LocalTime.now()
-			val newAbsenceEndTime =
-				state.newAbsenceEndDateTime?.toLocalTime() ?: LocalTime.now().plusHours(1)
-
 			var showStartTimePicker by remember { mutableStateOf(false) }
 			var showEndTimePicker by remember { mutableStateOf(false) }
 
@@ -259,7 +219,7 @@ internal fun AbsenceCheck(
 				},
 				trailingContent = {
 					Text(
-						text = newAbsenceStartTime.format(DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT)),
+						text = uiState.newAbsenceStart.format(DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT)),
 						style = MaterialTheme.typography.labelLarge
 					)
 				}
@@ -274,7 +234,7 @@ internal fun AbsenceCheck(
 				},
 				trailingContent = {
 					Text(
-						text = newAbsenceEndTime.format(DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT)),
+						text = uiState.newAbsenceEnd.format(DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT)),
 						style = MaterialTheme.typography.labelLarge
 					)
 				}
@@ -282,30 +242,24 @@ internal fun AbsenceCheck(
 
 			if (showStartTimePicker) {
 				TimePickerDialog(
-					initialSelection = newAbsenceStartTime,
+					initialSelection = uiState.newAbsenceStart.toLocalTime(),
 					onDismiss = {
 						showStartTimePicker = false
 					}
 				) { time ->
-					state.newAbsenceStartDateTime = LocalDateTime.of(
-						state.newAbsenceEndDateTime?.toLocalDate() ?: LocalDate.now(),
-						time
-					)
+					viewModel.setNewAbsenceStartTime(time)
 					showStartTimePicker = false
 				}
 			}
 
 			if (showEndTimePicker) {
 				TimePickerDialog(
-					initialSelection = newAbsenceEndTime,
+					initialSelection = uiState.newAbsenceEnd.toLocalTime(),
 					onDismiss = {
 						showEndTimePicker = false
 					}
 				) { time ->
-					state.newAbsenceEndDateTime = LocalDateTime.of(
-						state.newAbsenceEndDateTime?.toLocalDate() ?: LocalDate.now(),
-						time
-					)
+					viewModel.setNewAbsenceEndTime(time)
 					showEndTimePicker = false
 				}
 			}

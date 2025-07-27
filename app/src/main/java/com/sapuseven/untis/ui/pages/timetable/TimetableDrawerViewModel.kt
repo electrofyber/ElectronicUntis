@@ -18,7 +18,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -35,20 +34,7 @@ class TimetableDrawerViewModel @Inject constructor(
 	var bookmarkDeleteDialog by mutableStateOf<ElementEntity?>(null)
 		private set
 
-	private val _elements = combine(
-		masterDataRepository.classes,
-		masterDataRepository.teachers,
-		masterDataRepository.subjects,
-		masterDataRepository.rooms
-	) { classes, teachers, subjects, rooms ->
-		mapOf(
-			ElementType.CLASS to classes,
-			ElementType.TEACHER to teachers,
-			ElementType.SUBJECT to subjects,
-			ElementType.ROOM to rooms
-		)
-	}
-	val elements: StateFlow<Map<ElementType, List<ElementEntity>>> = _elements.stateIn(
+	val elements: StateFlow<Map<ElementType, List<ElementEntity>>> = masterDataRepository.timetableElements.stateIn(
 		scope = viewModelScope,
 		started = SharingStarted.WhileSubscribed(5_000),
 		initialValue = emptyMap()
