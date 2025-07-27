@@ -11,6 +11,6 @@ dependencies {
 	implementation(libs.androidx.glance)
 	implementation(libs.androidx.glance.material3)
 
-	implementation(project(":persistence")) // move to core.data
+	implementation(project(":core:database"))
 	implementation(project(":material-color-utils")) // move to core.designsystem
 }

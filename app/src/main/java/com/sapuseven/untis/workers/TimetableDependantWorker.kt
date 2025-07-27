@@ -14,7 +14,7 @@ import com.sapuseven.untis.data.repository.TimetableRepository
 import com.sapuseven.untis.data.settings.model.UserSettings
 import com.sapuseven.untis.models.PeriodElementEntity
 import com.sapuseven.untis.models.PeriodItem
-import com.sapuseven.untis.persistence.entity.User
+import com.sapuseven.untis.core.database.entity.User
 import com.sapuseven.untis.ui.preferences.toPeriodElement
 import crocodile8.universal_cache.FromCache
 import kotlinx.coroutines.async

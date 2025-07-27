@@ -7,8 +7,8 @@ import com.sapuseven.untis.data.repository.MasterDataRepository
 import com.sapuseven.untis.data.repository.TimetableRepository
 import com.sapuseven.untis.data.repository.UserRepository
 import com.sapuseven.untis.models.RoomFinderItem
-import com.sapuseven.untis.persistence.entity.RoomEntity
-import com.sapuseven.untis.persistence.entity.RoomFinderDao
+import com.sapuseven.untis.core.database.entity.RoomEntity
+import com.sapuseven.untis.core.database.entity.RoomFinderDao
 import com.sapuseven.untis.services.WeekLogicService
 import crocodile8.universal_cache.FromCache
 import kotlinx.coroutines.ExperimentalCoroutinesApi

@@ -5,8 +5,8 @@ import android.app.NotificationManager.EXTRA_AUTOMATIC_RULE_ID
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.sapuseven.untis.persistence.entity.User
-import com.sapuseven.untis.persistence.entity.UserDao
+import com.sapuseven.untis.core.database.entity.User
+import com.sapuseven.untis.core.database.entity.UserDao
 import com.sapuseven.untis.data.repository.UserSettingsRepository
 import com.sapuseven.untis.services.AutoMuteService
 import com.sapuseven.untis.services.AutoMuteServiceZenRuleImpl

@@ -64,7 +64,7 @@ import com.sapuseven.untis.api.model.untis.timetable.PeriodData
 import com.sapuseven.untis.models.PeriodElementEntity
 import com.sapuseven.untis.models.PeriodItem
 import com.sapuseven.untis.models.toLongString
-import com.sapuseven.untis.persistence.entity.ElementEntity
+import com.sapuseven.untis.core.database.entity.ElementEntity
 import com.sapuseven.untis.ui.common.AppScaffold
 import com.sapuseven.untis.ui.common.ClickableUrlText
 import com.sapuseven.untis.ui.common.DebugTimetableItemDetailsAction

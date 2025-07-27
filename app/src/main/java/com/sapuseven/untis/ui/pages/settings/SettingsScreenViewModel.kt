@@ -12,7 +12,7 @@ import com.sapuseven.untis.data.repository.GlobalSettingsRepository
 import com.sapuseven.untis.data.repository.MasterDataRepository
 import com.sapuseven.untis.data.repository.UserRepository
 import com.sapuseven.untis.data.repository.UserSettingsRepository
-import com.sapuseven.untis.persistence.entity.ElementEntity
+import com.sapuseven.untis.core.database.entity.ElementEntity
 import com.sapuseven.untis.services.AutoMuteService
 import com.sapuseven.untis.services.AutoMuteServiceZenRuleImpl
 import dagger.assisted.Assisted

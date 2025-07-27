@@ -1,0 +1,58 @@
+package com.sapuseven.untis.core.database.entity
+
+import androidx.room.Entity
+import androidx.room.ForeignKey
+import androidx.room.Index
+import com.sapuseven.untis.api.model.untis.enumeration.ElementType
+import com.sapuseven.untis.api.model.untis.masterdata.Subject
+import com.sapuseven.untis.core.database.utils.EntityMapper
+
+@Entity(
+	tableName = "Subject",
+	primaryKeys = ["id", "userId"],
+	indices = [Index("id"), Index("userId")],
+	foreignKeys = [ForeignKey(
+		entity = User::class,
+		parentColumns = ["id"],
+		childColumns = ["userId"],
+		onDelete = ForeignKey.CASCADE
+	)]
+)
+data class SubjectEntity(
+	override val id: Long = 0,
+	override val userId: Long = -1,
+	override val name: String = "",
+	val longName: String = "",
+	val departmentIds: List<Long> = emptyList(),
+	override val foreColor: String? = null,
+	override val backColor: String? = null,
+	override val active: Boolean = false,
+	val displayAllowed: Boolean = false
+) : ElementEntity(), Comparable<String> {
+	companion object : EntityMapper<Subject, SubjectEntity> {
+		override fun map(from: Subject, userId: Long) = SubjectEntity(
+			id = from.id,
+			userId = userId,
+			name = from.name,
+			longName = from.longName,
+			departmentIds = from.departmentIds,
+			foreColor = from.foreColor,
+			backColor = from.backColor,
+			active = from.active,
+			displayAllowed = from.displayAllowed,
+		)
+	}
+
+	override fun compareTo(other: String) = if (
+		name.contains(other, true)
+		|| longName.contains(other, true)
+	) 0 else name.compareTo(other)
+
+	override fun getType() = ElementType.SUBJECT
+
+	override fun getShortName(default: String) = name
+
+	override fun getLongName(default: String) = longName
+
+	override fun isAllowed() = displayAllowed
+}

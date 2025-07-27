@@ -26,8 +26,8 @@ import com.sapuseven.untis.data.repository.UserSettingsRepository
 import com.sapuseven.untis.helpers.BuildConfigFieldsProvider
 import com.sapuseven.untis.mappers.TimetableMapper
 import com.sapuseven.untis.models.PeriodItem
-import com.sapuseven.untis.persistence.entity.ElementEntity
-import com.sapuseven.untis.persistence.entity.User
+import com.sapuseven.untis.core.database.entity.ElementEntity
+import com.sapuseven.untis.core.database.entity.User
 import com.sapuseven.untis.services.WeekLogicService
 import com.sapuseven.untis.ui.navigation.AppNavigator
 import com.sapuseven.untis.ui.navigation.AppRoutes

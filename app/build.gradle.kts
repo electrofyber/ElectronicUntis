@@ -255,6 +255,6 @@ dependencies {
 	implementation(project(":api"))
 	//implementation(project(":feature:glance"))
 	implementation(projects.feature.glance)
-	implementation(projects.persistence)
+	implementation(projects.core.database)
 	implementation(project(":material-color-utils"))
 }

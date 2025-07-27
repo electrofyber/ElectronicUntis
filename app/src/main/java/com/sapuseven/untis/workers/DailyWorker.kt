@@ -10,7 +10,7 @@ import androidx.work.WorkerParameters
 import com.sapuseven.untis.data.repository.MasterDataRepository
 import com.sapuseven.untis.data.repository.TimetableRepository
 import com.sapuseven.untis.data.repository.UserSettingsRepository
-import com.sapuseven.untis.persistence.entity.UserDao
+import com.sapuseven.untis.core.database.entity.UserDao
 import crocodile8.universal_cache.FromCache
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject

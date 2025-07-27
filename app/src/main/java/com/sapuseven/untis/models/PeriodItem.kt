@@ -10,7 +10,7 @@ import com.sapuseven.untis.api.model.untis.enumeration.PeriodState
 import com.sapuseven.untis.api.model.untis.timetable.Period
 import com.sapuseven.untis.api.model.untis.timetable.PeriodElement
 import com.sapuseven.untis.models.PeriodItem.Companion.ELEMENT_NAME_SEPARATOR
-import com.sapuseven.untis.persistence.entity.ElementEntity
+import com.sapuseven.untis.core.database.entity.ElementEntity
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
 

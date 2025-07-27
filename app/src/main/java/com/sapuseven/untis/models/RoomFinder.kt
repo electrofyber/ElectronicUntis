@@ -2,7 +2,7 @@ package com.sapuseven.untis.models
 
 import com.sapuseven.untis.api.model.untis.masterdata.timegrid.Day
 import com.sapuseven.untis.api.model.untis.masterdata.timegrid.Unit
-import com.sapuseven.untis.persistence.entity.RoomEntity
+import com.sapuseven.untis.core.database.entity.RoomEntity
 
 
 data class RoomFinderHour(

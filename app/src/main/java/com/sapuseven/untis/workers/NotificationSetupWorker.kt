@@ -24,8 +24,8 @@ import com.sapuseven.untis.mappers.TimetableMapper
 import com.sapuseven.untis.models.PeriodItem
 import com.sapuseven.untis.models.toLongString
 import com.sapuseven.untis.models.toShortString
-import com.sapuseven.untis.persistence.entity.User
-import com.sapuseven.untis.persistence.entity.UserDao
+import com.sapuseven.untis.core.database.entity.User
+import com.sapuseven.untis.core.database.entity.UserDao
 import com.sapuseven.untis.receivers.NotificationReceiver
 import com.sapuseven.untis.receivers.NotificationReceiver.Companion.EXTRA_BOOLEAN_CLEAR
 import com.sapuseven.untis.receivers.NotificationReceiver.Companion.EXTRA_BOOLEAN_FIRST

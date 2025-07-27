@@ -2,10 +2,10 @@ package com.sapuseven.untis.data.repository
 
 import androidx.compose.runtime.compositionLocalOf
 import com.sapuseven.untis.api.model.untis.enumeration.ElementType
-import com.sapuseven.untis.persistence.entity.ElementEntity
-import com.sapuseven.untis.persistence.entity.User
-import com.sapuseven.untis.persistence.entity.UserDao
-import com.sapuseven.untis.persistence.entity.UserWithData
+import com.sapuseven.untis.core.database.entity.ElementEntity
+import com.sapuseven.untis.core.database.entity.User
+import com.sapuseven.untis.core.database.entity.UserDao
+import com.sapuseven.untis.core.database.entity.UserWithData
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow

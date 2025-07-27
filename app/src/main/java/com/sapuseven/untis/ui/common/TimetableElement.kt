@@ -1,6 +1,6 @@
 
 import androidx.compose.runtime.Composable
-import com.sapuseven.untis.persistence.entity.ElementEntity
+import com.sapuseven.untis.core.database.entity.ElementEntity
 
 @Composable
 fun ElementItem(

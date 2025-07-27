@@ -16,7 +16,7 @@ import com.sapuseven.untis.models.PeriodElementEntity
 import com.sapuseven.untis.models.PeriodItem
 import com.sapuseven.untis.models.toShortString
 import com.sapuseven.untis.models.getShortAnnotatedString
-import com.sapuseven.untis.persistence.entity.ElementEntity
+import com.sapuseven.untis.core.database.entity.ElementEntity
 import com.sapuseven.untis.ui.weekview.Event
 import com.sapuseven.untis.ui.weekview.EventStyle
 import kotlinx.coroutines.flow.filterNotNull

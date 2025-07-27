@@ -17,8 +17,8 @@ import com.sapuseven.untis.data.repository.TimetableRepository
 import com.sapuseven.untis.data.repository.UserSettingsRepository
 import com.sapuseven.untis.mappers.TimetableMapper
 import com.sapuseven.untis.models.toShortString
-import com.sapuseven.untis.persistence.entity.User
-import com.sapuseven.untis.persistence.entity.UserDao
+import com.sapuseven.untis.core.database.entity.User
+import com.sapuseven.untis.core.database.entity.UserDao
 import com.sapuseven.untis.receivers.AutoMuteReceiver
 import com.sapuseven.untis.receivers.AutoMuteReceiver.Companion.EXTRA_BOOLEAN_MUTE
 import com.sapuseven.untis.receivers.AutoMuteReceiver.Companion.EXTRA_INT_ID

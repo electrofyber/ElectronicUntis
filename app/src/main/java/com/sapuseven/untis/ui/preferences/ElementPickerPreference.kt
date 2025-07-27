@@ -17,7 +17,7 @@ import com.sapuseven.untis.api.model.untis.enumeration.ElementType
 import com.sapuseven.untis.api.model.untis.timetable.PeriodElement
 import com.sapuseven.untis.data.repository.MasterDataRepository
 import com.sapuseven.untis.data.settings.model.TimetableElement
-import com.sapuseven.untis.persistence.entity.ElementEntity
+import com.sapuseven.untis.core.database.entity.ElementEntity
 import com.sapuseven.untis.ui.dialogs.ElementPickerDialog
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.map

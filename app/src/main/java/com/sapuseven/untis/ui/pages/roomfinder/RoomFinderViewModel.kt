@@ -8,9 +8,9 @@ import com.sapuseven.untis.data.repository.UserRepository
 import com.sapuseven.untis.domain.GetRoomFinderItemsUseCase
 import com.sapuseven.untis.models.RoomFinderHour
 import com.sapuseven.untis.models.RoomFinderItem
-import com.sapuseven.untis.persistence.entity.ElementEntity
-import com.sapuseven.untis.persistence.entity.RoomFinderDao
-import com.sapuseven.untis.persistence.entity.RoomFinderEntity
+import com.sapuseven.untis.core.database.entity.ElementEntity
+import com.sapuseven.untis.core.database.entity.RoomFinderDao
+import com.sapuseven.untis.core.database.entity.RoomFinderEntity
 import com.sapuseven.untis.ui.navigation.AppNavigator
 import com.sapuseven.untis.ui.navigation.AppRoutes
 import dagger.hilt.android.lifecycle.HiltViewModel

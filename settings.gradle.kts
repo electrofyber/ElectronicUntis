@@ -33,11 +33,10 @@ enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 
 include(":app")
 include(":feature:glance")
-
+include(":core:database")
 
 include(":material-color-utils")
 include(":api")
-include(":persistence")
 
 check(JavaVersion.current().isCompatibleWith(JavaVersion.VERSION_17)) {
 	"""
