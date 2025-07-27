@@ -1,8 +1,8 @@
 package com.sapuseven.untis.ui.navigation
 
 import androidx.annotation.StringRes
-import com.sapuseven.untis.api.model.untis.enumeration.ElementType
-import com.sapuseven.untis.api.model.untis.timetable.PeriodElement
+import com.sapuseven.untis.core.api.model.untis.enumeration.ElementType
+import com.sapuseven.untis.core.api.model.untis.timetable.PeriodElement
 import kotlinx.serialization.Serializable
 
 object AppRoutes {

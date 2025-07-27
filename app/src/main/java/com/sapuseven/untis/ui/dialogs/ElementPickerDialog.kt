@@ -55,7 +55,7 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import com.sapuseven.untis.R
-import com.sapuseven.untis.api.model.untis.enumeration.ElementType
+import com.sapuseven.untis.core.api.model.untis.enumeration.ElementType
 import com.sapuseven.untis.core.database.entity.ElementEntity
 import com.sapuseven.untis.ui.common.AbbreviatedText
 import com.sapuseven.untis.ui.common.AppScaffold

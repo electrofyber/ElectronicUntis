@@ -5,7 +5,7 @@ import androidx.compose.material3.ColorScheme
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.sapuseven.untis.api.model.untis.enumeration.ElementType
+import com.sapuseven.untis.core.api.model.untis.enumeration.ElementType
 import com.sapuseven.untis.data.model.github.GitHubApi.URL_GITHUB_REPOSITORY_API
 import com.sapuseven.untis.data.model.github.GitHubUser
 import com.sapuseven.untis.data.repository.GlobalSettingsRepository

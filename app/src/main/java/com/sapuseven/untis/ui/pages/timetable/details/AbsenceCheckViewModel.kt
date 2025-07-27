@@ -2,10 +2,10 @@ package com.sapuseven.untis.ui.pages.timetable.details
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.sapuseven.untis.api.model.untis.Person
-import com.sapuseven.untis.api.model.untis.absence.StudentAbsence
-import com.sapuseven.untis.api.model.untis.timetable.Period
-import com.sapuseven.untis.api.model.untis.timetable.PeriodData
+import com.sapuseven.untis.core.api.model.untis.Person
+import com.sapuseven.untis.core.api.model.untis.absence.StudentAbsence
+import com.sapuseven.untis.core.api.model.untis.timetable.Period
+import com.sapuseven.untis.core.api.model.untis.timetable.PeriodData
 import com.sapuseven.untis.data.repository.TimetableRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow

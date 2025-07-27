@@ -45,7 +45,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.sapuseven.untis.R
-import com.sapuseven.untis.api.model.untis.enumeration.ElementType
+import com.sapuseven.untis.core.api.model.untis.enumeration.ElementType
 import com.sapuseven.untis.models.RoomFinderHour
 import com.sapuseven.untis.models.RoomFinderItem
 import com.sapuseven.untis.ui.animations.fullscreenDialogAnimationEnter

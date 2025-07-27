@@ -1,6 +1,6 @@
 package com.sapuseven.untis.models.untis
 
-import com.sapuseven.untis.api.model.request.SchoolSearchParams
+import com.sapuseven.untis.core.api.model.request.SchoolSearchParams
 import com.sapuseven.untis.helpers.SerializationUtils.getJSON
 import com.sapuseven.untis.models.untis.params.AppSharedSecretParams
 import com.sapuseven.untis.models.untis.params.UserDataParams

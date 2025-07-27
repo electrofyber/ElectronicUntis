@@ -14,11 +14,11 @@ import androidx.room.Relation
 import androidx.room.Transaction
 import androidx.room.Update
 import androidx.room.Upsert
-import com.sapuseven.untis.api.model.untis.MasterData
-import com.sapuseven.untis.api.model.untis.SchoolInfo
-import com.sapuseven.untis.api.model.untis.Settings
-import com.sapuseven.untis.api.model.untis.UserData
-import com.sapuseven.untis.api.model.untis.masterdata.TimeGrid
+import com.sapuseven.untis.core.api.model.untis.MasterData
+import com.sapuseven.untis.core.api.model.untis.SchoolInfo
+import com.sapuseven.untis.core.api.model.untis.Settings
+import com.sapuseven.untis.core.api.model.untis.UserData
+import com.sapuseven.untis.core.api.model.untis.masterdata.TimeGrid
 import kotlinx.coroutines.flow.Flow
 
 @Entity

@@ -1,7 +1,7 @@
 package com.sapuseven.untis.domain
 
-import com.sapuseven.untis.api.model.untis.classreg.Exam
-import com.sapuseven.untis.api.model.untis.enumeration.ElementType
+import com.sapuseven.untis.core.api.model.untis.classreg.Exam
+import com.sapuseven.untis.core.api.model.untis.enumeration.ElementType
 import com.sapuseven.untis.core.database.entity.SchoolYearEntity
 import com.sapuseven.untis.data.repository.InfoCenterRepository
 import crocodile8.universal_cache.FromCache

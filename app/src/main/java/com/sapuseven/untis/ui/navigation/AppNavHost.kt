@@ -18,7 +18,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
-import com.sapuseven.untis.api.model.untis.enumeration.ElementType
+import com.sapuseven.untis.core.api.model.untis.enumeration.ElementType
 import com.sapuseven.untis.ui.pages.infocenter.InfoCenter
 import com.sapuseven.untis.ui.pages.login.Login
 import com.sapuseven.untis.ui.pages.login.datainput.LoginDataInput

@@ -1,10 +1,10 @@
 package com.sapuseven.untis.data.repository
 
-import com.sapuseven.untis.api.client.TimetableApi
-import com.sapuseven.untis.api.model.response.PeriodDataResult
-import com.sapuseven.untis.api.model.untis.absence.StudentAbsence
-import com.sapuseven.untis.api.model.untis.enumeration.ElementType
-import com.sapuseven.untis.api.model.untis.timetable.Period
+import com.sapuseven.untis.core.api.client.TimetableApi
+import com.sapuseven.untis.core.api.model.response.PeriodDataResult
+import com.sapuseven.untis.core.api.model.untis.absence.StudentAbsence
+import com.sapuseven.untis.core.api.model.untis.enumeration.ElementType
+import com.sapuseven.untis.core.api.model.untis.timetable.Period
 import com.sapuseven.untis.data.cache.DiskCache
 import com.sapuseven.untis.core.database.entity.UserDao
 import crocodile8.universal_cache.CachedSource

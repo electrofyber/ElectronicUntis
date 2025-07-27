@@ -39,8 +39,8 @@ import com.sapuseven.untis.R
 import com.sapuseven.untis.activities.MainActivity
 import com.sapuseven.untis.activities.main.DrawerItems
 import com.sapuseven.untis.activities.main.DrawerText
-import com.sapuseven.untis.api.model.untis.enumeration.ElementType
-import com.sapuseven.untis.api.model.untis.timetable.PeriodElement
+import com.sapuseven.untis.core.api.model.untis.enumeration.ElementType
+import com.sapuseven.untis.core.api.model.untis.timetable.PeriodElement
 import com.sapuseven.untis.core.database.entity.ElementEntity
 import com.sapuseven.untis.ui.animations.fullscreenDialogAnimationEnter
 import com.sapuseven.untis.ui.animations.fullscreenDialogAnimationExit

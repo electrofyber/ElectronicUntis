@@ -1,7 +1,7 @@
 package com.sapuseven.untis.models.untis
 
 import com.sapuseven.untis.helpers.SerializationUtils.getJSON
-import com.sapuseven.untis.api.model.UntisSchoolInfo
+import com.sapuseven.untis.core.api.model.UntisSchoolInfo
 import com.sapuseven.untis.models.untis.response.*
 import kotlinx.serialization.encodeToString
 import org.hamcrest.CoreMatchers.*
@@ -31,7 +31,7 @@ class ResponseTest {
 				result = SchoolSearchResult(
 						size = 2,
 						schools = listOf(
-                            com.sapuseven.untis.api.model.UntisSchoolInfo(
+                            com.sapuseven.untis.core.api.model.UntisSchoolInfo(
                                 server = "server 1",
                                 useMobileServiceUrlAndroid = true,
                                 useMobileServiceUrlIos = false,
@@ -41,7 +41,7 @@ class ResponseTest {
                                 schoolId = 123,
                                 serverUrl = "http://",
                                 mobileServiceUrl = "http://"
-                            ), com.sapuseven.untis.api.model.UntisSchoolInfo(
+                            ), com.sapuseven.untis.core.api.model.UntisSchoolInfo(
                                 server = "server 2",
                                 useMobileServiceUrlAndroid = true,
                                 useMobileServiceUrlIos = false,
@@ -102,7 +102,7 @@ class ResponseTest {
 		assertThat(schoolSearchResponse2.jsonrpc, `is`("2.0"))
 		assertThat(schoolSearchResponse2.result!!.size, `is`(2))
 		assertThat(schoolSearchResponse2.result!!.schools[0], `is`(
-            com.sapuseven.untis.api.model.UntisSchoolInfo(
+            com.sapuseven.untis.core.api.model.UntisSchoolInfo(
                 server = "server 1",
                 useMobileServiceUrlAndroid = true,
                 useMobileServiceUrlIos = false,
@@ -115,7 +115,7 @@ class ResponseTest {
             )
         ))
 		assertThat(schoolSearchResponse2.result!!.schools[1], `is`(
-            com.sapuseven.untis.api.model.UntisSchoolInfo(
+            com.sapuseven.untis.core.api.model.UntisSchoolInfo(
                 server = "server 2",
                 useMobileServiceUrlAndroid = true,
                 useMobileServiceUrlIos = false,

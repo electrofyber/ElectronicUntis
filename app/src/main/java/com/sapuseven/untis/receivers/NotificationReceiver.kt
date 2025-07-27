@@ -13,7 +13,7 @@ import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import com.sapuseven.untis.R
 import com.sapuseven.untis.activities.MainActivity
-import com.sapuseven.untis.api.model.untis.MessageOfDay
+import com.sapuseven.untis.core.api.model.untis.MessageOfDay
 import com.sapuseven.untis.data.repository.UserSettingsRepository
 import com.sapuseven.untis.data.settings.model.NotificationVisibility
 import com.sapuseven.untis.data.settings.model.UserSettings

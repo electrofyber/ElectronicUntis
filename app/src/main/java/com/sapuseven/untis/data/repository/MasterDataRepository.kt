@@ -1,7 +1,7 @@
 package com.sapuseven.untis.data.repository
 
 import androidx.compose.runtime.compositionLocalOf
-import com.sapuseven.untis.api.model.untis.enumeration.ElementType
+import com.sapuseven.untis.core.api.model.untis.enumeration.ElementType
 import com.sapuseven.untis.core.database.entity.ElementEntity
 import com.sapuseven.untis.core.database.entity.User
 import com.sapuseven.untis.core.database.entity.UserDao

@@ -14,7 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import com.sapuseven.untis.R
-import com.sapuseven.untis.api.model.untis.absence.StudentAbsence
+import com.sapuseven.untis.core.api.model.untis.absence.StudentAbsence
 import com.sapuseven.untis.core.database.entity.ExcuseStatusEntity
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle

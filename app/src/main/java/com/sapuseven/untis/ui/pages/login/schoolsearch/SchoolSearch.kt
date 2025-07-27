@@ -16,7 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.sapuseven.untis.R
-import com.sapuseven.untis.api.model.untis.SchoolInfo
+import com.sapuseven.untis.core.api.model.untis.SchoolInfo
 import kotlinx.serialization.ExperimentalSerializationApi
 
 

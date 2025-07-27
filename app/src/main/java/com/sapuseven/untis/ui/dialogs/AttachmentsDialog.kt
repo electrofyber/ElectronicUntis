@@ -28,7 +28,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.sapuseven.untis.R
-import com.sapuseven.untis.api.model.untis.Attachment
+import com.sapuseven.untis.core.api.model.untis.Attachment
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

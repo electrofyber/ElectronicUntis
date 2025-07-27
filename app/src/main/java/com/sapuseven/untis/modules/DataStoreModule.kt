@@ -11,7 +11,7 @@ import androidx.datastore.dataStoreFile
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
 import com.google.protobuf.InvalidProtocolBufferException
-import com.sapuseven.untis.api.model.untis.timetable.PeriodElement
+import com.sapuseven.untis.core.api.model.untis.timetable.PeriodElement
 import com.sapuseven.untis.data.settings.model.AbsencesTimeRange
 import com.sapuseven.untis.data.settings.model.DarkTheme
 import com.sapuseven.untis.data.settings.model.NotificationVisibility

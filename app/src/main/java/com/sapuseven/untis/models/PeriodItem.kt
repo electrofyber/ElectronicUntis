@@ -5,10 +5,10 @@ import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.withStyle
-import com.sapuseven.untis.api.model.untis.enumeration.ElementType
-import com.sapuseven.untis.api.model.untis.enumeration.PeriodState
-import com.sapuseven.untis.api.model.untis.timetable.Period
-import com.sapuseven.untis.api.model.untis.timetable.PeriodElement
+import com.sapuseven.untis.core.api.model.untis.enumeration.ElementType
+import com.sapuseven.untis.core.api.model.untis.enumeration.PeriodState
+import com.sapuseven.untis.core.api.model.untis.timetable.Period
+import com.sapuseven.untis.core.api.model.untis.timetable.PeriodElement
 import com.sapuseven.untis.models.PeriodItem.Companion.ELEMENT_NAME_SEPARATOR
 import com.sapuseven.untis.core.database.entity.ElementEntity
 import kotlinx.serialization.Serializable

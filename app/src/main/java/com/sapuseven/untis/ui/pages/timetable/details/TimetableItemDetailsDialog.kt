@@ -58,9 +58,9 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.sapuseven.untis.BuildConfig
 import com.sapuseven.untis.R
-import com.sapuseven.untis.api.model.untis.Attachment
-import com.sapuseven.untis.api.model.untis.enumeration.PeriodRight
-import com.sapuseven.untis.api.model.untis.timetable.PeriodData
+import com.sapuseven.untis.core.api.model.untis.Attachment
+import com.sapuseven.untis.core.api.model.untis.enumeration.PeriodRight
+import com.sapuseven.untis.core.api.model.untis.timetable.PeriodData
 import com.sapuseven.untis.models.PeriodElementEntity
 import com.sapuseven.untis.models.PeriodItem
 import com.sapuseven.untis.models.toLongString

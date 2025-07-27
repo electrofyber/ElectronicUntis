@@ -8,7 +8,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.viewModelScope
 import com.journeyapps.barcodescanner.ScanIntentResult
 import com.journeyapps.barcodescanner.ScanOptions
-import com.sapuseven.untis.api.model.untis.SchoolInfo
+import com.sapuseven.untis.core.api.model.untis.SchoolInfo
 import com.sapuseven.untis.helpers.SerializationUtils.getJSON
 import com.sapuseven.untis.services.CodeScanService
 import com.sapuseven.untis.ui.navigation.AppNavigator

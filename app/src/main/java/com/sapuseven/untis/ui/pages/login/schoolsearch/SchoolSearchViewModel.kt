@@ -5,9 +5,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.sapuseven.untis.api.client.SchoolSearchApi
-import com.sapuseven.untis.api.exception.UntisApiException
-import com.sapuseven.untis.api.model.untis.SchoolInfo
+import com.sapuseven.untis.core.api.client.SchoolSearchApi
+import com.sapuseven.untis.core.api.exception.UntisApiException
+import com.sapuseven.untis.core.api.model.untis.SchoolInfo
 import com.sapuseven.untis.helpers.ErrorMessageDictionary
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.FlowPreview

@@ -1,4 +1,4 @@
-package com.sapuseven.untis.api.serializer
+package com.sapuseven.untis.core.api.serializer
 
 import kotlinx.serialization.json.Json
 import org.junit.Assert

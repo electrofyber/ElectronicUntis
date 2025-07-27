@@ -9,8 +9,8 @@ import org.junit.Test
 class UntisSchoolInfoTest {
 	@Test
 	fun untisSchoolInfo_serialization() {
-		assertThat(getJSON().encodeToString<com.sapuseven.untis.api.model.UntisSchoolInfo>(
-            com.sapuseven.untis.api.model.UntisSchoolInfo(
+		assertThat(getJSON().encodeToString<com.sapuseven.untis.core.api.model.UntisSchoolInfo>(
+            com.sapuseven.untis.core.api.model.UntisSchoolInfo(
                 server = "server",
                 useMobileServiceUrlAndroid = true,
                 useMobileServiceUrlIos = false,
@@ -26,7 +26,7 @@ class UntisSchoolInfoTest {
 
 	@Test
 	fun untisSchoolInfo_deserialization() {
-		val schoolInfo = getJSON().decodeFromString<com.sapuseven.untis.api.model.UntisSchoolInfo>("""{"server":"server","useMobileServiceUrlAndroid":true,"useMobileServiceUrlIos":false,"address":"123","displayName":"school display name","loginName":"LOGIN_NAME","schoolId":123,"serverUrl":"http://","mobileServiceUrl":"http://"}""")
+		val schoolInfo = getJSON().decodeFromString<com.sapuseven.untis.core.api.model.UntisSchoolInfo>("""{"server":"server","useMobileServiceUrlAndroid":true,"useMobileServiceUrlIos":false,"address":"123","displayName":"school display name","loginName":"LOGIN_NAME","schoolId":123,"serverUrl":"http://","mobileServiceUrl":"http://"}""")
 
 		assertThat(schoolInfo.server , `is`("server"))
 		assertThat(schoolInfo.server, `is`("server"))

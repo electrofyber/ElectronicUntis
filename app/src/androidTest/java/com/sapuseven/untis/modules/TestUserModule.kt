@@ -1,11 +1,11 @@
 package com.sapuseven.untis.modules
 
-import com.sapuseven.untis.api.model.untis.MasterData
-import com.sapuseven.untis.api.model.untis.UserData
-import com.sapuseven.untis.api.model.untis.enumeration.ElementType
-import com.sapuseven.untis.api.model.untis.enumeration.Right
-import com.sapuseven.untis.api.model.untis.masterdata.TimeGrid
-import com.sapuseven.untis.api.model.untis.masterdata.timegrid.Day
+import com.sapuseven.untis.core.api.model.untis.MasterData
+import com.sapuseven.untis.core.api.model.untis.UserData
+import com.sapuseven.untis.core.api.model.untis.enumeration.ElementType
+import com.sapuseven.untis.core.api.model.untis.enumeration.Right
+import com.sapuseven.untis.core.api.model.untis.masterdata.TimeGrid
+import com.sapuseven.untis.core.api.model.untis.masterdata.timegrid.Day
 import com.sapuseven.untis.core.database.module.UserDatabaseModule
 import com.sapuseven.untis.core.database.entity.AbsenceReasonEntity
 import com.sapuseven.untis.core.database.entity.DepartmentEntity
@@ -84,63 +84,63 @@ object FakeUserModule {
 		}
 	}
 
-	private fun units(): List<com.sapuseven.untis.api.model.untis.masterdata.timegrid.Unit> = listOf(
-		com.sapuseven.untis.api.model.untis.masterdata.timegrid.Unit(
+	private fun units(): List<com.sapuseven.untis.core.api.model.untis.masterdata.timegrid.Unit> = listOf(
+		com.sapuseven.untis.core.api.model.untis.masterdata.timegrid.Unit(
 			label = "1",
 			startTime = LocalTime.of(7, 45),
 			endTime = LocalTime.of(8, 35)
 		),
-		com.sapuseven.untis.api.model.untis.masterdata.timegrid.Unit(
+		com.sapuseven.untis.core.api.model.untis.masterdata.timegrid.Unit(
 			label = "2",
 			startTime = LocalTime.of(8, 40),
 			endTime = LocalTime.of(9, 30)
 		),
-		com.sapuseven.untis.api.model.untis.masterdata.timegrid.Unit(
+		com.sapuseven.untis.core.api.model.untis.masterdata.timegrid.Unit(
 			label = "3",
 			startTime = LocalTime.of(9, 45),
 			endTime = LocalTime.of(10, 35)
 		),
-		com.sapuseven.untis.api.model.untis.masterdata.timegrid.Unit(
+		com.sapuseven.untis.core.api.model.untis.masterdata.timegrid.Unit(
 			label = "4",
 			startTime = LocalTime.of(10, 40),
 			endTime = LocalTime.of(11, 30)
 		),
-		com.sapuseven.untis.api.model.untis.masterdata.timegrid.Unit(
+		com.sapuseven.untis.core.api.model.untis.masterdata.timegrid.Unit(
 			label = "5",
 			startTime = LocalTime.of(11, 35),
 			endTime = LocalTime.of(12, 25)
 		),
-		com.sapuseven.untis.api.model.untis.masterdata.timegrid.Unit(
+		com.sapuseven.untis.core.api.model.untis.masterdata.timegrid.Unit(
 			label = "6",
 			startTime = LocalTime.of(12, 30),
 			endTime = LocalTime.of(13, 20)
 		),
-		com.sapuseven.untis.api.model.untis.masterdata.timegrid.Unit(
+		com.sapuseven.untis.core.api.model.untis.masterdata.timegrid.Unit(
 			label = "7",
 			startTime = LocalTime.of(13, 25),
 			endTime = LocalTime.of(14, 15)
 		),
-		com.sapuseven.untis.api.model.untis.masterdata.timegrid.Unit(
+		com.sapuseven.untis.core.api.model.untis.masterdata.timegrid.Unit(
 			label = "8",
 			startTime = LocalTime.of(14, 20),
 			endTime = LocalTime.of(15, 10)
 		),
-		com.sapuseven.untis.api.model.untis.masterdata.timegrid.Unit(
+		com.sapuseven.untis.core.api.model.untis.masterdata.timegrid.Unit(
 			label = "9",
 			startTime = LocalTime.of(15, 20),
 			endTime = LocalTime.of(16, 10)
 		),
-		com.sapuseven.untis.api.model.untis.masterdata.timegrid.Unit(
+		com.sapuseven.untis.core.api.model.untis.masterdata.timegrid.Unit(
 			label = "10",
 			startTime = LocalTime.of(16, 15),
 			endTime = LocalTime.of(17, 5)
 		),
-		com.sapuseven.untis.api.model.untis.masterdata.timegrid.Unit(
+		com.sapuseven.untis.core.api.model.untis.masterdata.timegrid.Unit(
 			label = "11",
 			startTime = LocalTime.of(17, 10),
 			endTime = LocalTime.of(18, 0)
 		),
-		com.sapuseven.untis.api.model.untis.masterdata.timegrid.Unit(
+		com.sapuseven.untis.core.api.model.untis.masterdata.timegrid.Unit(
 			label = "12",
 			startTime = LocalTime.of(18, 0),
 			endTime = LocalTime.of(18, 45)

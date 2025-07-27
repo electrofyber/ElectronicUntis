@@ -3,6 +3,7 @@ import java.util.Locale
 
 plugins {
 	alias(libs.plugins.betteruntis.jvm.library)
+	alias(libs.plugins.kotlin.serialization)
 	alias(libs.plugins.openapi.generator)
 }
 
@@ -31,7 +32,7 @@ apiSpecList.forEach { file ->
 		generatorName.set("kotlin")
 		inputSpec.set("${layout.projectDirectory}/spec/untis-intern/untis-$apiName.yaml")
 		outputDir.set("${layout.buildDirectory.get()}/generated")
-		apiPackage.set("com.sapuseven.untis.api.$packageName")
+		apiPackage.set("com.sapuseven.untis.core.api.$packageName")
 		modelPackage.set("com.sapuseven.untis.model.$packageName")
 		configOptions.set(
 			mapOf(
@@ -42,7 +43,7 @@ apiSpecList.forEach { file ->
 		)
 		typeMappings.set(
 			mapOf(
-				"java.time.OffsetDateTime" to "com.sapuseven.untis.api.serializer.DateTime"
+				"java.time.OffsetDateTime" to "com.sapuseven.untis.core.api.serializer.DateTime"
 			)
 		)
 	}

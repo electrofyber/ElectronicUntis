@@ -57,8 +57,8 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImagePainter
 import coil.compose.rememberAsyncImagePainter
 import com.sapuseven.untis.R
-import com.sapuseven.untis.api.model.untis.Attachment
-import com.sapuseven.untis.api.model.untis.MessageOfDay
+import com.sapuseven.untis.core.api.model.untis.Attachment
+import com.sapuseven.untis.core.api.model.untis.MessageOfDay
 import com.sapuseven.untis.model.rest.Message
 import com.sapuseven.untis.ui.common.MessageBubble
 import com.sapuseven.untis.ui.common.MessageBubbleDefaults

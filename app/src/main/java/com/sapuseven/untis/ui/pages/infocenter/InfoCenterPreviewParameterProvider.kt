@@ -1,11 +1,11 @@
 package com.sapuseven.untis.ui.pages.infocenter
 
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
-import com.sapuseven.untis.api.exception.UntisApiException
-import com.sapuseven.untis.api.model.response.Error
-import com.sapuseven.untis.api.model.response.UntisErrorCode
-import com.sapuseven.untis.api.model.untis.Attachment
-import com.sapuseven.untis.api.model.untis.MessageOfDay
+import com.sapuseven.untis.core.api.exception.UntisApiException
+import com.sapuseven.untis.core.api.model.response.Error
+import com.sapuseven.untis.core.api.model.response.UntisErrorCode
+import com.sapuseven.untis.core.api.model.untis.Attachment
+import com.sapuseven.untis.core.api.model.untis.MessageOfDay
 import com.sapuseven.untis.model.rest.Message
 import com.sapuseven.untis.ui.pages.infocenter.PreviewParameterData.messagesOfDay
 import com.sapuseven.untis.ui.pages.infocenter.PreviewParameterData.untisApiException

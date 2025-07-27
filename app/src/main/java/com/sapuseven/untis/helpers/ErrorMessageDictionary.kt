@@ -1,7 +1,7 @@
 package com.sapuseven.untis.helpers
 
 import com.sapuseven.untis.R
-import com.sapuseven.untis.api.model.response.UntisErrorCode
+import com.sapuseven.untis.core.api.model.response.UntisErrorCode
 
 object ErrorMessageDictionary {
 	fun getErrorMessageResource(code: UntisErrorCode?, fallbackToGeneric: Boolean = true): Int? {

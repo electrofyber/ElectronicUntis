@@ -1,12 +1,12 @@
 package com.sapuseven.untis.modules
 
-import com.sapuseven.untis.api.client.AbsenceApi
-import com.sapuseven.untis.api.client.ClassRegApi
-import com.sapuseven.untis.api.client.MessagesApi
-import com.sapuseven.untis.api.client.OfficeHoursApi
-import com.sapuseven.untis.api.client.SchoolSearchApi
-import com.sapuseven.untis.api.client.TimetableApi
-import com.sapuseven.untis.api.client.UserDataApi
+import com.sapuseven.untis.core.api.client.AbsenceApi
+import com.sapuseven.untis.core.api.client.ClassRegApi
+import com.sapuseven.untis.core.api.client.MessagesApi
+import com.sapuseven.untis.core.api.client.OfficeHoursApi
+import com.sapuseven.untis.core.api.client.SchoolSearchApi
+import com.sapuseven.untis.core.api.client.TimetableApi
+import com.sapuseven.untis.core.api.client.UserDataApi
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

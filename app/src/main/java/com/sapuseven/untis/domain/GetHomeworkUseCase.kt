@@ -1,7 +1,7 @@
 package com.sapuseven.untis.domain
 
-import com.sapuseven.untis.api.model.untis.classreg.HomeWork
-import com.sapuseven.untis.api.model.untis.enumeration.ElementType
+import com.sapuseven.untis.core.api.model.untis.classreg.HomeWork
+import com.sapuseven.untis.core.api.model.untis.enumeration.ElementType
 import com.sapuseven.untis.data.repository.UserRepository
 import com.sapuseven.untis.core.database.entity.SchoolYearEntity
 import com.sapuseven.untis.data.repository.InfoCenterRepository

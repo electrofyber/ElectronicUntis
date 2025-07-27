@@ -4,10 +4,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.core.graphics.toColorInt
-import com.sapuseven.untis.api.model.untis.enumeration.ElementType
-import com.sapuseven.untis.api.model.untis.enumeration.PeriodState
-import com.sapuseven.untis.api.model.untis.masterdata.timegrid.Day
-import com.sapuseven.untis.api.model.untis.timetable.Period
+import com.sapuseven.untis.core.api.model.untis.enumeration.ElementType
+import com.sapuseven.untis.core.api.model.untis.enumeration.PeriodState
+import com.sapuseven.untis.core.api.model.untis.masterdata.timegrid.Day
+import com.sapuseven.untis.core.api.model.untis.timetable.Period
 import com.sapuseven.untis.data.repository.UserRepository
 import com.sapuseven.untis.data.repository.UserSettingsRepository
 import com.sapuseven.untis.data.repository.withDefault

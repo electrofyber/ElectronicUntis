@@ -1,6 +1,6 @@
 package com.sapuseven.untis.domain
 
-import com.sapuseven.untis.api.model.untis.MessageOfDay
+import com.sapuseven.untis.core.api.model.untis.MessageOfDay
 import com.sapuseven.untis.data.repository.InfoCenterRepository
 import com.sapuseven.untis.data.repository.UserRepository
 import crocodile8.universal_cache.FromCache

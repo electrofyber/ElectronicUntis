@@ -1,15 +1,15 @@
 package com.sapuseven.untis.data.repository
 
-import com.sapuseven.untis.api.client.AbsenceApi
-import com.sapuseven.untis.api.client.ClassRegApi
-import com.sapuseven.untis.api.client.MessagesApi
-import com.sapuseven.untis.api.client.OfficeHoursApi
-import com.sapuseven.untis.api.model.untis.MessageOfDay
-import com.sapuseven.untis.api.model.untis.absence.StudentAbsence
-import com.sapuseven.untis.api.model.untis.classreg.Exam
-import com.sapuseven.untis.api.model.untis.classreg.HomeWork
-import com.sapuseven.untis.api.model.untis.enumeration.ElementType
-import com.sapuseven.untis.api.model.untis.timetable.OfficeHour
+import com.sapuseven.untis.core.api.client.AbsenceApi
+import com.sapuseven.untis.core.api.client.ClassRegApi
+import com.sapuseven.untis.core.api.client.MessagesApi
+import com.sapuseven.untis.core.api.client.OfficeHoursApi
+import com.sapuseven.untis.core.api.model.untis.MessageOfDay
+import com.sapuseven.untis.core.api.model.untis.absence.StudentAbsence
+import com.sapuseven.untis.core.api.model.untis.classreg.Exam
+import com.sapuseven.untis.core.api.model.untis.classreg.HomeWork
+import com.sapuseven.untis.core.api.model.untis.enumeration.ElementType
+import com.sapuseven.untis.core.api.model.untis.timetable.OfficeHour
 import com.sapuseven.untis.data.cache.DiskCache
 import crocodile8.universal_cache.CachedSource
 import crocodile8.universal_cache.time.TimeProvider

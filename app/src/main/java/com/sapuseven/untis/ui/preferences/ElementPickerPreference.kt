@@ -13,8 +13,8 @@ import androidx.compose.runtime.setValue
 import com.google.protobuf.MessageLite
 import com.sapuseven.compose.protostore.data.SettingsRepository
 import com.sapuseven.compose.protostore.ui.preferences.Preference
-import com.sapuseven.untis.api.model.untis.enumeration.ElementType
-import com.sapuseven.untis.api.model.untis.timetable.PeriodElement
+import com.sapuseven.untis.core.api.model.untis.enumeration.ElementType
+import com.sapuseven.untis.core.api.model.untis.timetable.PeriodElement
 import com.sapuseven.untis.data.repository.MasterDataRepository
 import com.sapuseven.untis.data.settings.model.TimetableElement
 import com.sapuseven.untis.core.database.entity.ElementEntity

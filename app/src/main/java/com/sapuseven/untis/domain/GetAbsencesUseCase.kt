@@ -1,6 +1,6 @@
 package com.sapuseven.untis.domain
 
-import com.sapuseven.untis.api.model.untis.absence.StudentAbsence
+import com.sapuseven.untis.core.api.model.untis.absence.StudentAbsence
 import com.sapuseven.untis.core.database.entity.SchoolYearEntity
 import com.sapuseven.untis.data.repository.InfoCenterRepository
 import com.sapuseven.untis.data.repository.UserRepository

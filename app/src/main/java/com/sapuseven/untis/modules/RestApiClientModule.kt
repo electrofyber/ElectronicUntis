@@ -1,7 +1,7 @@
 package com.sapuseven.untis.modules
 
-import com.sapuseven.untis.api.client.UserDataApi
-import com.sapuseven.untis.api.rest.MessagesApi
+import com.sapuseven.untis.core.api.client.UserDataApi
+import com.sapuseven.untis.core.api.rest.MessagesApi
 import com.sapuseven.untis.data.repository.UserRepository
 import com.sapuseven.untis.exceptions.UntisRestApiException
 import com.sapuseven.untis.model.rest.ErrorResponse
