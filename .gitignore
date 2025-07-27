@@ -1,17 +1,46 @@
-*.iml
-.gradle
-/local.properties
-/.idea
-/.kotlin
-.DS_Store
-/build
-/captures
-.externalNativeBuild
+# built application files
+*.apk
+*.ap_
+
+# files for the dex VM
+*.dex
+
+# Java class files
+*.class
+
+# generated files
+bin/
+gen/
+out/
+build/
+generated/
+
+# Local configuration file (sdk path, etc)
+local.properties
 *.jks
 signing.properties
 **/fastlane/key.json
 **/fastlane/report.xml
 **/fastlane/metadata/android/screenshots.html
 /vendor
-/screenshots
 sentry.properties
+
+# Windows thumbnail db
+.DS_Store
+
+# IDEA/Android Studio project files, because
+# the project can be imported from settings.gradle.kts
+*.iml
+.idea/*
+
+# Gradle cache
+.gradle
+
+# Android Studio captures folder
+captures/
+
+# Generated screenshots
+/screenshots
+
+# Kotlin
+.kotlin

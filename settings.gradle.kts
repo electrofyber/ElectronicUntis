@@ -1,24 +1,48 @@
-rootProject.name = "BetterUntis"
-
 pluginManagement {
+	includeBuild("build-logic")
 	repositories {
-		gradlePluginPortal()
-		google()
+		google {
+			content {
+				includeGroupByRegex("com\\.android.*")
+				includeGroupByRegex("com\\.google.*")
+				includeGroupByRegex("androidx.*")
+			}
+		}
 		mavenCentral()
+		gradlePluginPortal()
 	}
 }
 
 dependencyResolutionManagement {
+	repositoriesMode = RepositoriesMode.FAIL_ON_PROJECT_REPOS
 	repositories {
-		google()
+		google {
+			content {
+				includeGroupByRegex("com\\.android.*")
+				includeGroupByRegex("com\\.google.*")
+				includeGroupByRegex("androidx.*")
+			}
+		}
 		mavenCentral()
-		mavenLocal()
 	}
 }
 
+rootProject.name = "betteruntis"
+
+enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 
 include(":app")
+include(":feature:glance")
+
+
 include(":material-color-utils")
 include(":api")
-include(":glance")
 include(":persistence")
+
+check(JavaVersion.current().isCompatibleWith(JavaVersion.VERSION_17)) {
+	"""
+    BetterUntis requires JDK 17+ but it is currently using JDK ${JavaVersion.current()}.
+    Java Home: [${System.getProperty("java.home")}]
+    https://developer.android.com/build/jdks#jdk-config-in-studio
+    """.trimIndent()
+}

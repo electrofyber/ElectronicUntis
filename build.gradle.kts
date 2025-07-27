@@ -1,3 +1,16 @@
+buildscript {
+	repositories {
+		google {
+			content {
+				includeGroupByRegex("com\\.android.*")
+				includeGroupByRegex("com\\.google.*")
+				includeGroupByRegex("androidx.*")
+			}
+		}
+		mavenCentral()
+	}
+}
+
 plugins {
 	alias(libs.plugins.agp.application) apply false
 	alias(libs.plugins.agp.library) apply false
@@ -9,7 +22,8 @@ plugins {
 	alias(libs.plugins.mannodermaus.android.junit5) apply false
 	alias(libs.plugins.mikepenz.aboutlibraries) apply false
 	alias(libs.plugins.openapi.generator) apply false
-	alias(libs.plugins.dagger.hilt) apply false
+	alias(libs.plugins.hilt) apply false
 	alias(libs.plugins.kotlin.parcelize) apply false
 	alias(libs.plugins.protobuf) apply false
+	alias(libs.plugins.room) apply false
 }

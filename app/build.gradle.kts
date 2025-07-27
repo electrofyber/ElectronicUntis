@@ -14,7 +14,7 @@ plugins {
 	alias(libs.plugins.mikepenz.aboutlibraries)
 	alias(libs.plugins.ksp)
 	alias(libs.plugins.mannodermaus.android.junit5)
-	alias(libs.plugins.dagger.hilt)
+	alias(libs.plugins.hilt)
 	alias(libs.plugins.kotlin.parcelize)
 	alias(libs.plugins.protobuf)
 }
@@ -192,7 +192,7 @@ dependencies {
 	implementation(libs.androidx.hilt.navigation.compose)
 	implementation(libs.androidx.hilt.work)
 	implementation(libs.androidx.lifecycle)
-	implementation(libs.androidx.lifecycle.compose)
+	implementation(libs.androidx.lifecycle.viewModelCompose)
 	implementation(libs.androidx.navigation.compose)
 	implementation(libs.androidx.preference)
 	implementation(libs.androidx.recyclerview)
@@ -228,7 +228,7 @@ dependencies {
 
 	gmsImplementation(libs.gms.code.scanner)
 
-	coreLibraryDesugaring(libs.desugar.jdk.libs)
+	coreLibraryDesugaring(libs.android.desugarJdkLibs)
 
 	ksp(libs.androidx.hilt.compiler)
 	ksp(libs.dagger.compiler)
@@ -253,7 +253,8 @@ dependencies {
 	debugImplementation(libs.androidx.compose.ui.test.manifest)
 
 	implementation(project(":api"))
-	implementation(project(":glance"))
-	implementation(project(":persistence"))
+	//implementation(project(":feature:glance"))
+	implementation(projects.feature.glance)
+	implementation(projects.persistence)
 	implementation(project(":material-color-utils"))
 }
