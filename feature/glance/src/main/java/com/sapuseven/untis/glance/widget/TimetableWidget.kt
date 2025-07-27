@@ -30,7 +30,7 @@ import com.sapuseven.untis.glance.ui.WidgetListView
 class TimetableWidget : BaseWidget() {
 	private var items by mutableStateOf<List<WidgetListItemModel>?>(null)
 
-	private var elementId by mutableStateOf<Int>(-1)
+	//private var elementId by mutableIntStateOf(-1)
 
 	@Composable
 	override fun Content() {
@@ -38,11 +38,11 @@ class TimetableWidget : BaseWidget() {
 			Scaffold(
 				titleBar = {
 					TitleBar(
-						startIcon = ImageProvider(R.drawable.outline_calendar_view_day_24),
+						startIcon = ImageProvider(R.drawable.feature_glance_schedule),
 						title = "Test profile",
 						actions = {
 							CircleIconButton(
-								imageProvider = ImageProvider(R.drawable.outline_refresh_24),
+								imageProvider = ImageProvider(R.drawable.feature_glance_refresh),
 								contentDescription = "Reload timetable",
 								backgroundColor = null,
 								onClick = {
@@ -71,7 +71,7 @@ class TimetableWidget : BaseWidget() {
 						contentAlignment = Alignment.Center
 					) {
 						Text(
-							LocalContext.current.getString(R.string.widget_loading),
+							LocalContext.current.getString(R.string.feature_glance_widget_loading),
 							style = TextStyle(
 								// Body Large
 								color = GlanceTheme.colors.onSurface,

@@ -12,7 +12,7 @@
 
         <receiver
             android:name=".receiver.TimetableWidgetReceiver"
-            android:label="@string/timetable_widget_name"
+            android:label="@string/feature_glance_timetable_widget_name"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
@@ -20,7 +20,7 @@
 
             <meta-data
                 android:name="android.appwidget.provider"
-                android:resource="@xml/timetable_widget_info" />
+                android:resource="@xml/feature_glance_timetable_widget_info" />
         </receiver>
     </application>
 </manifest>
