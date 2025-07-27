@@ -205,5 +205,6 @@ dependencies {
 	implementation(projects.feature.glance)
 	implementation(projects.core.api)
 	implementation(projects.core.database)
-	implementation(project(":material-color-utils"))
+	implementation(projects.core.ui)
+	implementation(projects.materialColorUtils)
 }

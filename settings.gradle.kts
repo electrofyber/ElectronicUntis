@@ -33,8 +33,9 @@ enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 
 include(":app")
 include(":feature:glance")
-include(":core:database")
 include(":core:api")
+include(":core:database")
+include(":core:ui")
 
 include(":material-color-utils")
 
