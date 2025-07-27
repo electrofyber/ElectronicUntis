@@ -85,14 +85,14 @@ gradlePlugin {
 			id = libs.plugins.betteruntis.android.room.get().pluginId
 			implementationClass = "AndroidRoomConventionPlugin"
 		}
-//		register("androidFlavors") {
-//			id = libs.plugins.betteruntis.android.application.flavors.get().pluginId
-//			implementationClass = "AndroidApplicationFlavorsConventionPlugin"
-//		}
-//		register("androidLint") {
-//			id = libs.plugins.betteruntis.android.lint.get().pluginId
-//			implementationClass = "AndroidLintConventionPlugin"
-//		}
+		register("androidFlavors") {
+			id = libs.plugins.betteruntis.android.application.flavors.get().pluginId
+			implementationClass = "AndroidApplicationFlavorsConventionPlugin"
+		}
+		register("androidLint") {
+			id = libs.plugins.betteruntis.android.lint.get().pluginId
+			implementationClass = "AndroidLintConventionPlugin"
+		}
 		register("jvmLibrary") {
 			id = libs.plugins.betteruntis.jvm.library.get().pluginId
 			implementationClass = "JvmLibraryConventionPlugin"

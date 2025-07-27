@@ -12,7 +12,7 @@ class AndroidApplicationConventionPlugin : Plugin<Project> {
 		with(target) {
 			apply(plugin = "com.android.application")
 			apply(plugin = "org.jetbrains.kotlin.android")
-			//apply(plugin = "betteruntis.android.lint")
+			apply(plugin = "betteruntis.android.lint")
 
 			extensions.configure<ApplicationExtension> {
 				configureKotlinAndroid(this)

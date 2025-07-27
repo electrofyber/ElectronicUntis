@@ -8,6 +8,7 @@ import java.util.Properties
 plugins {
 	alias(libs.plugins.betteruntis.android.application)
 	alias(libs.plugins.betteruntis.android.application.compose)
+	alias(libs.plugins.betteruntis.android.application.flavors)
 	alias(libs.plugins.betteruntis.android.application.sentry)
 	alias(libs.plugins.betteruntis.hilt)
 
@@ -21,8 +22,6 @@ plugins {
 fun generateVersionCode(): Int {
 	return (Date().time / 1000 / 60).toInt()
 }
-
-val gmsImplementation: Configuration by configurations.creating
 
 android {
 	namespace = "com.sapuseven.untis"
@@ -88,18 +87,6 @@ android {
 	lint {
 		disable += "MissingTranslation"
 	}
-
-	flavorDimensions += "dependencies"
-	productFlavors {
-		create("gms") {
-			isDefault = true
-			dimension = "dependencies"
-		}
-
-		create("foss") {
-			dimension = "dependencies"
-		}
-	}
 }
 
 aboutLibraries {
@@ -107,6 +94,7 @@ aboutLibraries {
 	library.duplicationMode = com.mikepenz.aboutlibraries.plugin.DuplicateMode.MERGE
 }
 
+// TODO Move to :core:datastore
 protobuf {
 	protoc {
 		artifact = "com.google.protobuf:protoc:4.28.0"
