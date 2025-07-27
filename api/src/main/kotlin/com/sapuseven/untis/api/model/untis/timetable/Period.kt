@@ -28,19 +28,12 @@ data class Period(
 	val onlinePeriodLink: String? = null, // Note: This value still seems to be present in the response, but missing in the Untis Mobile sources
 	val blockHash: Int? = null // Note: This value still seems to be present in the response, but missing in the Untis Mobile sources
 ) {
-	companion object {
-		const val CODE_REGULAR = "REGULAR"
-		const val CODE_CANCELLED = "CANCELLED"
-		const val CODE_IRREGULAR = "IRREGULAR"
-		const val CODE_EXAM = "EXAM"
+	fun can(periodRight: PeriodRight): Boolean {
+		return can.contains(periodRight)
 	}
 
-	fun can(PersiodRight: PeriodRight): Boolean {
-		return can.contains(PersiodRight)
-	}
-
-	fun `is`(PersiodState: PeriodState): Boolean {
-		return `is`.contains(PersiodState)
+	fun `is`(periodState: PeriodState): Boolean {
+		return `is`.contains(periodState)
 	}
 
 	fun equalsIgnoreTime(second: Period): Boolean {

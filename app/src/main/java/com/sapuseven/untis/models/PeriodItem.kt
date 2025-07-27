@@ -9,81 +9,58 @@ import com.sapuseven.untis.api.model.untis.enumeration.ElementType
 import com.sapuseven.untis.api.model.untis.enumeration.PeriodState
 import com.sapuseven.untis.api.model.untis.timetable.Period
 import com.sapuseven.untis.api.model.untis.timetable.PeriodElement
-import com.sapuseven.untis.data.repository.MasterDataRepository
+import com.sapuseven.untis.models.PeriodItem.Companion.ELEMENT_NAME_SEPARATOR
+import com.sapuseven.untis.persistence.entity.ElementEntity
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
 
+/**
+ * A PeriodElementEntity represents an element in a period, which can be a class, teacher, subject, or room.
+ *
+ * It may also have a replacement entity if the original entity has been replaced or substituted.
+ *
+ * A timetable period contains multiple elements, each representing a different aspect of the period.
+ *
+ * @property entity The main element entity for this period element.
+ * @property replacementEntity An optional replacement entity for this period element.
+ */
+data class PeriodElementEntity(
+	val entity: ElementEntity,
+	val replacementEntity: ElementEntity? = null,
+) {
+	constructor(allElements: Map<ElementType, List<ElementEntity>>, periodElement: PeriodElement) : this(
+		entity = allElements[periodElement.type].orEmpty().firstOrNull { it.id == periodElement.id }
+			?: throw IllegalArgumentException("Element with id ${periodElement.id} and type ${periodElement.type} not found"),
+		replacementEntity = allElements[periodElement.type].orEmpty().firstOrNull { it.id == periodElement.orgId }
+			?.takeIf { periodElement.id != periodElement.orgId && periodElement.orgId != 0L }
+	) {
+		// Only elements with the same type as the main element are allowed to be replacements
+		assert(replacementEntity?.getType()?.equals(entity.getType()) ?: true) {
+			"Replacement entity type does not match original entity type: ${replacementEntity?.getType()} != ${entity.getType()}"
+		}
+	}
+}
+
+/**
+ * A timetable period represents a single "slot" in the timetable.
+ *
+ * A [PeriodItem] contains all subjects, classes, teachers, and rooms that occur during that period.
+ * Every subject, class, teacher, or room is an element of the period.
+ */
 @Serializable
 class PeriodItem(
-	@Transient private var masterDataRepository: MasterDataRepository? = null,
-	var originalPeriod: Period
+	@Transient private var elements: List<PeriodElementEntity> = emptyList(),
+	val originalPeriod: Period
 ) {
-	val classes = HashSet<PeriodElement>()
-	val teachers = HashSet<PeriodElement>()
-	val subjects = HashSet<PeriodElement>()
-	val rooms = HashSet<PeriodElement>()
+	@Transient val classes = elements.filter { it.entity.getType() == ElementType.CLASS }
+	@Transient val teachers = elements.filter { it.entity.getType() == ElementType.TEACHER }
+	@Transient val subjects = elements.filter { it.entity.getType() == ElementType.SUBJECT }
+	@Transient val rooms = elements.filter { it.entity.getType() == ElementType.ROOM }
 
 	var forceIrregular = false
 
 	companion object {
-		// TODO: Convert to string resources
 		const val ELEMENT_NAME_SEPARATOR = ", "
-		const val ELEMENT_NAME_UNKNOWN = "?"
-	}
-
-	init {
-		parseElements()
-	}
-
-	private fun parseElements() {
-		originalPeriod.elements.forEach { originalPeriod ->
-			when (originalPeriod.type) {
-				ElementType.CLASS -> classes.add(originalPeriod)
-				ElementType.TEACHER -> teachers.add(originalPeriod)
-				ElementType.SUBJECT -> subjects.add(originalPeriod)
-				ElementType.ROOM -> rooms.add(originalPeriod)
-				else -> {}
-			}
-		}
-	}
-
-	private fun getListFor(type: ElementType): java.util.HashSet<PeriodElement> =
-		when (type) {
-			ElementType.CLASS -> classes
-			ElementType.TEACHER -> teachers
-			ElementType.SUBJECT -> subjects
-			ElementType.ROOM -> rooms
-			else -> hashSetOf()
-		}
-
-	fun getShort(type: ElementType, list: HashSet<PeriodElement> = getListFor(type)) =
-		list.joinToString(ELEMENT_NAME_SEPARATOR) {
-			masterDataRepository?.getElement(it.id, type)?.getShortName() ?: ELEMENT_NAME_UNKNOWN
-		}
-
-	fun getLong(type: ElementType, list: HashSet<PeriodElement> = getListFor(type)) =
-		list.joinToString(ELEMENT_NAME_SEPARATOR) {
-			masterDataRepository?.getElement(it.id, type)?.getLongName() ?: ELEMENT_NAME_UNKNOWN
-		}
-
-	fun getShortAnnotated(
-		type: ElementType,
-		list: HashSet<PeriodElement> = getListFor(type),
-		includeOrgIds: Boolean = true
-	): AnnotatedString {
-		return buildAnnotatedString {
-			list.forEach {
-				if (length > 0) append(ELEMENT_NAME_SEPARATOR)
-				append(masterDataRepository?.getElement(it.id, type)?.getShortName() ?: ELEMENT_NAME_UNKNOWN)
-
-				if (includeOrgIds && it.id != it.orgId && it.orgId != 0L) {
-					append(ELEMENT_NAME_SEPARATOR)
-					withStyle(SpanStyle(textDecoration = TextDecoration.LineThrough)) {
-						append(masterDataRepository?.getElement(it.orgId, type)?.getShortName() ?: ELEMENT_NAME_UNKNOWN)
-					}
-				}
-			}
-		}
 	}
 
 	fun isCancelled(): Boolean = originalPeriod.`is`.contains(PeriodState.CANCELLED)
@@ -91,16 +68,37 @@ class PeriodItem(
 	fun isIrregular(): Boolean = forceIrregular || originalPeriod.`is`.contains(PeriodState.IRREGULAR)
 
 	fun isExam(): Boolean = originalPeriod.`is`.contains(PeriodState.EXAM)
+
+	fun equalsIgnoreTime(other: PeriodItem) =
+		originalPeriod.equalsIgnoreTime(other.originalPeriod)
+
+	operator fun plus(other: PeriodItem) =
+		PeriodItem(
+			elements = this.elements + other.elements,
+			originalPeriod = originalPeriod
+		)
 }
 
-fun PeriodItem.mergeValuesWith(item: PeriodItem) {
-	apply {
-		classes.addAll(item.classes)
-		teachers.addAll(item.teachers)
-		subjects.addAll(item.subjects)
-		rooms.addAll(item.rooms)
+fun List<PeriodElementEntity>.toShortString(): String =
+	joinToString(ELEMENT_NAME_SEPARATOR) { it.entity.getShortName() }
+
+fun List<PeriodElementEntity>.toLongString(): String =
+	joinToString(ELEMENT_NAME_SEPARATOR) { it.entity.getShortName() }
+
+fun List<PeriodElementEntity>.getShortAnnotatedString(
+	includeReplacements: Boolean = true
+): AnnotatedString {
+	return buildAnnotatedString {
+		forEach {
+			if (length > 0) append(ELEMENT_NAME_SEPARATOR)
+			append(it.entity.getShortName())
+
+			it.replacementEntity.takeIf { includeReplacements }?.let { replacement ->
+				append(ELEMENT_NAME_SEPARATOR)
+				withStyle(SpanStyle(textDecoration = TextDecoration.LineThrough)) {
+					append(replacement.getShortName())
+				}
+			}
+		}
 	}
 }
-
-fun PeriodItem.equalsIgnoreTime(secondItem: PeriodItem) =
-	originalPeriod.equalsIgnoreTime(secondItem.originalPeriod)

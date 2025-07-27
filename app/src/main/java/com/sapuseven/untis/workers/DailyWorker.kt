@@ -7,9 +7,10 @@ import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import androidx.work.WorkRequest
 import androidx.work.WorkerParameters
-import com.sapuseven.untis.persistence.entity.UserDao
+import com.sapuseven.untis.data.repository.MasterDataRepository
 import com.sapuseven.untis.data.repository.TimetableRepository
 import com.sapuseven.untis.data.repository.UserSettingsRepository
+import com.sapuseven.untis.persistence.entity.UserDao
 import crocodile8.universal_cache.FromCache
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
@@ -28,9 +29,10 @@ class DailyWorker @AssistedInject constructor(
 	@Assisted context: Context,
 	@Assisted params: WorkerParameters,
 	private val userSettingsRepository: UserSettingsRepository,
-	timetableRepository: TimetableRepository,
 	private val userDao: UserDao,
-) : TimetableDependantWorker(context, params, timetableRepository) {
+	masterDataRepository: MasterDataRepository,
+	timetableRepository: TimetableRepository,
+) : TimetableDependantWorker(context, params, masterDataRepository, timetableRepository) {
 	companion object {
 		const val TAG_DAILY_WORK = "DailyWork"
 

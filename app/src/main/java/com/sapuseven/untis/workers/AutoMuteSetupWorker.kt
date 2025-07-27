@@ -12,13 +12,13 @@ import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
-import com.sapuseven.untis.api.model.untis.enumeration.ElementType
-import com.sapuseven.untis.persistence.entity.User
-import com.sapuseven.untis.persistence.entity.UserDao
 import com.sapuseven.untis.data.repository.MasterDataRepository
 import com.sapuseven.untis.data.repository.TimetableRepository
 import com.sapuseven.untis.data.repository.UserSettingsRepository
 import com.sapuseven.untis.mappers.TimetableMapper
+import com.sapuseven.untis.models.toShortString
+import com.sapuseven.untis.persistence.entity.User
+import com.sapuseven.untis.persistence.entity.UserDao
 import com.sapuseven.untis.receivers.AutoMuteReceiver
 import com.sapuseven.untis.receivers.AutoMuteReceiver.Companion.EXTRA_BOOLEAN_MUTE
 import com.sapuseven.untis.receivers.AutoMuteReceiver.Companion.EXTRA_INT_ID
@@ -37,12 +37,12 @@ import java.time.temporal.ChronoUnit
 class AutoMuteSetupWorker @AssistedInject constructor(
 	private val userSettingsRepository: UserSettingsRepository,
 	private val timetableMapper: TimetableMapper,
-	private val masterDataRepository: MasterDataRepository,
 	private val userDao: UserDao,
 	@Assisted context: Context,
 	@Assisted params: WorkerParameters,
+	masterDataRepository: MasterDataRepository,
 	timetableRepository: TimetableRepository,
-) : TimetableDependantWorker(context, params, timetableRepository) {
+) : TimetableDependantWorker(context, params, masterDataRepository, timetableRepository) {
 	companion object {
 		private const val LOG_TAG = "AutoMuteSetup"
 		private const val TAG_AUTO_MUTE_SETUP_WORK = "AutoMuteSetupWork"
@@ -87,7 +87,7 @@ class AutoMuteSetupWorker @AssistedInject constructor(
 					FromCache.ONLY
 				), !userSettings.automuteCancelledLessons)
 
-				timetable.merged(masterDataRepository).sortedBy { it.originalPeriod.startDateTime }.zipWithNext().withLast()
+				timetable.merged().sortedBy { it.originalPeriod.startDateTime }.zipWithNext().withLast()
 					.forEach {
 						it.first?.let { item ->
 							val alarmManager =
@@ -117,7 +117,7 @@ class AutoMuteSetupWorker @AssistedInject constructor(
 							)
 							Log.d(
 								LOG_TAG,
-								"${item.getShort(ElementType.SUBJECT)} mute scheduled for ${item.originalPeriod.startDateTime}"
+								"${item.subjects.toShortString()} mute scheduled for ${item.originalPeriod.startDateTime}"
 							)
 
 							val subsequentBreakLength = it.second?.let { subsequentPeriod ->
@@ -126,7 +126,7 @@ class AutoMuteSetupWorker @AssistedInject constructor(
 							if (subsequentBreakLength != null && subsequentBreakLength < userSettings.automuteMinimumBreakLength) {
 								Log.d(
 									"AutoMuteSetup",
-									"${item.getShort(ElementType.SUBJECT)} unmute NOT scheduled for ${item.originalPeriod.endDateTime} - subsequent break too short (${subsequentBreakLength} min)"
+									"${item.subjects.toShortString()} unmute NOT scheduled for ${item.originalPeriod.endDateTime} - subsequent break too short (${subsequentBreakLength} min)"
 								)
 								return@forEach
 							}
@@ -148,7 +148,7 @@ class AutoMuteSetupWorker @AssistedInject constructor(
 							)
 							Log.d(
 								"AutoMuteSetup",
-								"${item.getShort(ElementType.SUBJECT)} unmute scheduled for ${item.originalPeriod.endDateTime}"
+								"${item.subjects.toShortString()} unmute scheduled for ${item.originalPeriod.endDateTime}"
 							)
 						}
 					}

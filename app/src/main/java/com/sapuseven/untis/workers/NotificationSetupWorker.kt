@@ -17,15 +17,15 @@ import androidx.work.WorkerParameters
 import androidx.work.workDataOf
 import com.sapuseven.untis.BuildConfig
 import com.sapuseven.untis.R
-import com.sapuseven.untis.api.model.untis.enumeration.ElementType
-import com.sapuseven.untis.persistence.entity.User
-import com.sapuseven.untis.persistence.entity.UserDao
 import com.sapuseven.untis.data.repository.MasterDataRepository
 import com.sapuseven.untis.data.repository.TimetableRepository
 import com.sapuseven.untis.data.repository.UserSettingsRepository
 import com.sapuseven.untis.mappers.TimetableMapper
 import com.sapuseven.untis.models.PeriodItem
-import com.sapuseven.untis.models.equalsIgnoreTime
+import com.sapuseven.untis.models.toLongString
+import com.sapuseven.untis.models.toShortString
+import com.sapuseven.untis.persistence.entity.User
+import com.sapuseven.untis.persistence.entity.UserDao
 import com.sapuseven.untis.receivers.NotificationReceiver
 import com.sapuseven.untis.receivers.NotificationReceiver.Companion.EXTRA_BOOLEAN_CLEAR
 import com.sapuseven.untis.receivers.NotificationReceiver.Companion.EXTRA_BOOLEAN_FIRST
@@ -56,14 +56,14 @@ import java.time.format.FormatStyle
 @HiltWorker
 class NotificationSetupWorker @AssistedInject constructor(
 	private val userSettingsRepository: UserSettingsRepository,
-	private val masterDataRepository: MasterDataRepository,
 	private val timetableMapper: TimetableMapper,
 	private val clock: Clock,
 	private val userDao: UserDao,
 	@Assisted context: Context,
 	@Assisted params: WorkerParameters,
+	masterDataRepository: MasterDataRepository,
 	timetableRepository: TimetableRepository,
-) : TimetableDependantWorker(context, params, timetableRepository) {
+) : TimetableDependantWorker(context, params, masterDataRepository, timetableRepository) {
 	companion object {
 		private const val LOG_TAG = "NotificationSetup"
 		private const val TAG_NOTIFICATION_SETUP_WORK = "NotificationSetupWork"
@@ -117,8 +117,8 @@ class NotificationSetupWorker @AssistedInject constructor(
 				), false)
 
 				val preparedItems = timetable
-					.sortedBy { it.startDateTime }
-					.merged(masterDataRepository)
+					.sortedBy { it.originalPeriod.startDateTime }
+					.merged()
 					.filter { !it.isCancelled() }
 					.zipWithNext()
 
@@ -205,35 +205,35 @@ class NotificationSetupWorker @AssistedInject constructor(
 			)
 			.putExtra(
 				EXTRA_STRING_NEXT_SUBJECT,
-				notificationEndPeriodItem.getShort(ElementType.SUBJECT)
+				notificationEndPeriodItem.subjects.toShortString()
 			)
 			.putExtra(
 				EXTRA_STRING_NEXT_SUBJECT_LONG,
-				notificationEndPeriodItem.getLong(ElementType.SUBJECT)
+				notificationEndPeriodItem.subjects.toLongString()
 			)
 			.putExtra(
 				EXTRA_STRING_NEXT_ROOM,
-				notificationEndPeriodItem.getShort(ElementType.ROOM)
+				notificationEndPeriodItem.rooms.toShortString()
 			)
 			.putExtra(
 				EXTRA_STRING_NEXT_ROOM_LONG,
-				notificationEndPeriodItem.getLong(ElementType.ROOM)
+				notificationEndPeriodItem.rooms.toLongString()
 			)
 			.putExtra(
 				EXTRA_STRING_NEXT_TEACHER,
-				notificationEndPeriodItem.getShort(ElementType.TEACHER)
+				notificationEndPeriodItem.teachers.toShortString()
 			)
 			.putExtra(
 				EXTRA_STRING_NEXT_TEACHER_LONG,
-				notificationEndPeriodItem.getLong(ElementType.TEACHER)
+				notificationEndPeriodItem.teachers.toLongString()
 			)
 			.putExtra(
 				EXTRA_STRING_NEXT_CLASS,
-				notificationEndPeriodItem.getShort(ElementType.CLASS)
+				notificationEndPeriodItem.classes.toShortString()
 			)
 			.putExtra(
 				EXTRA_STRING_NEXT_CLASS_LONG,
-				notificationEndPeriodItem.getLong(ElementType.CLASS)
+				notificationEndPeriodItem.classes.toLongString()
 			)
 
 		if (isFirst) intent.putExtra(EXTRA_BOOLEAN_FIRST, true)
@@ -248,7 +248,7 @@ class NotificationSetupWorker @AssistedInject constructor(
 		alarmManager.setBest(notificationTime, pendingIntent)
 		Log.d(
 			LOG_TAG,
-			"${notificationEndPeriodItem.getShort(ElementType.SUBJECT)} scheduled for $notificationTime"
+			"${notificationEndPeriodItem.subjects.toShortString()} scheduled for $notificationTime"
 		)
 
 		val deletingIntent = Intent(context, NotificationReceiver::class.java)
@@ -266,7 +266,7 @@ class NotificationSetupWorker @AssistedInject constructor(
 		)
 		Log.d(
 			LOG_TAG,
-			"${notificationEndPeriodItem.getShort(ElementType.SUBJECT)} delete scheduled for ${notificationEndPeriodItem.originalPeriod.startDateTime}"
+			"${notificationEndPeriodItem.subjects.toShortString()} delete scheduled for ${notificationEndPeriodItem.originalPeriod.startDateTime}"
 		)
 	}
 

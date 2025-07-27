@@ -6,11 +6,9 @@ import com.sapuseven.untis.R
 import com.sapuseven.untis.api.model.untis.Person
 import com.sapuseven.untis.api.model.untis.timetable.Period
 import com.sapuseven.untis.api.model.untis.timetable.PeriodData
-import com.sapuseven.untis.api.model.untis.timetable.PeriodElement
 import com.sapuseven.untis.data.repository.MasterDataRepository
 import com.sapuseven.untis.data.repository.TimetableRepository
 import com.sapuseven.untis.data.repository.UserRepository
-import com.sapuseven.untis.persistence.entity.ElementEntity
 import com.sapuseven.untis.ui.functional.StringResourceDescriptor
 import crocodile8.universal_cache.FromCache
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -117,16 +115,6 @@ class TimetableItemDetailsDialogViewModel @Inject constructor(
 
 	fun resetLessonTopicState() {
 		_lessonTopicUiState.value = LessonTopicUiState()
-	}
-
-	fun toEntities(elements: Set<PeriodElement>): Map<ElementEntity, Boolean> {
-		return elements.flatMap { element ->
-			val elementsOfType = allElements.value[element.type].orEmpty()
-			listOfNotNull(
-				elementsOfType.firstOrNull { it.id == element.id }?.let { it to false },
-				elementsOfType.firstOrNull { it.id == element.orgId }?.takeIf { element.id != element.orgId }?.let { it to true }
-			)
-		}.toMap()
 	}
 }
 

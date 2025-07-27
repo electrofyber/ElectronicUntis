@@ -44,10 +44,10 @@ import crocodile8.universal_cache.FromCache
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.FlowCollector
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.combine
@@ -56,6 +56,7 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withTimeoutOrNull
 import java.time.Clock
 import java.time.Instant
 import java.time.LocalDate
@@ -76,6 +77,12 @@ class TimetableViewModel @Inject constructor(
 ) : ViewModel() {
 	private val args = savedStateHandle.toRoute<AppRoutes.Timetable>()
 
+	private val allElements = masterDataRepository.timetableElements
+		.stateIn(
+			scope = viewModelScope,
+			started = SharingStarted.WhileSubscribed(5_000),
+			initialValue = emptyMap()
+		)
 	val requestedElement = args.getElement()?.let { masterDataRepository.getElement(it.id, it.type) }
 
 	var profileManagementDialog by mutableStateOf(false)
@@ -180,7 +187,6 @@ class TimetableViewModel @Inject constructor(
 		}
 
 		viewModelScope.launch {
-			delay(1000) // FIXME How can I get the currentUserData after it is initialized in masterDataRepository?
 			val holidays = (masterDataRepository.userData?.holidays ?: emptyList())
 				.map { holiday ->
 					Holiday(
@@ -334,9 +340,17 @@ class TimetableViewModel @Inject constructor(
 		startDate: LocalDate,
 		updateLastRefresh: Boolean = true
 	) = collect { result ->
+		// Give allElements some time to be loaded if it is empty
+		withTimeoutOrNull(1_000) {
+			if (allElements.value.isEmpty()) {
+				allElements.first { it.isNotEmpty() }
+			}
+		}
+
 		val events = timetableMapper.mapTimetablePeriodsToWeekViewEvents(
 			result.value,
-			requestedElement?.getType() ?: ElementType.STUDENT
+			requestedElement?.getType() ?: ElementType.STUDENT,
+			allElements = allElements.value
 		)
 		val refreshTimestamp = result.originTimeStamp?.let { Instant.ofEpochMilli(it) } ?: Instant.now()
 		emitEvents(mapOf(startDate to events))

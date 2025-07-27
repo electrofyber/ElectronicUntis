@@ -8,16 +8,18 @@ import android.content.Context.NOTIFICATION_SERVICE
 import android.os.Build
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
-import com.sapuseven.untis.api.model.untis.timetable.Period
 import com.sapuseven.untis.api.model.untis.timetable.PeriodElement
-import com.sapuseven.untis.persistence.entity.User
 import com.sapuseven.untis.data.repository.MasterDataRepository
 import com.sapuseven.untis.data.repository.TimetableRepository
 import com.sapuseven.untis.data.settings.model.UserSettings
+import com.sapuseven.untis.models.PeriodElementEntity
 import com.sapuseven.untis.models.PeriodItem
-import com.sapuseven.untis.models.mergeValuesWith
+import com.sapuseven.untis.persistence.entity.User
 import com.sapuseven.untis.ui.preferences.toPeriodElement
 import crocodile8.universal_cache.FromCache
+import kotlinx.coroutines.async
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.last
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -30,6 +32,7 @@ import java.time.ZoneId
 abstract class TimetableDependantWorker(
 	context: Context,
 	params: WorkerParameters,
+	private val masterDataRepository: MasterDataRepository,
 	private val timetableRepository: TimetableRepository,
 ) : CoroutineWorker(context, params) {
 	companion object {
@@ -43,11 +46,13 @@ abstract class TimetableDependantWorker(
 		user: User,
 		element: PeriodElement,
 		fromCache: FromCache
-	): List<Period> {
+	): List<PeriodItem> = coroutineScope {
 		val currentDate = LocalDate.now()
 
+		val allElementsDeferred = async { masterDataRepository.timetableElements.first() }
+
 		// TODO This doesn't take user id into account
-		return timetableRepository.timetableSource().get(
+		val timetable = timetableRepository.timetableSource().get(
 			params = TimetableRepository.TimetableParams(
 				element.id,
 				element.type,
@@ -58,6 +63,17 @@ abstract class TimetableDependantWorker(
 			maxAge = 60 * 60 * 1000,
 			additionalKey = user.id
 		).last()
+
+		val allElements = allElementsDeferred.await()
+
+		timetable.map { period ->
+			PeriodItem(
+				elements = period.elements.map { element ->
+					PeriodElementEntity(allElements = allElements, periodElement = element)
+				},
+				originalPeriod = period
+			)
+		}
 	}
 
 	internal fun canAutoMute(): Boolean {
@@ -71,13 +87,12 @@ abstract class TimetableDependantWorker(
 	}
 
 	/**
-	 * Merges all values from contemporaneous lessons.
+	 * Groups all lessons by start time and merges them into a single PeriodItem for each start time.
 	 * After this operation, every time period only has a single lesson containing all subjects, teachers, rooms and classes.
 	 */
-	internal fun List<Period>.merged(masterDataRepository: MasterDataRepository): List<PeriodItem> = this
-		.map { PeriodItem(masterDataRepository, it) }
+	internal fun List<PeriodItem>.merged(): List<PeriodItem> = this
 		.groupBy { it.originalPeriod.startDateTime }
-		.map { it.value.reduce { item1, item2 -> item1.mergeValuesWith(item2); item1 } }
+		.map { it.value.reduce { item1, item2 -> item1 + item2; item1 } }
 
 	/**
 	 * Creates a copy of a zipped list with the very last element duplicated into a new Pair whose second element is null.

@@ -59,10 +59,11 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.sapuseven.untis.BuildConfig
 import com.sapuseven.untis.R
 import com.sapuseven.untis.api.model.untis.Attachment
-import com.sapuseven.untis.api.model.untis.enumeration.ElementType
 import com.sapuseven.untis.api.model.untis.enumeration.PeriodRight
 import com.sapuseven.untis.api.model.untis.timetable.PeriodData
+import com.sapuseven.untis.models.PeriodElementEntity
 import com.sapuseven.untis.models.PeriodItem
+import com.sapuseven.untis.models.toLongString
 import com.sapuseven.untis.persistence.entity.ElementEntity
 import com.sapuseven.untis.ui.common.AppScaffold
 import com.sapuseven.untis.ui.common.ClickableUrlText
@@ -239,7 +240,7 @@ private fun TimetableItemDetailsDialogPage(
 	viewModel: TimetableItemDetailsDialogViewModel = hiltViewModel()
 ) {
 	val uriHandler = LocalUriHandler.current
-	val title = periodItem.getLong(ElementType.SUBJECT).let { title ->
+	val title = periodItem.subjects.toLongString().let { title ->
 		if (periodItem.isCancelled())
 			stringResource(R.string.all_lesson_cancelled, title)
 		else if (periodItem.isIrregular())
@@ -312,7 +313,7 @@ private fun TimetableItemDetailsDialogPage(
 
 		// Lesson teachers
 		TimetableItemDetailsDialogElement(
-			elements = viewModel.toEntities(periodItem.teachers),
+			elements = periodItem.teachers,
 			onElementClick = { onElementClick(it) },
 			useLongName = true,
 			icon = {
@@ -327,7 +328,7 @@ private fun TimetableItemDetailsDialogPage(
 
 		// Lesson classes
 		TimetableItemDetailsDialogElement(
-			elements = viewModel.toEntities(periodItem.classes),
+			elements = periodItem.classes,
 			onElementClick = { onElementClick(it) },
 			icon = {
 				Icon(
@@ -341,7 +342,7 @@ private fun TimetableItemDetailsDialogPage(
 
 		// Lesson rooms
 		TimetableItemDetailsDialogElement(
-			elements = viewModel.toEntities(periodItem.rooms),
+			elements = periodItem.rooms,
 			onElementClick = { onElementClick(it) },
 			icon = {
 				Icon(
@@ -669,7 +670,7 @@ private fun ListItemWithPeriodData(
 
 @Composable
 private fun TimetableItemDetailsDialogElement(
-	elements: Map<ElementEntity, Boolean>,
+	elements: List<PeriodElementEntity>,
 	icon: (@Composable () -> Unit)? = null,
 	useLongName: Boolean = false,
 	onElementClick: (element: ElementEntity) -> Unit
@@ -681,20 +682,21 @@ private fun TimetableItemDetailsDialogElement(
 					modifier = Modifier.horizontalScroll(rememberScrollState()),
 					horizontalArrangement = Arrangement.spacedBy(8.dp)
 				) {
-					elements.forEach { (element, isDisabled) ->
-						Text(
-							text = if (useLongName) element.getLongName() else element.getShortName(),
-							style = LocalTextStyle.current.let {
-								if (isDisabled) it.copy(textDecoration = TextDecoration.LineThrough) else it
-							},
-							modifier = Modifier
-								.clip(RoundedCornerShape(50))
-								.clickable {
-									onElementClick(element)
-								}
-								.padding(8.dp)
-						)
-					}
+					elements.flatMap { e -> listOfNotNull(e.entity to false, e.replacementEntity?.let { it to true }) }
+						.forEach { (element, isReplacement) ->
+							Text(
+								text = if (useLongName) element.getLongName() else element.getShortName(),
+								style = LocalTextStyle.current.let {
+									if (isReplacement) it.copy(textDecoration = TextDecoration.LineThrough) else it
+								},
+								modifier = Modifier
+									.clip(RoundedCornerShape(50))
+									.clickable {
+										onElementClick(element)
+									}
+									.padding(8.dp)
+							)
+						}
 				}
 			},
 			leadingContent = icon
