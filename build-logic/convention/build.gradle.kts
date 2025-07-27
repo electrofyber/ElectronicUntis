@@ -27,6 +27,7 @@ dependencies {
 	compileOnly(libs.plugin.kotlin)
 	compileOnly(libs.plugin.ksp)
 	compileOnly(libs.plugin.room)
+	compileOnly(libs.plugin.sentry)
 //	implementation(libs.truth)
 //	lintChecks(libs.androidx.lint.gradle)
 }
@@ -40,14 +41,18 @@ tasks {
 
 gradlePlugin {
 	plugins {
-//		register("androidApplication") {
-//			id = libs.plugins.betteruntis.android.application.asProvider().get().pluginId
-//			implementationClass = "AndroidApplicationConventionPlugin"
-//		}
-//		register("androidApplicationCompose") {
-//			id = libs.plugins.betteruntis.android.application.compose.get().pluginId
-//			implementationClass = "AndroidApplicationComposeConventionPlugin"
-//		}
+		register("androidApplication") {
+			id = libs.plugins.betteruntis.android.application.asProvider().get().pluginId
+			implementationClass = "AndroidApplicationConventionPlugin"
+		}
+		register("androidApplicationCompose") {
+			id = libs.plugins.betteruntis.android.application.compose.get().pluginId
+			implementationClass = "AndroidApplicationComposeConventionPlugin"
+		}
+		register("androidApplicationSentry") {
+			id = libs.plugins.betteruntis.android.application.sentry.get().pluginId
+			implementationClass = "AndroidApplicationSentryConventionPlugin"
+		}
 //		register("androidApplicationJacoco") {
 //			id = libs.plugins.betteruntis.android.application.jacoco.get().pluginId
 //			implementationClass = "AndroidApplicationJacocoConventionPlugin"

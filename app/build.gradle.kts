@@ -6,15 +6,13 @@ import java.util.Date
 import java.util.Properties
 
 plugins {
-	alias(libs.plugins.agp.application)
-	alias(libs.plugins.sentry.gradle)
-	alias(libs.plugins.kotlin.android)
-	alias(libs.plugins.kotlin.compose)
-	alias(libs.plugins.kotlin.serialization)
+	alias(libs.plugins.betteruntis.android.application)
+	alias(libs.plugins.betteruntis.android.application.compose)
+	alias(libs.plugins.betteruntis.android.application.sentry)
+	alias(libs.plugins.betteruntis.hilt)
+
 	alias(libs.plugins.mikepenz.aboutlibraries)
-	alias(libs.plugins.ksp)
 	alias(libs.plugins.mannodermaus.android.junit5)
-	alias(libs.plugins.hilt)
 	alias(libs.plugins.kotlin.parcelize)
 	alias(libs.plugins.protobuf)
 }
@@ -28,22 +26,13 @@ val gmsImplementation: Configuration by configurations.creating
 
 android {
 	namespace = "com.sapuseven.untis"
-	compileSdk = 35
-
-	androidResources {
-		generateLocaleConfig = true
-	}
 
 	defaultConfig {
 		applicationId = "com.sapuseven.untis"
-		minSdk = 21
-		targetSdk = 35
 		versionCode = generateVersionCode()
 		versionName = "5.0.0-beta04"
-		vectorDrawables.useSupportLibrary = true
-		testInstrumentationRunner = "com.sapuseven.untis.HiltTestRunner"
 
-		buildConfigField("String", "SENTRY_DSN", "\"https://d3b77222abce4fcfa74fda2185e0f8dc@o1136770.ingest.sentry.io/6188900\"")
+		testInstrumentationRunner = "com.sapuseven.untis.HiltTestRunner"
 	}
 
 	signingConfigs {
@@ -72,6 +61,15 @@ android {
 	}
 
 	buildTypes {
+		debug {
+			applicationIdSuffix = ".debug"
+			versionNameSuffix = "-DEBUG"
+
+			if (file("BetterUntis.jks").exists()) {
+				signingConfig = signingConfigs.getByName("debug")
+			}
+		}
+
 		release {
 			isMinifyEnabled = true
 			isShrinkResources = true
@@ -81,37 +79,6 @@ android {
 				signingConfig = signingConfigs.getByName("release")
 			}
 		}
-
-		debug {
-			isMinifyEnabled = false
-			isShrinkResources = false
-			applicationIdSuffix = ".debug"
-			versionNameSuffix = "-DEBUG"
-
-			kotlinOptions {
-				freeCompilerArgs = listOf("-Xdebug")
-			}
-
-			if (file("BetterUntis.jks").exists()) {
-				signingConfig = signingConfigs.getByName("debug")
-			}
-		}
-	}
-
-	buildFeatures {
-		buildConfig = true
-		compose = true
-	}
-
-	compileOptions {
-		isCoreLibraryDesugaringEnabled = true
-
-		sourceCompatibility = JavaVersion.VERSION_17
-		targetCompatibility = JavaVersion.VERSION_17
-	}
-
-	kotlinOptions {
-		jvmTarget = JavaVersion.VERSION_17.toString()
 	}
 
 	packaging {
@@ -135,13 +102,9 @@ android {
 	}
 }
 
-sentry {
-	autoUploadProguardMapping.set(System.getenv("SENTRY_PROJECT") != null)
-}
-
 aboutLibraries {
-	includePlatform = false
-	duplicationMode = com.mikepenz.aboutlibraries.plugin.DuplicateMode.MERGE
+	collect.includePlatform = false
+	library.duplicationMode = com.mikepenz.aboutlibraries.plugin.DuplicateMode.MERGE
 }
 
 protobuf {
@@ -217,8 +180,6 @@ dependencies {
 	implementation(libs.material.theme.adapter)
 	implementation(libs.mikepenz.aboutlibraries.compose)
 	implementation(libs.mikepenz.aboutlibraries.core)
-	implementation(libs.sentry.android)
-	implementation(libs.sentry.compose.android)
 	implementation(libs.zxing)
 	implementation(libs.protobuf.javalite)
 	implementation(libs.androidx.transition.ktx)

@@ -26,4 +26,5 @@ plugins {
 	alias(libs.plugins.kotlin.parcelize) apply false
 	alias(libs.plugins.protobuf) apply false
 	alias(libs.plugins.room) apply false
+	alias(libs.plugins.sentry) apply false
 }

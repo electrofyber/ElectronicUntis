@@ -15,6 +15,7 @@ internal fun Project.configureAndroidCompose(
 ) {
 	commonExtension.apply {
 		buildFeatures {
+			buildConfig = true
 			compose = true
 		}
 

@@ -139,6 +139,7 @@ plugin-compose = { module = "org.jetbrains.kotlin:compose-compiler-gradle-plugin
 plugin-kotlin = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin", version.ref = "kotlin" }
 plugin-ksp = { group = "com.google.devtools.ksp", name = "com.google.devtools.ksp.gradle.plugin", version.ref = "ksp" }
 plugin-room = { group = "androidx.room", name = "room-gradle-plugin", version.ref = "androidx-room" }
+plugin-sentry = { group = "io.sentry", name = "sentry-android-gradle-plugin", version.ref = "sentry-gradle" }
 
 [plugins]
 agp-application = { id = "com.android.application", version.ref = "android-gradle-plugin" }
@@ -155,11 +156,12 @@ mikepenz-aboutlibraries = { id = "com.mikepenz.aboutlibraries.plugin", version.r
 openapi-generator = { id = "org.openapi.generator", version.ref = "openapi" }
 protobuf = { id = "com.google.protobuf", version.ref = "protobuf" }
 room = { id = "androidx.room", version.ref = "androidx-room" }
-sentry-gradle = { id = "io.sentry.android.gradle", version.ref = "sentry-gradle" }
+sentry = { id = "io.sentry.android.gradle", version.ref = "sentry-gradle" }
 
 # Plugins defined by this project
 betteruntis-android-application = { id = "betteruntis.android.application" }
 betteruntis-android-application-compose = { id = "betteruntis.android.application.compose" }
+betteruntis-android-application-sentry = { id = "betteruntis.android.application.sentry" }
 betteruntis-android-feature = { id = "betteruntis.android.feature" }
 betteruntis-android-library = { id = "betteruntis.android.library" }
 betteruntis-android-library-compose = { id = "betteruntis.android.library.compose" }
