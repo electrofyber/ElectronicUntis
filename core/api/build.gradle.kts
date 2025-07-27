@@ -1,32 +1,10 @@
-import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.openapitools.generator.gradle.plugin.tasks.GenerateTask
 import java.util.Locale
 
 plugins {
-	alias(libs.plugins.kotlin.jvm)
-	alias(libs.plugins.kotlin.serialization)
+	alias(libs.plugins.betteruntis.jvm.library)
 	alias(libs.plugins.openapi.generator)
 }
-
-java {
-	sourceCompatibility = JavaVersion.VERSION_17
-	targetCompatibility = JavaVersion.VERSION_17
-}
-
-
-tasks {
-	compileKotlin {
-		compilerOptions.jvmTarget = JvmTarget.JVM_17
-		compilerOptions.freeCompilerArgs = listOf(
-			"-opt-in=kotlin.contracts.ExperimentalContracts",
-			"-Xjvm-default=all-compatibility",
-		)
-	}
-	compileTestKotlin {
-		compilerOptions.jvmTarget = JvmTarget.JVM_17
-	}
-}
-//compileKotlin.dependsOn tasks.openApiGenerate
 
 dependencies {
 	implementation(libs.kotlinx.serialization.json)
@@ -48,6 +26,7 @@ apiSpecList.forEach { file ->
 	val taskName = "Untis" + apiName.split('-').joinToString("") { it.replaceFirstChar { c -> c.titlecase(Locale.getDefault()) } }
 	val packageName = apiName.replace("-", "_")
 
+	// Register OpenAPI generator task for each API spec
 	tasks.register("openApiGenerate$taskName", GenerateTask::class) {
 		generatorName.set("kotlin")
 		inputSpec.set("${layout.projectDirectory}/spec/untis-intern/untis-$apiName.yaml")
@@ -67,6 +46,8 @@ apiSpecList.forEach { file ->
 			)
 		)
 	}
+
+	// Ensure all OpenAPI generation tasks run before compiling Kotlin
 	tasks.named("compileKotlin").configure {
 		dependsOn("openApiGenerate$taskName")
 	}

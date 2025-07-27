@@ -12,7 +12,7 @@ dependencies {
 	implementation(libs.andrew0000.cache)
 	implementation(libs.sapuseven.protostore) // move to core:datastore
 
-	implementation(project(":api")) // move to core:api or similar
+	implementation(projects.core.api)
 
 	// <editor-fold desc="Fix crash from missing `beginTransactionReadOnly()` method in Room due to sqlite version mismatch">
 	// see https://issuetracker.google.com/issues/400483860#comment7

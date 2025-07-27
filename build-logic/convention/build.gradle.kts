@@ -88,9 +88,9 @@ gradlePlugin {
 //			id = libs.plugins.betteruntis.android.lint.get().pluginId
 //			implementationClass = "AndroidLintConventionPlugin"
 //		}
-//		register("jvmLibrary") {
-//			id = libs.plugins.betteruntis.jvm.library.get().pluginId
-//			implementationClass = "JvmLibraryConventionPlugin"
-//		}
+		register("jvmLibrary") {
+			id = libs.plugins.betteruntis.jvm.library.get().pluginId
+			implementationClass = "JvmLibraryConventionPlugin"
+		}
 	}
 }

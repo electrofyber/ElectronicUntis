@@ -252,9 +252,8 @@ dependencies {
 	androidTestImplementation(libs.hilt.android.testing)
 	debugImplementation(libs.androidx.compose.ui.test.manifest)
 
-	implementation(project(":api"))
-	//implementation(project(":feature:glance"))
 	implementation(projects.feature.glance)
+	implementation(projects.core.api)
 	implementation(projects.core.database)
 	implementation(project(":material-color-utils"))
 }

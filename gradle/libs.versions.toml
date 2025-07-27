@@ -160,9 +160,9 @@ sentry-gradle = { id = "io.sentry.android.gradle", version.ref = "sentry-gradle"
 # Plugins defined by this project
 betteruntis-android-application = { id = "betteruntis.android.application" }
 betteruntis-android-application-compose = { id = "betteruntis.android.application.compose" }
-betteruntis-android-application-flavors = { id = "betteruntis.android.application.flavors" }
 betteruntis-android-feature = { id = "betteruntis.android.feature" }
 betteruntis-android-library = { id = "betteruntis.android.library" }
 betteruntis-android-library-compose = { id = "betteruntis.android.library.compose" }
 betteruntis-android-room = { id = "betteruntis.android.room" }
 betteruntis-hilt = { id = "betteruntis.hilt" }
+betteruntis-jvm-library = { id = "betteruntis.jvm.library" }
