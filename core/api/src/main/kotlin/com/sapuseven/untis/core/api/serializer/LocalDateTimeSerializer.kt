@@ -16,7 +16,7 @@ object LocalDateTimeSerializer : KSerializer<LocalDateTime> {
 	private val format = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm[:ss]['Z']")
 
 	override val descriptor: SerialDescriptor =
-		PrimitiveSerialDescriptor("java.time.LocalDateTime", PrimitiveKind.STRING)
+		PrimitiveSerialDescriptor("kotlin.time.LocalDateTime", PrimitiveKind.STRING)
 
 	override fun serialize(encoder: Encoder, value: LocalDateTime) {
 		val string = value.format(format)

@@ -29,8 +29,8 @@ import com.sapuseven.untis.data.settings.model.DarkTheme
 import com.sapuseven.untis.data.settings.model.UserSettings
 import com.sapuseven.untis.helpers.AppTheme
 import com.sapuseven.untis.helpers.ThemeMode
-import com.sapuseven.untis.ui.common.AppScaffold
-import com.sapuseven.untis.ui.common.ReportsInfoBottomSheet
+import com.sapuseven.untis.core.ui.common.AppScaffold
+import com.sapuseven.untis.core.ui.common.ReportsInfoBottomSheet
 import com.sapuseven.untis.ui.navigation.AppNavHost
 import com.sapuseven.untis.ui.navigation.AppNavigator
 import com.sapuseven.untis.ui.navigation.AppRoutes

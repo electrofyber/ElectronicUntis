@@ -32,9 +32,6 @@
 -keepclassmembernames class kotlinx.** {
     volatile <fields>;
 }
--keepclassmembers class * extends com.google.protobuf.GeneratedMessageLite {
-    <fields>;
-}
 
 -keep public class * extends androidx.lifecycle.ViewModel { *; }
 

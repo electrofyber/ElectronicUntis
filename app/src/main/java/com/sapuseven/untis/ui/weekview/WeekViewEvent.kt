@@ -32,7 +32,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.core.graphics.ColorUtils
-import com.sapuseven.untis.ui.common.ifNotNull
+import com.sapuseven.untis.core.ui.common.ifNotNull
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.ZoneId

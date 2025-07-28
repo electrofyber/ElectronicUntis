@@ -65,14 +65,14 @@ import com.sapuseven.untis.models.PeriodElementEntity
 import com.sapuseven.untis.models.PeriodItem
 import com.sapuseven.untis.models.toLongString
 import com.sapuseven.untis.core.database.entity.ElementEntity
-import com.sapuseven.untis.ui.common.AppScaffold
-import com.sapuseven.untis.ui.common.ClickableUrlText
-import com.sapuseven.untis.ui.common.DebugTimetableItemDetailsAction
-import com.sapuseven.untis.ui.common.HorizontalPagerIndicator
-import com.sapuseven.untis.ui.common.SmallCircularProgressIndicator
-import com.sapuseven.untis.ui.dialogs.AttachmentsDialog
-import com.sapuseven.untis.ui.dialogs.DynamicHeightAlertDialog
-import com.sapuseven.untis.ui.functional.bottomInsets
+import com.sapuseven.untis.core.ui.common.AppScaffold
+import com.sapuseven.untis.core.ui.common.ClickableUrlText
+import com.sapuseven.untis.core.ui.common.DebugTimetableItemDetailsAction
+import com.sapuseven.untis.core.ui.common.HorizontalPagerIndicator
+import com.sapuseven.untis.core.ui.common.SmallCircularProgressIndicator
+import com.sapuseven.untis.core.ui.dialogs.AttachmentsDialog
+import com.sapuseven.untis.core.ui.dialogs.DynamicHeightAlertDialog
+import com.sapuseven.untis.core.ui.functional.bottomInsets
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
 

@@ -12,7 +12,7 @@ import java.util.Locale
 
 object DayOfWeekSerializer : KSerializer<DayOfWeek> {
 	override val descriptor: SerialDescriptor =
-		PrimitiveSerialDescriptor("java.time.DayOfWeek", PrimitiveKind.STRING)
+		PrimitiveSerialDescriptor("kotlin.time.DayOfWeek", PrimitiveKind.STRING)
 
 	override fun serialize(encoder: Encoder, value: DayOfWeek) {
 		encoder.encodeString(value.getDisplayName(TextStyle.SHORT, Locale.ENGLISH).uppercase())

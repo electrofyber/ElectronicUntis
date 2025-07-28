@@ -21,8 +21,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.sapuseven.untis.ui.common.conditional
-import com.sapuseven.untis.ui.common.ifNotNull
+import com.sapuseven.untis.core.ui.common.conditional
+import com.sapuseven.untis.core.ui.common.ifNotNull
 import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter

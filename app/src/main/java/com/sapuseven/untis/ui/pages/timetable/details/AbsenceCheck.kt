@@ -28,9 +28,9 @@ import com.sapuseven.untis.core.api.model.untis.timetable.PeriodData
 import com.sapuseven.untis.data.repository.TimetableRepository
 import com.sapuseven.untis.ui.animations.fullscreenDialogAnimationEnter
 import com.sapuseven.untis.ui.animations.fullscreenDialogAnimationExit
-import com.sapuseven.untis.ui.common.SmallCircularProgressIndicator
-import com.sapuseven.untis.ui.dialogs.TimePickerDialog
-import com.sapuseven.untis.ui.functional.insetsPaddingValues
+import com.sapuseven.untis.core.ui.common.SmallCircularProgressIndicator
+import com.sapuseven.untis.core.ui.dialogs.TimePickerDialog
+import com.sapuseven.untis.core.ui.functional.insetsPaddingValues
 import kotlinx.coroutines.CoroutineScope
 import java.time.LocalDateTime
 import java.time.LocalTime

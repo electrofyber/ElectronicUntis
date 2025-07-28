@@ -302,7 +302,7 @@
     <string name="errors_button_report">Prijavi sve</string>
     <string name="infocenter_absence_excused">Opravdano</string>
     <string name="infocenter_absence_unexcused">Neopravdano</string>
-    <string name="mainactivitydrawer_profile_edit">Uredi profile</string>
+    <string name="core_ui_profile_edit">Uredi profile</string>
     <string name="preference_info_license">Licenca</string>
     <string name="preference_info_privacy">Eksterni sadržaj</string>
     <string name="preference_info_privacy_desc">Doprinositelji se učitavaju s GitHuba. Za daljnje informacije pročitaj njihovu zaštitu privatnosti.</string>

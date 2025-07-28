@@ -33,7 +33,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.sapuseven.untis.BuildConfig
 import com.sapuseven.untis.R
-import com.sapuseven.untis.ui.common.MessageBubble
+import com.sapuseven.untis.core.ui.common.MessageBubble
 
 @Composable
 private fun PermissionInfoMessage(

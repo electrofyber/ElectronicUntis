@@ -19,7 +19,7 @@ import coil.compose.AsyncImagePainter
 import coil.compose.rememberAsyncImagePainter
 import com.sapuseven.untis.R
 import com.sapuseven.untis.data.model.github.GitHubUser
-import com.sapuseven.untis.ui.common.ifNotNull
+import com.sapuseven.untis.core.ui.common.ifNotNull
 import io.github.fornewid.placeholder.foundation.PlaceholderDefaults
 import io.github.fornewid.placeholder.foundation.PlaceholderHighlight
 import io.github.fornewid.placeholder.foundation.placeholder

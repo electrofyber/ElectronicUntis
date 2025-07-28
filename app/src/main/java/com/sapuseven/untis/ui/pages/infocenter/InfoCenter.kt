@@ -32,8 +32,8 @@ import com.sapuseven.untis.R
 import com.sapuseven.untis.data.repository.LocalMasterDataRepository
 import com.sapuseven.untis.ui.animations.fullscreenDialogAnimationEnter
 import com.sapuseven.untis.ui.animations.fullscreenDialogAnimationExit
-import com.sapuseven.untis.ui.common.AppScaffold
-import com.sapuseven.untis.ui.common.NavigationBarInset
+import com.sapuseven.untis.core.ui.common.AppScaffold
+import com.sapuseven.untis.core.ui.common.NavigationBarInset
 import com.sapuseven.untis.ui.navigation.AppRoutes
 import com.sapuseven.untis.ui.pages.infocenter.fragments.AbsenceFilterDialog
 

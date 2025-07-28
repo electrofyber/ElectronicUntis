@@ -44,7 +44,7 @@ import com.sapuseven.untis.core.api.model.untis.timetable.PeriodElement
 import com.sapuseven.untis.core.database.entity.ElementEntity
 import com.sapuseven.untis.ui.animations.fullscreenDialogAnimationEnter
 import com.sapuseven.untis.ui.animations.fullscreenDialogAnimationExit
-import com.sapuseven.untis.ui.dialogs.ElementPickerDialogFullscreen
+import com.sapuseven.untis.core.ui.dialogs.ElementPickerDialogFullscreen
 import com.sapuseven.untis.ui.preferences.toElementEntity
 import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json

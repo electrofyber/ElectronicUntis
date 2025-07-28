@@ -66,13 +66,13 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.journeyapps.barcodescanner.ScanContract
 import com.sapuseven.untis.R
-import com.sapuseven.untis.ui.common.AppScaffold
-import com.sapuseven.untis.ui.common.LabeledCheckbox
-import com.sapuseven.untis.ui.common.LabeledSwitch
-import com.sapuseven.untis.ui.common.MessageBubble
-import com.sapuseven.untis.ui.common.SmallCircularProgressIndicator
-import com.sapuseven.untis.ui.common.ifNotNull
-import com.sapuseven.untis.ui.functional.bottomInsets
+import com.sapuseven.untis.core.ui.common.AppScaffold
+import com.sapuseven.untis.core.ui.common.LabeledCheckbox
+import com.sapuseven.untis.core.ui.common.LabeledSwitch
+import com.sapuseven.untis.core.ui.common.MessageBubble
+import com.sapuseven.untis.core.ui.common.SmallCircularProgressIndicator
+import com.sapuseven.untis.core.ui.common.ifNotNull
+import com.sapuseven.untis.core.ui.functional.bottomInsets
 import com.sapuseven.untis.ui.pages.login.schoolsearch.SchoolSearch
 import kotlinx.coroutines.launch
 

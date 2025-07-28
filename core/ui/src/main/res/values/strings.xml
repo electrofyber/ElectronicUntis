@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<string name="core_ui_button_cancel">Cancel</string>
+	<string name="core_ui_button_delete">Delete</string>
+
+	<string name="core_ui_profiles_show">Show profile list</string>
+	<string name="core_ui_profile_add">Add a profile</string>
+	<string name="core_ui_profile_edit">Edit profiles</string>
+	<string name="core_ui_profile_edit_hint">Tap on a profile to edit</string>
+	<string name="core_ui_profile_delete_hint">Long-press a profile to edit</string>
+	<string name="core_ui_profile_dialog_delete_message">Are you sure you want to delete your profile with user %1$s at school %2$s\?</string>
+	<string name="core_ui_profile_dialog_delete_title">Delete profile?</string>
+</resources>

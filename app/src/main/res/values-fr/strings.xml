@@ -286,7 +286,7 @@
     <string name="all_lessontopic_edit">Editer le sujet de la leçon</string>
     <string name="preference_automute_mute_priority">Ne pas permettre aux événements prioritaires d\'ignorer la mise en sourdine automatique</string>
     <string name="errors_button_dismiss">Rejeter tout</string>
-    <string name="mainactivitydrawer_profile_edit">Modifier les profils</string>
+    <string name="core_ui_profile_edit">Modifier les profils</string>
     <string name="settings_recommend_title">Recommander BetterUntis</string>
     <string name="preference_automute_minimum_break_length_summary">Ne pas rétablir le son de l\'appareil pendant les pauses d\'une durée inférieure à la durée spécifiée (en minutes)</string>
     <string name="settings_dialog_url_open_title">Aucune application compatible trouvée</string>

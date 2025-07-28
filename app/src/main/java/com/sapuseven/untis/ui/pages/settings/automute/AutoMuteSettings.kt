@@ -37,7 +37,7 @@ import com.sapuseven.compose.protostore.ui.preferences.SliderPreference
 import com.sapuseven.compose.protostore.ui.preferences.SwitchPreference
 import com.sapuseven.compose.protostore.ui.utils.LocalListItemColors
 import com.sapuseven.untis.R
-import com.sapuseven.untis.ui.common.AppScaffold
+import com.sapuseven.untis.core.ui.common.AppScaffold
 import kotlinx.coroutines.launch
 
 @RequiresApi(Build.VERSION_CODES.M)

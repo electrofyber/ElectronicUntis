@@ -42,14 +42,14 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.sapuseven.untis.R
 import com.sapuseven.untis.ui.animations.fullscreenDialogAnimationEnter
 import com.sapuseven.untis.ui.animations.fullscreenDialogAnimationExit
-import com.sapuseven.untis.ui.common.AppScaffold
-import com.sapuseven.untis.ui.common.DebugDesclaimerAction
-import com.sapuseven.untis.ui.common.ProfileSelectorAction
-import com.sapuseven.untis.ui.common.disabled
-import com.sapuseven.untis.ui.dialogs.FeedbackDialog
-import com.sapuseven.untis.ui.dialogs.ProfileManagementDialog
-import com.sapuseven.untis.ui.functional.bottomInsets
-import com.sapuseven.untis.ui.functional.insetsPaddingValues
+import com.sapuseven.untis.core.ui.common.AppScaffold
+import com.sapuseven.untis.core.ui.common.DebugDisclaimerAction
+import com.sapuseven.untis.core.ui.common.ProfileSelectorAction
+import com.sapuseven.untis.core.ui.common.disabled
+import com.sapuseven.untis.core.ui.dialogs.FeedbackDialog
+import com.sapuseven.untis.core.ui.dialogs.ProfileManagementDialog
+import com.sapuseven.untis.core.ui.functional.bottomInsets
+import com.sapuseven.untis.core.ui.functional.insetsPaddingValues
 import com.sapuseven.untis.ui.pages.timetable.details.TimetableItemDetailsDialog
 import com.sapuseven.untis.ui.weekview.WeekViewCompose
 import com.sapuseven.untis.ui.weekview.WeekViewStyle
@@ -120,7 +120,7 @@ fun Timetable(
 					},
 					actions = {
 						if (viewModel.isDebug)
-							DebugDesclaimerAction()
+							DebugDisclaimerAction()
 
 						ProfileSelectorAction(
 							users = users,

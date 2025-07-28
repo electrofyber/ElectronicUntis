@@ -1,5 +1,6 @@
 package com.sapuseven.untis.helpers
 
+import com.sapuseven.untis.core.ui.utils.TextUtils
 import org.hamcrest.CoreMatchers.`is`
 import org.hamcrest.MatcherAssert.assertThat
 import org.junit.Test

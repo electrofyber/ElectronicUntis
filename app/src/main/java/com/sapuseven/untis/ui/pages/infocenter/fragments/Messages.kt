@@ -60,9 +60,9 @@ import com.sapuseven.untis.R
 import com.sapuseven.untis.core.api.model.untis.Attachment
 import com.sapuseven.untis.core.api.model.untis.MessageOfDay
 import com.sapuseven.untis.model.rest.Message
-import com.sapuseven.untis.ui.common.MessageBubble
-import com.sapuseven.untis.ui.common.MessageBubbleDefaults
-import com.sapuseven.untis.ui.dialogs.AttachmentsDialog
+import com.sapuseven.untis.core.ui.common.MessageBubble
+import com.sapuseven.untis.core.ui.common.MessageBubbleDefaults
+import com.sapuseven.untis.core.ui.dialogs.AttachmentsDialog
 import com.sapuseven.untis.ui.pages.infocenter.InfoCenterViewModel
 import io.github.fornewid.placeholder.foundation.PlaceholderDefaults
 import io.github.fornewid.placeholder.foundation.PlaceholderHighlight

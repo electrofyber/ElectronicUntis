@@ -15,8 +15,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavController
 import com.mikepenz.aboutlibraries.ui.compose.m3.LibrariesContainer
 import com.sapuseven.untis.R
-import com.sapuseven.untis.ui.common.AppScaffold
-import com.sapuseven.untis.ui.functional.insetsPaddingValues
+import com.sapuseven.untis.core.ui.common.AppScaffold
+import com.sapuseven.untis.core.ui.functional.insetsPaddingValues
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

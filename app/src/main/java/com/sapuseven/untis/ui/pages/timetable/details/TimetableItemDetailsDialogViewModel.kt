@@ -9,8 +9,7 @@ import com.sapuseven.untis.core.api.model.untis.timetable.PeriodData
 import com.sapuseven.untis.data.repository.MasterDataRepository
 import com.sapuseven.untis.data.repository.TimetableRepository
 import com.sapuseven.untis.data.repository.UserRepository
-import com.sapuseven.untis.ui.functional.StringResourceDescriptor
-import crocodile8.universal_cache.FromCache
+import com.sapuseven.untis.core.ui.functional.StringResourceDescriptor
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -43,8 +42,7 @@ class TimetableItemDetailsDialogViewModel @Inject constructor(
 
 	fun loadPeriodData(periods: Set<Period>) {
 		viewModelScope.launch {
-			timetableRepository.periodDataSource()
-				.get(periods, FromCache.IF_FAILED, additionalKey = userRepository.currentUser!!)
+			timetableRepository.getPeriodData(periods)
 				.catch { /* TODO handle error */ }
 				.collect { result ->
 					_uiState.update { state ->

@@ -50,10 +50,10 @@ import com.sapuseven.untis.models.RoomFinderHour
 import com.sapuseven.untis.models.RoomFinderItem
 import com.sapuseven.untis.ui.animations.fullscreenDialogAnimationEnter
 import com.sapuseven.untis.ui.animations.fullscreenDialogAnimationExit
-import com.sapuseven.untis.ui.common.AppScaffold
-import com.sapuseven.untis.ui.common.SmallCircularProgressIndicator
-import com.sapuseven.untis.ui.dialogs.ElementPickerDialogFullscreen
-import com.sapuseven.untis.ui.functional.bottomInsets
+import com.sapuseven.untis.core.ui.common.AppScaffold
+import com.sapuseven.untis.core.ui.common.SmallCircularProgressIndicator
+import com.sapuseven.untis.core.ui.dialogs.ElementPickerDialogFullscreen
+import com.sapuseven.untis.core.ui.functional.bottomInsets
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
 import java.time.format.TextStyle

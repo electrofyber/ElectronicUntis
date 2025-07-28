@@ -27,7 +27,7 @@ data class RoomEntity(
 	override val foreColor: String? = null,
 	override val backColor: String? = null,
 	override val active: Boolean = false,
-	val displayAllowed: Boolean = false
+	override val allowed: Boolean = true
 ) : ElementEntity(), Comparable<String> {
 	companion object : EntityMapper<Room, RoomEntity> {
 		override fun map(from: Room, userId: Long) = RoomEntity(
@@ -39,20 +39,18 @@ data class RoomEntity(
 			foreColor = from.foreColor,
 			backColor = from.backColor,
 			active = from.active,
-			displayAllowed = from.displayAllowed,
+			allowed = from.displayAllowed,
 		)
 	}
+
+	override val type = ElementType.ROOM
 
 	override fun compareTo(other: String) = if (
 		name.contains(other, true)
 		|| longName.contains(other, true)
 	) 0 else name.compareTo(other)
 
-	override fun getType() = ElementType.ROOM
-
 	override fun getShortName(default: String) = name
 
 	override fun getLongName(default: String) = longName
-
-	override fun isAllowed() = displayAllowed
 }

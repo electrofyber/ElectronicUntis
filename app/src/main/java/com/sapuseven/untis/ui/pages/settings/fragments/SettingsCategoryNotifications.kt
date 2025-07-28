@@ -30,7 +30,7 @@ import com.sapuseven.compose.protostore.ui.preferences.PreferenceGroup
 import com.sapuseven.compose.protostore.ui.preferences.SwitchPreference
 import com.sapuseven.untis.R
 import com.sapuseven.untis.data.settings.model.NotificationVisibility
-import com.sapuseven.untis.ui.common.disabled
+import com.sapuseven.untis.core.ui.common.disabled
 import com.sapuseven.untis.ui.pages.settings.SettingsScreenViewModel
 import com.sapuseven.untis.workers.NotificationSetupWorker
 import kotlinx.coroutines.delay

@@ -74,10 +74,10 @@ import androidx.compose.ui.util.fastAny
 import androidx.compose.ui.util.fastForEach
 import com.sapuseven.untis.R
 import com.sapuseven.untis.services.WeekLogicService
-import com.sapuseven.untis.ui.common.conditional
-import com.sapuseven.untis.ui.common.ifNotNull
-import com.sapuseven.untis.ui.dialogs.DatePickerDialog
-import com.sapuseven.untis.ui.functional.useDebounce
+import com.sapuseven.untis.core.ui.common.conditional
+import com.sapuseven.untis.core.ui.common.ifNotNull
+import com.sapuseven.untis.core.ui.dialogs.DatePickerDialog
+import com.sapuseven.untis.core.ui.functional.useDebounce
 import kotlinx.coroutines.launch
 import java.time.Duration
 import java.time.LocalDate

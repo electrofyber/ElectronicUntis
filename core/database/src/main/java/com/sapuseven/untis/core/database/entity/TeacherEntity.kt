@@ -31,7 +31,7 @@ data class TeacherEntity(
 	val entryDate: LocalDate? = null,
 	val exitDate: LocalDate? = null,
 	override val active: Boolean = false,
-	val displayAllowed: Boolean = false
+	override val allowed: Boolean = true
 ) : ElementEntity(), Comparable<String> {
 	companion object : EntityMapper<Teacher, TeacherEntity> {
 		override fun map(from: Teacher, userId: Long) = TeacherEntity(
@@ -46,9 +46,11 @@ data class TeacherEntity(
 			entryDate = from.entryDate,
 			exitDate = from.exitDate,
 			active = from.active,
-			displayAllowed = from.displayAllowed,
+			allowed = from.displayAllowed,
 		)
 	}
+
+	override val type = ElementType.TEACHER
 
 	override fun compareTo(other: String) = if (
 		name.contains(other, true)
@@ -56,11 +58,7 @@ data class TeacherEntity(
 		|| lastName.contains(other, true)
 	) 0 else name.compareTo(other)
 
-	override fun getType() = ElementType.TEACHER
-
 	override fun getShortName(default: String) = name
 
 	override fun getLongName(default: String) = "$firstName $lastName"
-
-	override fun isAllowed() = displayAllowed
 }

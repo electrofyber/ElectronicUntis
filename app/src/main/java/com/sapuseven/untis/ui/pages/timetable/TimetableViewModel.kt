@@ -263,7 +263,7 @@ class TimetableViewModel @Inject constructor(
 					startDate = startDate,
 				),
 				fromCache = fromCache,
-				additionalKey = currentUser
+				additionalKey = currentUser.id
 			)
 		} ?: emptyFlow()
 	}

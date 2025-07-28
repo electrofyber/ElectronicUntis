@@ -36,7 +36,7 @@ import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.sapuseven.untis.ui.common.SmallCircularProgressIndicator
+import com.sapuseven.untis.core.ui.common.SmallCircularProgressIndicator
 
 /**
  * Implementation of PullToRefreshState that has an empty `animateToThreshold()` method.

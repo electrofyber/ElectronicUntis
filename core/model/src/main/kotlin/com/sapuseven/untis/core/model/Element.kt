@@ -1,0 +1,23 @@
+package com.sapuseven.untis.core.model
+
+/**
+ * An Element represents an element inside a [Period], which can be a class, teacher, subject, or room.
+ *
+ * @property id The unique identifier for the element.
+ * @property type The type of the element.
+ * @property name The name of the element.
+ * @property foreColor The suggested foreground color for the element, if any.
+ * @property backColor The suggested background color for the element, if any.
+ * @property replaced Indicates whether this element was replaced by another element of the same type.
+ * This is typically used for cases like teacher substitutions or room changes.
+ * @see Timetable
+ * @see Period
+ */
+data class Element(
+	val id: Long,
+	val type: ElementType,
+	val name: String,
+	val foreColor: String?,
+	val backColor: String?,
+	val replaced: Boolean,
+)

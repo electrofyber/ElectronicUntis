@@ -273,7 +273,7 @@
     <string name="activity_title_messenger">Sohbet</string>
     <string name="preference_category_timetable_range">Zaman Çizelgesi Aralığı</string>
     <string name="logindatainput_key_saved">Anahtar veya Şifre (kaydedilmiş)</string>
-    <string name="mainactivitydrawer_profile_edit">Profilleri düzenle</string>
+    <string name="core_ui_profile_edit">Profilleri düzenle</string>
     <string name="infocenter_absences_timerange">%1$s - %2$s</string>
     <string name="preference_automute_allow_priority">Öncelikli olayların sessizliği yok saymasına izin ver</string>
     <string name="all_dialog_absences_save">Devamsızlık kontrolünü gönderin</string>

@@ -20,8 +20,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.sapuseven.untis.R
-import com.sapuseven.untis.ui.common.AppScaffold
-import com.sapuseven.untis.ui.functional.bottomInsets
+import com.sapuseven.untis.core.ui.common.AppScaffold
+import com.sapuseven.untis.core.ui.functional.bottomInsets
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

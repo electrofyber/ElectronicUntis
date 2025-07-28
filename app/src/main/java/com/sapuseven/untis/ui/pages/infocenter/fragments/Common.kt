@@ -17,7 +17,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import com.sapuseven.untis.R
-import com.sapuseven.untis.ui.common.MessageBubble
+import com.sapuseven.untis.core.ui.common.MessageBubble
 import com.sapuseven.untis.ui.pages.infocenter.ErrorPreviewParameterProvider
 import io.github.fornewid.placeholder.foundation.PlaceholderDefaults
 import io.github.fornewid.placeholder.foundation.PlaceholderHighlight

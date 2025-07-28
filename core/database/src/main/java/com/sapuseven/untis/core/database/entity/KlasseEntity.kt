@@ -30,7 +30,7 @@ data class KlasseEntity(
 	override val foreColor: String? = "",
 	override val backColor: String? = "",
 	override val active: Boolean = false,
-	val displayable: Boolean = false
+	override val allowed: Boolean = true
 ) : ElementEntity(), Comparable<String> {
 	companion object : EntityMapper<Klasse, KlasseEntity> {
 		override fun map(from: Klasse, userId: Long) = KlasseEntity(
@@ -44,20 +44,18 @@ data class KlasseEntity(
 			foreColor = from.foreColor,
 			backColor = from.backColor,
 			active = from.active,
-			displayable = from.displayable,
+			allowed = from.displayable,
 		)
 	}
+
+	override val type = ElementType.CLASS
 
 	override fun compareTo(other: String) = if (
 		name.contains(other, true)
 		|| longName.contains(other, true)
 	) 0 else name.compareTo(other)
 
-	override fun getType() = ElementType.CLASS
-
 	override fun getShortName(default: String) = name
 
 	override fun getLongName(default: String) = longName
-
-	override fun isAllowed() = displayable
 }

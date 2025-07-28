@@ -1,6 +1,3 @@
-import com.google.protobuf.gradle.id
-import org.gradle.internal.extensions.stdlib.capitalized
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import java.io.FileInputStream
 import java.util.Date
 import java.util.Properties
@@ -15,7 +12,6 @@ plugins {
 	alias(libs.plugins.mikepenz.aboutlibraries)
 	alias(libs.plugins.mannodermaus.android.junit5)
 	alias(libs.plugins.kotlin.parcelize)
-	alias(libs.plugins.protobuf)
 }
 
 // Auto-generates a new version code every minute
@@ -94,37 +90,6 @@ aboutLibraries {
 	library.duplicationMode = com.mikepenz.aboutlibraries.plugin.DuplicateMode.MERGE
 }
 
-// TODO Move to :core:datastore
-protobuf {
-	protoc {
-		artifact = "com.google.protobuf:protoc:4.28.0"
-	}
-
-	// Generates the java Protobuf-lite code for the Protobufs in this project. See
-	// https://github.com/google/protobuf-gradle-plugin#customizing-protobuf-compilation
-	// for more information.
-	generateProtoTasks {
-		all().configureEach {
-			builtins {
-				id("java") {
-					option("lite")
-				}
-			}
-		}
-	}
-
-	androidComponents {
-		onVariants(selector().all()) { variant ->
-			afterEvaluate {
-				val capName = variant.name.capitalized()
-				tasks.getByName<KotlinCompile>("ksp${capName}Kotlin") {
-					setSource(tasks.getByName("generate${capName}Proto").outputs)
-				}
-			}
-		}
-	}
-}
-
 dependencies {
 	implementation(libs.accompanist.flowlayout)
 	implementation(libs.accompanist.swiperefresh)
@@ -169,10 +134,8 @@ dependencies {
 	implementation(libs.mikepenz.aboutlibraries.compose)
 	implementation(libs.mikepenz.aboutlibraries.core)
 	implementation(libs.zxing)
-	implementation(libs.protobuf.javalite)
 	implementation(libs.androidx.transition.ktx)
 	implementation(libs.andrew0000.cache)
-	implementation(libs.sapuseven.protostore)
 	implementation(libs.fornewid.placeholder.material3)
 	implementation(libs.fornewid.material.motion.compose.core)
 
