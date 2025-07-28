@@ -40,13 +40,6 @@ import com.sapuseven.untis.core.model.Period
 import com.sapuseven.untis.core.ui.R
 import kotlinx.coroutines.launch
 
-/*@OptIn(ExperimentalSerializationApi::class)
-private val json = Json {
-	encodeDefaults = true
-	prettyPrint = true
-	prettyPrintIndent = "  "
-}*/
-
 @Composable
 internal fun DebugInfoAction(
 	title: @Composable (() -> Unit)? = null,
@@ -56,7 +49,7 @@ internal fun DebugInfoAction(
 
 	IconButton(onClick = { showInfoDialog = true }) {
 		Icon(
-			painterResource(R.drawable.all_debug),
+			painterResource(R.drawable.core_ui_debug),
 			contentDescription = "Debug info"
 		)
 	}
@@ -69,7 +62,7 @@ internal fun DebugInfoAction(
 			confirmButton = {
 				TextButton(
 					onClick = { showInfoDialog = false }) {
-					Text(stringResource(R.string.all_ok))
+					Text(stringResource(R.string.core_ui_button_ok))
 				}
 			}
 		)
@@ -77,7 +70,9 @@ internal fun DebugInfoAction(
 }
 
 @Composable
-fun DebugDisclaimerAction() {
+fun DebugDisclaimerAction(
+	colorSchemeDebugInfo: String
+) {
 	DebugInfoAction(
 		title = { Text("Debug information") }
 	) {
@@ -96,16 +91,18 @@ fun DebugDisclaimerAction() {
 			Text(style = MaterialTheme.typography.titleLarge, text = "Debug Data")
 			Text(style = MaterialTheme.typography.titleMedium, text = "ColorScheme")
 			RawText(
-				item = MaterialTheme.colorScheme.toString()
-					.replace("(\\w+=\\w+\\([^)]*\\))".toRegex(), "\$1\n")
-					.replace(", sRGB IEC61966-2.1", "")
-					.removePrefix("ColorScheme(")
-					.removeSuffix("\n)"),
+				item = colorSchemeDebugInfo,
 				encode = false
 			)
 		}
 	}
 }
+
+//@Serializable
+private data class DebugPeriodInfo(
+	val period: Period,
+	val periodData: PeriodData?
+)
 
 @Composable
 fun DebugTimetableItemDetailsAction(
@@ -127,17 +124,11 @@ fun DebugTimetableItemDetailsAction(
 	}
 }
 
-//@Serializable
-private data class DebugPeriodInfo(
-	val period: Period,
-	val periodData: PeriodData?
-)
-
 @Composable
 private inline fun <reified T> RawText(item: T, encode: Boolean = true) {
 	val clipboard: Clipboard = LocalClipboard.current
 	val scope = rememberCoroutineScope()
-	val itemText = remember { /*if (encode) json.encodeToString(item) else*/ item.toString() }
+	val itemText = remember { /* TODO if (encode) json.encodeToString(item) else*/ item.toString() }
 
 	Column(
 		horizontalAlignment = Alignment.End,
@@ -167,8 +158,8 @@ private inline fun <reified T> RawText(item: T, encode: Boolean = true) {
 			}
 		) {
 			Icon(
-				painter = painterResource(R.drawable.all_copy),
-				contentDescription = "Copy",
+				painter = painterResource(R.drawable.core_ui_copy),
+				contentDescription = stringResource(R.string.core_ui_button_copy),
 				modifier = Modifier
 					.padding(end = 8.dp)
 			)

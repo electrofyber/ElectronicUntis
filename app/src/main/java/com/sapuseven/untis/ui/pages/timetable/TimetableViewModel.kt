@@ -19,13 +19,13 @@ import com.sapuseven.untis.core.api.exception.UntisApiException
 import com.sapuseven.untis.core.api.model.untis.enumeration.ElementType
 import com.sapuseven.untis.core.api.model.untis.timetable.Period
 import com.sapuseven.untis.core.api.model.untis.timetable.PeriodElement
+import com.sapuseven.untis.core.data.repository.DebugInfoRepository
+import com.sapuseven.untis.core.data.repository.TimetableRepository
+import com.sapuseven.untis.core.data.repository.UserSettingsRepository
+import com.sapuseven.untis.core.data.repository.UserRepository
 import com.sapuseven.untis.data.repository.MasterDataRepository
-import com.sapuseven.untis.data.repository.TimetableRepository
-import com.sapuseven.untis.data.repository.UserRepository
-import com.sapuseven.untis.data.repository.UserSettingsRepository
 import com.sapuseven.untis.helpers.BuildConfigFieldsProvider
 import com.sapuseven.untis.mappers.TimetableMapper
-import com.sapuseven.untis.models.PeriodItem
 import com.sapuseven.untis.core.database.entity.ElementEntity
 import com.sapuseven.untis.core.database.entity.User
 import com.sapuseven.untis.services.WeekLogicService
@@ -65,11 +65,12 @@ import javax.inject.Inject
 @HiltViewModel
 class TimetableViewModel @Inject constructor(
 	private val navigator: AppNavigator,
-	private val userSettingsRepository: UserSettingsRepository,
+	//private val userSettingsRepository: UserSettingsRepository,
 	private val timetableMapper: TimetableMapper,
 	internal val userRepository: UserRepository,
 	internal val timetableRepository: TimetableRepository,
 	internal val masterDataRepository: MasterDataRepository,
+	internal val debugInfoRepository: DebugInfoRepository,
 	internal val clock: Clock,
 	internal val weekLogicService: WeekLogicService,
 	buildConfigFieldsProvider: BuildConfigFieldsProvider,

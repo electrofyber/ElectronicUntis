@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="core_ui_button_ok">Cancel</string>
 	<string name="core_ui_button_cancel">Cancel</string>
 	<string name="core_ui_button_delete">Delete</string>
+	<string name="core_ui_button_copy">Copy</string>
 
 	<string name="core_ui_profiles_show">Show profile list</string>
 	<string name="core_ui_profile_add">Add a profile</string>

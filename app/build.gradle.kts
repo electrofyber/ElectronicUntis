@@ -91,6 +91,14 @@ aboutLibraries {
 }
 
 dependencies {
+	implementation(projects.feature.glance)
+
+	implementation(projects.core.api)
+	implementation(projects.core.data)
+	implementation(projects.core.database)
+	implementation(projects.core.ui)
+	implementation(projects.materialColorUtils)
+
 	implementation(libs.accompanist.flowlayout)
 	implementation(libs.accompanist.swiperefresh)
 	implementation(libs.accompanist.systemuicontroller)
@@ -164,10 +172,4 @@ dependencies {
 	androidTestImplementation(libs.androidx.compose.ui.test)
 	androidTestImplementation(libs.hilt.android.testing)
 	debugImplementation(libs.androidx.compose.ui.test.manifest)
-
-	implementation(projects.feature.glance)
-	implementation(projects.core.api)
-	implementation(projects.core.database)
-	implementation(projects.core.ui)
-	implementation(projects.materialColorUtils)
 }
