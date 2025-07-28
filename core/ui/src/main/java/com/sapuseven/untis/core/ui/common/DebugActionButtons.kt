@@ -1,5 +1,6 @@
 package com.sapuseven.untis.core.ui.common
 
+import android.content.ClipData
 import androidx.compose.foundation.background
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
@@ -7,6 +8,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -20,30 +22,30 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.platform.ClipboardManager
-import androidx.compose.ui.platform.LocalClipboardManager
+import androidx.compose.ui.platform.ClipEntry
+import androidx.compose.ui.platform.Clipboard
+import androidx.compose.ui.platform.LocalClipboard
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
-import com.sapuseven.untis.core.ui.R
 import com.sapuseven.untis.core.api.model.untis.timetable.PeriodData
-import com.sapuseven.untis.models.PeriodItem
-import kotlinx.serialization.ExperimentalSerializationApi
-import kotlinx.serialization.Serializable
-import kotlinx.serialization.json.Json
+import com.sapuseven.untis.core.model.Period
+import com.sapuseven.untis.core.ui.R
+import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalSerializationApi::class)
+/*@OptIn(ExperimentalSerializationApi::class)
 private val json = Json {
 	encodeDefaults = true
 	prettyPrint = true
 	prettyPrintIndent = "  "
-}
+}*/
 
 @Composable
 internal fun DebugInfoAction(
@@ -107,7 +109,7 @@ fun DebugDisclaimerAction() {
 
 @Composable
 fun DebugTimetableItemDetailsAction(
-	timegridItems: List<PeriodItem>,
+	timetablePeriods: List<Period>,
 	periodDataMap: Map<Long, PeriodData>
 ) {
 	DebugInfoAction(
@@ -118,23 +120,24 @@ fun DebugTimetableItemDetailsAction(
 			modifier = Modifier
 				.fillMaxWidth()
 		) {
-			items(timegridItems) {
-				RawText(item = DebugPeriodInfo(it, periodDataMap[it.originalPeriod.id]))
+			items(timetablePeriods) {
+				RawText(item = DebugPeriodInfo(it, periodDataMap[it.id]))
 			}
 		}
 	}
 }
 
-@Serializable
+//@Serializable
 private data class DebugPeriodInfo(
-	val periodItem: PeriodItem,
+	val period: Period,
 	val periodData: PeriodData?
 )
 
 @Composable
 private inline fun <reified T> RawText(item: T, encode: Boolean = true) {
-	val clipboardManager: ClipboardManager = LocalClipboardManager.current
-	val itemText = remember { if (encode) json.encodeToString(item) else item.toString() }
+	val clipboard: Clipboard = LocalClipboard.current
+	val scope = rememberCoroutineScope()
+	val itemText = remember { /*if (encode) json.encodeToString(item) else*/ item.toString() }
 
 	Column(
 		horizontalAlignment = Alignment.End,
@@ -150,7 +153,18 @@ private inline fun <reified T> RawText(item: T, encode: Boolean = true) {
 			modifier = Modifier.horizontalScroll(rememberScrollState())
 		)
 		TextButton(
-			onClick = { clipboardManager.setText(AnnotatedString(itemText)) }
+			onClick = {
+				scope.launch {
+					clipboard.setClipEntry(
+						ClipEntry(
+							ClipData.newPlainText(
+								"BetterUntis debug info",
+								AnnotatedString(itemText)
+							)
+						)
+					)
+				}
+			}
 		) {
 			Icon(
 				painter = painterResource(R.drawable.all_copy),
