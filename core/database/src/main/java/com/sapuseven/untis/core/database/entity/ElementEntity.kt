@@ -1,6 +1,6 @@
 package com.sapuseven.untis.core.database.entity
 
-import com.sapuseven.untis.core.api.model.untis.enumeration.ElementType
+import com.sapuseven.untis.core.model.ElementType
 
 abstract class ElementEntity {
 	abstract val id: Long

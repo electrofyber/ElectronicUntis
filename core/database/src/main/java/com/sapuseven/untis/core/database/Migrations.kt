@@ -198,3 +198,25 @@ class MigrationSpec10to11 : AutoMigrationSpec
 	toColumnName = "apiHost"
 )
 class MigrationSpec11to12 : AutoMigrationSpec
+
+@RenameColumn(
+	tableName = "Klasse",
+	fromColumnName = "displayable",
+	toColumnName = "allowed"
+)
+@RenameColumn(
+	tableName = "Room",
+	fromColumnName = "displayAllowed",
+	toColumnName = "allowed"
+)
+@RenameColumn(
+	tableName = "Teacher",
+	fromColumnName = "displayAllowed",
+	toColumnName = "allowed"
+)
+@RenameColumn(
+	tableName = "Subject",
+	fromColumnName = "displayAllowed",
+	toColumnName = "allowed"
+)
+class MigrationSpec12to13 : AutoMigrationSpec

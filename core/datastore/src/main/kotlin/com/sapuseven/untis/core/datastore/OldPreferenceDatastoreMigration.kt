@@ -1,63 +1,52 @@
-package com.sapuseven.untis.modules
+package com.sapuseven.untis.core.datastore
 
 import android.content.Context
-import androidx.datastore.core.CorruptionException
 import androidx.datastore.core.DataMigration
 import androidx.datastore.core.DataStore
-import androidx.datastore.core.DataStoreFactory
-import androidx.datastore.core.Serializer
-import androidx.datastore.core.handlers.ReplaceFileCorruptionHandler
-import androidx.datastore.dataStoreFile
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
-import com.google.protobuf.InvalidProtocolBufferException
-import com.sapuseven.untis.core.api.model.untis.timetable.PeriodElement
 import com.sapuseven.untis.data.settings.model.AbsencesTimeRange
 import com.sapuseven.untis.data.settings.model.DarkTheme
 import com.sapuseven.untis.data.settings.model.NotificationVisibility
 import com.sapuseven.untis.data.settings.model.Settings
+import com.sapuseven.untis.data.settings.model.TimetableElement
 import com.sapuseven.untis.data.settings.model.UserSettings
-import com.sapuseven.untis.ui.preferences.toTimetableElement
-import dagger.Module
-import dagger.Provides
-import dagger.hilt.InstallIn
-import dagger.hilt.android.qualifiers.ApplicationContext
-import dagger.hilt.components.SingletonComponent
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.first
+import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 import java.io.File
-import java.io.InputStream
-import java.io.OutputStream
-import javax.inject.Singleton
-
-private const val DATA_STORE_FILE_NAME = "settings.pb"
 
 private val Context.oldPreferenceDataStore by preferencesDataStore(name = "preferences")
 
-@InstallIn(SingletonComponent::class)
-@Module
-object DataStoreModule {
-	@Provides
-	@Singleton
-	fun provideProtoDataStore(@ApplicationContext appContext: Context): DataStore<Settings> {
-		return DataStoreFactory.create(
-			serializer = UserSettingsSerializer,
-			produceFile = { appContext.dataStoreFile(DATA_STORE_FILE_NAME) },
-			corruptionHandler = ReplaceFileCorruptionHandler {
-				Settings.getDefaultInstance()
-			},
-			migrations = listOf(
-				OldPreferenceDataStoreMigration(appContext)
-			),
-			scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
-		)
-	}
+@Serializable
+private data class OldPeriodElement(
+	val type: OldElementType,
+	val id: Long,
+	val orgId: Long = id
+) {
+	fun toTimetableElement(): TimetableElement =
+		TimetableElement.newBuilder().apply {
+			elementId = id
+			elementType = type.id
+		}.build()
 }
 
-private class OldPreferenceDataStoreMigration(val context: Context) : DataMigration<Settings> {
+private enum class OldElementType(val id: Int) {
+	CLASS(1),
+	TEACHER(2),
+	SUBJECT(3),
+	ROOM(4),
+	STUDENT(5),
+	PARENT(15),
+
+	@Deprecated("Not present in Untis API anymore")
+	LEGAL_GUARDIAN(12),
+
+	@Deprecated("Not present in Untis API anymore")
+	APPRENTICE_REPRESENTATIVE(21)
+}
+
+internal class OldPreferenceDataStoreMigration(val context: Context) : DataMigration<Settings> {
 	val oldDataStore: DataStore<Preferences> = context.oldPreferenceDataStore
 	val oldDataStoreFile: File = File(context.filesDir, "datastore/preferences.preferences_pb")
 
@@ -103,7 +92,7 @@ private class OldPreferenceDataStoreMigration(val context: Context) : DataMigrat
 							"theme_color" -> userSettings.themeColor = value as Int
 							"dark_theme" -> userSettings.darkTheme = mapEnumDarkTheme(value as String)
 							"dark_theme_oled" -> userSettings.darkThemeOled = value as Boolean
-							"timetable_personal_timetable" -> userSettings.timetablePersonalTimetable = Json.decodeFromString<PeriodElement>(value as String).toTimetableElement()
+							"timetable_personal_timetable" -> userSettings.timetablePersonalTimetable = Json.decodeFromString<OldPeriodElement>(value as String).toTimetableElement()
 							"timetable_hide_timestamps" -> userSettings.timetableHideTimeStamps = value as Boolean
 							"timetable_hide_cancelled" -> userSettings.timetableHideCancelled = value as Boolean
 							"timetable_substitutions_irregular" -> userSettings.timetableSubstitutionsIrregular = value as Boolean
@@ -175,21 +164,4 @@ private class OldPreferenceDataStoreMigration(val context: Context) : DataMigrat
 	override suspend fun cleanUp() {
 		oldDataStoreFile.delete()
 	}
-}
-
-internal object UserSettingsSerializer : Serializer<Settings> {
-	override val defaultValue: Settings = Settings.getDefaultInstance()
-
-	override suspend fun readFrom(input: InputStream): Settings {
-		try {
-			return Settings.parseFrom(input)
-		} catch (exception: InvalidProtocolBufferException) {
-			throw CorruptionException("Cannot read proto", exception)
-		}
-	}
-
-	override suspend fun writeTo(
-		t: Settings,
-		output: OutputStream
-	) = t.writeTo(output)
 }

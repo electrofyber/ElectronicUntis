@@ -5,6 +5,7 @@ plugins {
 	alias(libs.plugins.betteruntis.android.library)
 	alias(libs.plugins.betteruntis.hilt)
 	alias(libs.plugins.protobuf)
+	id("kotlinx-serialization")
 }
 
 android {
@@ -20,13 +21,13 @@ protobuf {
 		artifact = libs.protobuf.protoc.get().toString()
 	}
 
-	// Generates the java Protobuf-lite code for the Protobufs in this project. See
-	// https://github.com/google/protobuf-gradle-plugin#customizing-protobuf-compilation
-	// for more information.
 	generateProtoTasks {
 		all().configureEach {
 			builtins {
 				register("kotlin") {
+					option("lite")
+				}
+				register("java") {
 					option("lite")
 				}
 			}
@@ -45,25 +46,15 @@ protobuf {
 	}
 }
 
-/*androidComponents.beforeVariants {
-	android.sourceSets.register(it.name) {
-		val buildDir = layout.buildDirectory.get().asFile
-		java.srcDir(buildDir.resolve("generated/source/proto/${it.name}/java"))
-		kotlin.srcDir(buildDir.resolve("generated/source/proto/${it.name}/kotlin"))
-	}
-}*/
-
-
 dependencies {
-	implementation(libs.protobuf.kotlin.lite)
 	implementation(libs.sapuseven.protostore)
+	implementation(libs.kotlinx.serialization.json)
 
-	/*api(libs.androidx.dataStore)
-	api(projects.core.datastoreProto)
+	api(libs.androidx.datastore)
+	api(libs.protobuf.kotlin.lite)
 	api(projects.core.model)
+	/*
+	api(projects.core.datastoreProto)
 
-	implementation(projects.core.common)
-
-	testImplementation(projects.core.datastoreTest)
-	testImplementation(libs.kotlinx.coroutines.test)*/
+	implementation(projects.core.common)*/
 }

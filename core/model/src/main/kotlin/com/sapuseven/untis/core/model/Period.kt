@@ -10,4 +10,6 @@ package com.sapuseven.untis.core.model
  * @see Timetable
  * @see Element
  */
-data class Period()
+data class Period(
+	val id: Long,
+)

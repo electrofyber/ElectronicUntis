@@ -10,9 +10,9 @@ android {
 
 dependencies {
 	implementation(libs.andrew0000.cache)
-	implementation(libs.sapuseven.protostore) // move to core:datastore
 
-	implementation(projects.core.api)
+	api(projects.core.api) // TODO: Remove references to :core:api and use :core:model instead
+	api(projects.core.model)
 
 	// <editor-fold desc="Fix crash from missing `beginTransactionReadOnly()` method in Room due to sqlite version mismatch">
 	// see https://issuetracker.google.com/issues/400483860#comment7

@@ -1,7 +1,9 @@
 package com.sapuseven.untis.core.data.repository
 
+import androidx.datastore.core.DataStore
 import com.sapuseven.untis.core.database.entity.User
 import com.sapuseven.untis.core.database.entity.UserDao
+import com.sapuseven.untis.data.settings.model.Settings
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -62,7 +64,7 @@ interface UserRepository {
 @Singleton
 class UserRepositoryImpl @Inject constructor(
 	private val userDao: UserDao,
-	//private val settingsDataStore: DataStore<Settings>,
+	private val settingsDataStore: DataStore<Settings>,
 ) : UserRepository {
 	private val _userState = MutableStateFlow<UserState>(UserState.Loading)
 	override val userState: StateFlow<UserState> = _userState
