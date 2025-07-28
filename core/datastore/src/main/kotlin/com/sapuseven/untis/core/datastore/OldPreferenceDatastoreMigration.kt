@@ -5,12 +5,12 @@ import androidx.datastore.core.DataMigration
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
-import com.sapuseven.untis.data.settings.model.AbsencesTimeRange
-import com.sapuseven.untis.data.settings.model.DarkTheme
-import com.sapuseven.untis.data.settings.model.NotificationVisibility
-import com.sapuseven.untis.data.settings.model.Settings
-import com.sapuseven.untis.data.settings.model.TimetableElement
-import com.sapuseven.untis.data.settings.model.UserSettings
+import com.sapuseven.untis.core.datastore.model.AbsencesTimeRange
+import com.sapuseven.untis.core.datastore.model.DarkTheme
+import com.sapuseven.untis.core.datastore.model.NotificationVisibility
+import com.sapuseven.untis.core.datastore.model.Settings
+import com.sapuseven.untis.core.datastore.model.TimetableElement
+import com.sapuseven.untis.core.datastore.model.UserSettings
 import kotlinx.coroutines.flow.first
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
@@ -31,6 +31,7 @@ private data class OldPeriodElement(
 		}.build()
 }
 
+@Suppress("unused")
 private enum class OldElementType(val id: Int) {
 	CLASS(1),
 	TEACHER(2),

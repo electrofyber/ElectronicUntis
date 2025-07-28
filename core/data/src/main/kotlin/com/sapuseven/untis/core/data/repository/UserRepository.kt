@@ -3,7 +3,7 @@ package com.sapuseven.untis.core.data.repository
 import androidx.datastore.core.DataStore
 import com.sapuseven.untis.core.database.entity.User
 import com.sapuseven.untis.core.database.entity.UserDao
-import com.sapuseven.untis.data.settings.model.Settings
+import com.sapuseven.untis.core.datastore.model.Settings
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow

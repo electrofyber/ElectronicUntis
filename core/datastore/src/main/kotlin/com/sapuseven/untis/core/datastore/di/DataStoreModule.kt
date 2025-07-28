@@ -7,7 +7,7 @@ import androidx.datastore.core.handlers.ReplaceFileCorruptionHandler
 import androidx.datastore.dataStoreFile
 import com.sapuseven.untis.core.datastore.OldPreferenceDataStoreMigration
 import com.sapuseven.untis.core.datastore.UserSettingsSerializer
-import com.sapuseven.untis.data.settings.model.Settings
+import com.sapuseven.untis.core.datastore.model.Settings
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

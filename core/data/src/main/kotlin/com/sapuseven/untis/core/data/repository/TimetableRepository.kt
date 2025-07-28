@@ -87,7 +87,7 @@ class UntisTimetableRepository @Inject constructor(
 			if (!result.fromCache) {
 				userDao.upsertMasterData(user.id, result.value.masterData)
 			}
-			result.value.timetable.toDomain().copy(
+			result.value.timetable.toDomain(emptyMap(/* TODO: Pass allElements */)).copy(
 				timestamp = result.originTimeStamp?.let(Instant::ofEpochMilli) ?: Instant.now()
 			)
 		}

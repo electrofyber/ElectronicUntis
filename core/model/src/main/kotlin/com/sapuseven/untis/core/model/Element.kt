@@ -5,7 +5,8 @@ package com.sapuseven.untis.core.model
  *
  * @property id The unique identifier for the element.
  * @property type The type of the element.
- * @property name The name of the element.
+ * @property shortName The name of the element.
+ * @property longName The name of the element.
  * @property foreColor The suggested foreground color for the element, if any.
  * @property backColor The suggested background color for the element, if any.
  * @property replaced Indicates whether this element was replaced by another element of the same type.
@@ -16,7 +17,8 @@ package com.sapuseven.untis.core.model
 data class Element(
 	val id: Long,
 	val type: ElementType,
-	val name: String,
+	val shortName: String,
+	val longName: String,
 	val foreColor: String?,
 	val backColor: String?,
 	val replaced: Boolean,

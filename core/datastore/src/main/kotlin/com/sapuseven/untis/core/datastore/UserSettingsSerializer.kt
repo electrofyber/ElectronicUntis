@@ -3,7 +3,7 @@ package com.sapuseven.untis.core.datastore
 import androidx.datastore.core.CorruptionException
 import androidx.datastore.core.Serializer
 import com.google.protobuf.InvalidProtocolBufferException
-import com.sapuseven.untis.data.settings.model.Settings
+import com.sapuseven.untis.core.datastore.model.Settings
 import java.io.InputStream
 import java.io.OutputStream
 
