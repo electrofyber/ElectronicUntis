@@ -1,42 +1,8 @@
 package com.sapuseven.untis.core.ui.common
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.Icon
-import androidx.compose.material3.ListItemDefaults
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.SheetState
-import androidx.compose.material3.Text
-import androidx.compose.material3.surfaceColorAtElevation
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
-import com.sapuseven.compose.protostore.ui.preferences.SwitchPreference
-import com.sapuseven.compose.protostore.ui.utils.LocalListItemColors
-import com.sapuseven.untis.core.ui.R
-import com.sapuseven.untis.core.ui.functional.insetsPaddingValues
-import kotlinx.coroutines.launch
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -45,7 +11,7 @@ fun ReportsInfoBottomSheet(
 	sheetState: SheetState,
 	onSave: () -> Unit,
 ) {
-	val scope = rememberCoroutineScope()
+	/*TODO val scope = rememberCoroutineScope()
 	var saveEnabled by rememberSaveable { mutableStateOf(true) }
 
 	if (sheetState.isVisible) {
@@ -157,5 +123,5 @@ fun ReportsInfoBottomSheet(
                     .align(Alignment.BottomCenter)
 			) {}
 		}
-	}
+	}*/
 }

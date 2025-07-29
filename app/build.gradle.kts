@@ -5,8 +5,8 @@ import java.util.Properties
 plugins {
 	alias(libs.plugins.betteruntis.android.application)
 	alias(libs.plugins.betteruntis.android.application.compose)
-	alias(libs.plugins.betteruntis.android.application.flavors)
 	alias(libs.plugins.betteruntis.android.application.sentry)
+	alias(libs.plugins.betteruntis.android.flavors)
 	alias(libs.plugins.betteruntis.hilt)
 
 	alias(libs.plugins.mikepenz.aboutlibraries)
@@ -92,6 +92,8 @@ aboutLibraries {
 
 dependencies {
 	implementation(projects.feature.glance)
+	implementation(projects.feature.login)
+	implementation(projects.feature.timetable)
 
 	implementation(projects.core.api)
 	implementation(projects.core.data)
@@ -99,7 +101,6 @@ dependencies {
 	implementation(projects.core.ui)
 	implementation(projects.materialColorUtils)
 
-	implementation(libs.accompanist.flowlayout)
 	implementation(libs.accompanist.swiperefresh)
 	implementation(libs.accompanist.systemuicontroller)
 	implementation(libs.accompanist.permissions)
@@ -141,13 +142,10 @@ dependencies {
 	implementation(libs.material.theme.adapter)
 	implementation(libs.mikepenz.aboutlibraries.compose)
 	implementation(libs.mikepenz.aboutlibraries.core)
-	implementation(libs.zxing)
 	implementation(libs.androidx.transition.ktx)
 	implementation(libs.andrew0000.cache)
 	implementation(libs.fornewid.placeholder.material3)
 	implementation(libs.fornewid.material.motion.compose.core)
-
-	gmsImplementation(libs.gms.code.scanner)
 
 	coreLibraryDesugaring(libs.android.desugarJdkLibs)
 

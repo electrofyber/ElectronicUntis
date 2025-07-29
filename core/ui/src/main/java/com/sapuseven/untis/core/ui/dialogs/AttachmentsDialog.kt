@@ -27,7 +27,7 @@ import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import com.sapuseven.untis.core.api.model.untis.Attachment
+import com.sapuseven.untis.core.model.Attachment
 import com.sapuseven.untis.core.ui.R
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -65,7 +65,7 @@ fun AttachmentsDialog(
 							headlineContent = { Text(it.name) },
 							leadingContent = {
 								Icon(
-									painter = painterResource(id = R.drawable.infocenter_attachment),
+									painter = painterResource(id = R.drawable.core_ui_document),
 									contentDescription = null
 								)
 							},

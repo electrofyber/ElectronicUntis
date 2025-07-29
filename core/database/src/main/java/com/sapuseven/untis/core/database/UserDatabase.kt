@@ -22,8 +22,8 @@ import com.sapuseven.untis.core.database.entity.SchoolYearEntity
 import com.sapuseven.untis.core.database.entity.SubjectEntity
 import com.sapuseven.untis.core.database.entity.TeacherEntity
 import com.sapuseven.untis.core.database.entity.TeachingMethodEntity
-import com.sapuseven.untis.core.database.entity.User
 import com.sapuseven.untis.core.database.entity.UserDao
+import com.sapuseven.untis.core.database.entity.UserEntity
 import kotlinx.serialization.json.Json
 import java.time.LocalDate
 import java.time.LocalTime
@@ -32,7 +32,7 @@ import java.time.format.DateTimeFormatter
 @Database(
 	version = 13,
 	entities = [
-		User::class,
+		UserEntity::class,
 		AbsenceReasonEntity::class,
 		DepartmentEntity::class,
 		DutyEntity::class,

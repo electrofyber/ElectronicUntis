@@ -1,10 +1,10 @@
 package com.sapuseven.untis.modules
 
 import com.sapuseven.untis.data.repository.InfoCenterRepository
-import com.sapuseven.untis.data.repository.MasterDataRepository
+import com.sapuseven.untis.core.data.repository.MasterDataRepository
 import com.sapuseven.untis.data.repository.MessagesRepository
 import com.sapuseven.untis.data.repository.UntisInfoCenterRepository
-import com.sapuseven.untis.data.repository.UntisMasterDataRepository
+import com.sapuseven.untis.core.data.repository.UntisMasterDataRepository
 import com.sapuseven.untis.data.repository.UntisMessagesRepository
 import dagger.Binds
 import dagger.Module

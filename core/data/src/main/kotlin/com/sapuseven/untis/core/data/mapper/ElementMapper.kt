@@ -18,7 +18,8 @@ internal fun PeriodElement.toDomainElements(
 			longName = "?",
 			foreColor = null,
 			backColor = null,
-			replaced = false
+			replaced = false,
+			timetableAllowed = false
 		) // TODO: Log/handle this error (element not found in database), especially in debug builds
 
 	val replacedElement = if (id != orgId && orgId != 0L) {
@@ -36,7 +37,8 @@ private fun ElementEntity.toDomain(): Element =
 		longName = getLongName(),
 		foreColor = foreColor,
 		backColor = backColor,
-		replaced = false
+		replaced = false,
+		timetableAllowed = allowed
 	)
 
 

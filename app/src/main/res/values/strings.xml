@@ -128,7 +128,7 @@
     <string name="login_manual_data_input">Manual data input</string>
     <string name="login_no_results">No results</string>
     <string name="login_please_log_in">Choose one of the following options to login:</string>
-    <string name="login_scan_code">Scan QR code</string>
+	<string name="login_scan_code">Scan QR code</string>
     <string name="login_search_by_school_name_or_address">Search by school name or address</string>
     <string name="login_welcome">Welcome to BetterUntis!</string>
     <string name="logindatainput_adding_user_unknown_error">An unknown error happened while adding the user.</string>

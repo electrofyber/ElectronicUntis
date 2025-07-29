@@ -5,7 +5,7 @@
 			<group android:checkableBehavior="single">
 				<item
 					android:id="@+id/nav_show_personal"
-					android:icon="@drawable/all_prefs_personal"
+					android:icon="@drawable/core_ui_personal"
 					android:title="@string/all_personal_timetable"/>
 			</group>
 		</menu>
@@ -13,15 +13,15 @@
 	<group android:id="@+id/nav_more_timetables" android:checkableBehavior="single">
 		<item
 			android:id="@+id/nav_show_classes"
-			android:icon="@drawable/all_classes"
+			android:icon="@drawable/core_ui_classes"
 			android:title="@string/all_classes"/>
 		<item
 			android:id="@+id/nav_show_teachers"
-			android:icon="@drawable/all_teachers"
+			android:icon="@drawable/core_ui_teachers"
 			android:title="@string/all_teachers"/>
 		<item
 			android:id="@+id/nav_show_rooms"
-			android:icon="@drawable/all_rooms"
+			android:icon="@drawable/core_ui_rooms"
 			android:title="@string/all_rooms"/>
 	</group>
 	<group>

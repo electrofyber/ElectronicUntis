@@ -63,7 +63,7 @@ class UntisTimetableRepository @Inject constructor(
 		fromCache: FromCache
 	): Flow<Timetable> {
 		// TODO: Add error handling
-		val user = userRepository.requireUser()
+		val user = userRepository.currentUser()
 		return CachedSource<TimetableParams, TimetableResult>(
 			source = { params ->
 				api.getTimetable(
@@ -71,8 +71,8 @@ class UntisTimetableRepository @Inject constructor(
 					type = params.elementType,
 					startDate = params.startDate,
 					endDate = params.endDate,
-					masterDataTimestamp = user.masterDataTimestamp,
-					apiUrl = user.jsonRpcApiUrl.toString(),
+					masterDataTimestamp = 0L,//TODO user.masterData.timestamp,
+					apiUrl = user.school.apiUrl,
 					user = user.user,
 					key = user.key
 				)
@@ -95,12 +95,12 @@ class UntisTimetableRepository @Inject constructor(
 
 	override suspend fun getPeriodData(periods: Set<Period>): Result<PeriodDataResult> {
 		return runCatching {
-			val user = userRepository.requireUser()
+			val user = userRepository.currentUser()
 			CachedSource<Set<Period>, PeriodDataResult>(
 				source = { params ->
 					api.getPeriodData(
 						periodIds = params.map { it.id }.toSet(),
-						apiUrl = user.jsonRpcApiUrl.toString(),
+						apiUrl = user.school.apiUrl,
 						user = user.user,
 						key = user.key
 					)
@@ -115,11 +115,11 @@ class UntisTimetableRepository @Inject constructor(
 
 	override suspend fun postLessonTopic(periodId: Long, lessonTopic: String): Result<Boolean> {
 		return runCatching {
-			val user = userRepository.requireUser()
+			val user = userRepository.currentUser()
 			api.postLessonTopic(
 				periodId = periodId,
 				lessonTopic = lessonTopic,
-				apiUrl = user.jsonRpcApiUrl.toString(),
+				apiUrl = user.school.apiUrl,
 				user = user.user,
 				key = user.key
 			)
@@ -133,13 +133,13 @@ class UntisTimetableRepository @Inject constructor(
 		endTime: LocalTime
 	): Result<List<StudentAbsence>> {
 		return runCatching {
-			val user = userRepository.requireUser()
+			val user = userRepository.currentUser()
 			api.postAbsence(
 				periodId = periodId,
 				studentId = studentId,
 				startTime = startTime,
 				endTime = endTime,
-				apiUrl = user.jsonRpcApiUrl.toString(),
+				apiUrl = user.school.apiUrl,
 				user = user.user,
 				key = user.key
 			)
@@ -148,18 +148,18 @@ class UntisTimetableRepository @Inject constructor(
 
 	override suspend fun deleteAbsence(absenceId: Long): Result<Boolean> {
 		return runCatching {
-			val user = userRepository.requireUser()
+			val user = userRepository.currentUser()
 			api.deleteAbsence(
-				absenceId = absenceId, apiUrl = user.jsonRpcApiUrl.toString(), user = user.user, key = user.key
+				absenceId = absenceId, apiUrl = user.school.apiUrl, user = user.user, key = user.key
 			)
 		}
 	}
 
 	override suspend fun postAbsencesChecked(periodIds: Set<Long>): Result<Unit> {
 		return runCatching {
-			val user = userRepository.requireUser()
+			val user = userRepository.currentUser()
 			api.postAbsencesChecked(
-				periodIds = periodIds, apiUrl = user.jsonRpcApiUrl.toString(), user = user.user, key = user.key
+				periodIds = periodIds, apiUrl = user.school.apiUrl, user = user.user, key = user.key
 			)
 		}
 	}

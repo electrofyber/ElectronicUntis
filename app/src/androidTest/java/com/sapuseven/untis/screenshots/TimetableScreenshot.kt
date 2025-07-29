@@ -16,7 +16,7 @@ import com.sapuseven.untis.core.api.client.UserDataApi
 import com.sapuseven.untis.core.database.entity.UserDao
 import com.sapuseven.untis.data.settings.model.Settings
 import com.sapuseven.untis.modules.FakeUserModule.MOCK_USER_ID
-import com.sapuseven.untis.ui.pages.login.datainput.DEMO_API_URL
+import com.sapuseven.untis.feature.login.datainput.DEMO_API_URL
 import com.sapuseven.untis.ui.pages.timetable.Timetable
 import com.sapuseven.untis.ui.pages.timetable.TimetableViewModel
 import com.sapuseven.untis.ui.theme.generateColorScheme

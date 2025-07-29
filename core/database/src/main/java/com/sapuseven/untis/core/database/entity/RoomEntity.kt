@@ -11,7 +11,7 @@ import com.sapuseven.untis.core.model.ElementType
 	primaryKeys = ["id", "userId"],
 	indices = [Index("id"), Index("userId")],
 	foreignKeys = [ForeignKey(
-		entity = User::class,
+		entity = UserEntity::class,
 		parentColumns = ["id"],
 		childColumns = ["userId"],
 		onDelete = ForeignKey.CASCADE

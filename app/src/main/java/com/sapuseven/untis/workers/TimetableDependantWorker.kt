@@ -9,7 +9,7 @@ import android.os.Build
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import com.sapuseven.untis.core.api.model.untis.timetable.PeriodElement
-import com.sapuseven.untis.data.repository.MasterDataRepository
+import com.sapuseven.untis.core.data.repository.MasterDataRepository
 import com.sapuseven.untis.data.repository.TimetableRepository
 import com.sapuseven.untis.data.settings.model.UserSettings
 import com.sapuseven.untis.models.PeriodElementEntity

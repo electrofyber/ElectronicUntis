@@ -112,7 +112,7 @@ object MessageBubbleDefaults {
 @Composable
 fun MessageBubbleErrorPreview() {
 	MessageBubble(
-		icon = { Icon(painter = painterResource(id = R.drawable.all_error), contentDescription = stringResource(id = R.string.all_error)) },
+		icon = { Icon(painter = painterResource(id = R.drawable.core_ui_error), contentDescription = stringResource(id = R.string.all_error)) },
 		messageText = R.string.errormessagedictionary_generic,
 		messageTextRaw = "Here can be some additional error details that can even be very long"
 	)
@@ -122,7 +122,7 @@ fun MessageBubbleErrorPreview() {
 @Composable
 fun MessageBubbleErrorColorPreview() {
 	MessageBubble(
-		icon = { Icon(painter = painterResource(id = R.drawable.all_error), contentDescription = stringResource(id = R.string.all_error)) },
+		icon = { Icon(painter = painterResource(id = R.drawable.core_ui_error), contentDescription = stringResource(id = R.string.all_error)) },
 		colors = MessageBubbleDefaults.errorColors(),
 		messageText = R.string.errormessagedictionary_generic,
 		messageTextRaw = "Here can be some additional error details that can even be very long"

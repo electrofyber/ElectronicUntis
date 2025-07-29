@@ -3,7 +3,7 @@ package com.sapuseven.untis.domain
 import com.sapuseven.untis.core.api.model.untis.enumeration.ElementType
 import com.sapuseven.untis.core.api.model.untis.enumeration.PeriodState
 import com.sapuseven.untis.core.api.model.untis.timetable.Period
-import com.sapuseven.untis.data.repository.MasterDataRepository
+import com.sapuseven.untis.core.data.repository.MasterDataRepository
 import com.sapuseven.untis.data.repository.TimetableRepository
 import com.sapuseven.untis.data.repository.UserRepository
 import com.sapuseven.untis.models.RoomFinderItem

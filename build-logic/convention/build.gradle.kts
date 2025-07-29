@@ -86,8 +86,8 @@ gradlePlugin {
 			implementationClass = "AndroidRoomConventionPlugin"
 		}
 		register("androidFlavors") {
-			id = libs.plugins.betteruntis.android.application.flavors.get().pluginId
-			implementationClass = "AndroidApplicationFlavorsConventionPlugin"
+			id = libs.plugins.betteruntis.android.flavors.get().pluginId
+			implementationClass = "AndroidFlavorsConventionPlugin"
 		}
 		register("androidLint") {
 			id = libs.plugins.betteruntis.android.lint.get().pluginId

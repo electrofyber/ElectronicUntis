@@ -12,7 +12,7 @@ import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
-import com.sapuseven.untis.data.repository.MasterDataRepository
+import com.sapuseven.untis.core.data.repository.MasterDataRepository
 import com.sapuseven.untis.data.repository.TimetableRepository
 import com.sapuseven.untis.data.repository.UserSettingsRepository
 import com.sapuseven.untis.mappers.TimetableMapper

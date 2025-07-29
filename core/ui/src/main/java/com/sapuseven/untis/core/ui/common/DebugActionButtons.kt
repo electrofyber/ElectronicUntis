@@ -5,10 +5,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -35,8 +32,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
-import com.sapuseven.untis.core.api.model.untis.timetable.PeriodData
-import com.sapuseven.untis.core.model.Period
 import com.sapuseven.untis.core.ui.R
 import kotlinx.coroutines.launch
 
@@ -99,7 +94,7 @@ fun DebugDisclaimerAction(
 }
 
 //@Serializable
-private data class DebugPeriodInfo(
+/*private data class DebugPeriodInfo(
 	val period: Period,
 	val periodData: PeriodData?
 )
@@ -122,7 +117,7 @@ fun DebugTimetableItemDetailsAction(
 			}
 		}
 	}
-}
+}*/
 
 @Composable
 private inline fun <reified T> RawText(item: T, encode: Boolean = true) {

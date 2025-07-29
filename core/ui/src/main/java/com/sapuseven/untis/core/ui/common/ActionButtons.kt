@@ -20,7 +20,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import com.sapuseven.untis.core.database.entity.User
+import com.sapuseven.untis.core.model.User
 import com.sapuseven.untis.core.ui.R
 
 @Composable
@@ -49,7 +49,7 @@ fun ProfileSelectorAction(
 	) {
 		users.forEach {
 			DropdownMenuItem(
-				text = { Text(it.getDisplayedName()) },
+				text = { Text(it.displayName) },
 				leadingIcon = {
 					if (currentSelection?.id == it.id) {
 						Icon(

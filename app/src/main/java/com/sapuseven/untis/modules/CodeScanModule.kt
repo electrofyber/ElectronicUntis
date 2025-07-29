@@ -1,8 +1,8 @@
 package com.sapuseven.untis.modules
 
 import android.content.Context
-import com.sapuseven.untis.services.CodeScanService
-import com.sapuseven.untis.services.CodeScanServiceImpl
+import com.sapuseven.untis.feature.login.CodeScanService
+import com.sapuseven.untis.feature.login.CodeScanServiceImpl
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

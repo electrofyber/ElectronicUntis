@@ -15,7 +15,7 @@ import com.sapuseven.compose.protostore.data.SettingsRepository
 import com.sapuseven.compose.protostore.ui.preferences.Preference
 import com.sapuseven.untis.core.api.model.untis.enumeration.ElementType
 import com.sapuseven.untis.core.api.model.untis.timetable.PeriodElement
-import com.sapuseven.untis.data.repository.MasterDataRepository
+import com.sapuseven.untis.core.data.repository.MasterDataRepository
 import com.sapuseven.untis.data.settings.model.TimetableElement
 import com.sapuseven.untis.core.database.entity.ElementEntity
 import com.sapuseven.untis.core.ui.dialogs.ElementPickerDialog

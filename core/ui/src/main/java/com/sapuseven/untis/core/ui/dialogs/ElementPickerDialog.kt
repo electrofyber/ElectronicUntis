@@ -54,28 +54,27 @@ import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
+import com.sapuseven.untis.core.model.Element
+import com.sapuseven.untis.core.model.ElementType
 import com.sapuseven.untis.core.ui.R
-import com.sapuseven.untis.core.api.model.untis.enumeration.ElementType
-import com.sapuseven.untis.core.database.entity.ElementEntity
 import com.sapuseven.untis.core.ui.common.AbbreviatedText
 import com.sapuseven.untis.core.ui.common.AppScaffold
 import com.sapuseven.untis.core.ui.common.NavigationBarInset
 import com.sapuseven.untis.core.ui.common.disabled
 import com.sapuseven.untis.core.ui.functional.insetsPaddingValues
-import kotlin.collections.map
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ElementPickerDialogFullscreen(
 	title: @Composable () -> Unit,
-	elements: Map<ElementType, List<ElementEntity>>,
+	elements: Map<ElementType, List<Element>>,
 	initialType: ElementType? = null,
 	multiSelect: Boolean = false,
 	hideTypeSelection: Boolean = false,
 	hideTypeSelectionPersonal: Boolean = false,
 	onDismiss: (success: Boolean) -> Unit = {},
-	onSelect: (selectedItem: ElementEntity?) -> Unit = {},
-	onMultiSelect: (selectedItems: List<ElementEntity>) -> Unit = {},
+	onSelect: (selectedItem: Element?) -> Unit = {},
+	onMultiSelect: (selectedItems: List<Element>) -> Unit = {},
 	additionalActions: (@Composable () -> Unit) = {}
 ) {
 	var selectedType by remember { mutableStateOf(initialType) }
@@ -83,7 +82,7 @@ fun ElementPickerDialogFullscreen(
 	var search by remember { mutableStateOf("") }
 
 	val items = remember(selectedType) {
-		mutableStateMapOf<ElementEntity, Boolean>().apply {
+		mutableStateMapOf<Element, Boolean>().apply {
 			elements[selectedType]?.forEach { put(it, false) }
 		}
 	}
@@ -217,17 +216,17 @@ fun ElementPickerDialogFullscreen(
 @Composable
 fun ElementPickerDialog(
 	title: (@Composable () -> Unit)?,
-	elements: Map<ElementType, List<ElementEntity>>,
+	elements: Map<ElementType, List<Element>>,
 	initialType: ElementType? = null,
 	hideTypeSelection: Boolean = false,
 	hideTypeSelectionPersonal: Boolean = false,
 	onDismiss: (success: Boolean) -> Unit = {},
-	onSelect: (selectedItem: ElementEntity?) -> Unit = {}
+	onSelect: (selectedItem: Element?) -> Unit = {}
 ) {
 	var selectedType by remember { mutableStateOf(initialType) }
 
 	val items = remember(selectedType) {
-		mutableStateMapOf<ElementEntity, Boolean>().apply {
+		mutableStateMapOf<Element, Boolean>().apply {
 			elements[selectedType]?.forEach { put(it, false) }
 		}
 	}
@@ -282,8 +281,8 @@ fun ElementPickerElements(
 	multiSelect: Boolean = false,
 	modifier: Modifier,
 	onDismiss: (success: Boolean) -> Unit = {},
-	onSelect: (selectedItem: ElementEntity?) -> Unit = {},
-	items: MutableMap<ElementEntity, Boolean>,
+	onSelect: (selectedItem: Element?) -> Unit = {},
+	items: MutableMap<Element, Boolean>,
 	filter: String = "",
 	contentPadding: PaddingValues = PaddingValues(0.dp)
 ) {
@@ -302,8 +301,8 @@ fun ElementPickerElements(
 						.map {
 							object {
 								val element = it
-								val name = it.getShortName()
-								val enabled = it.isAllowed()
+								val name = it.shortName
+								val enabled = it.timetableAllowed
 							}
 						}
 						.filter { it.name.contains(filter, true) }
@@ -374,14 +373,14 @@ fun ElementPickerTypeSelection(
 	hideTypeSelectionPersonal: Boolean = false,
 	onTypeChange: (ElementType?) -> Unit,
 	onDismiss: (success: Boolean) -> Unit = {},
-	onSelect: (selectedItem: ElementEntity?) -> Unit = {}
+	onSelect: (selectedItem: Element?) -> Unit = {}
 ) {
 	NavigationBarInset {
 		if (!hideTypeSelectionPersonal)
 			NavigationBarItem(
 				icon = {
 					Icon(
-						painterResource(id = R.drawable.all_prefs_personal),
+						painterResource(id = R.drawable.core_ui_personal),
 						contentDescription = null
 					)
 				},
@@ -401,7 +400,7 @@ fun ElementPickerTypeSelection(
 		NavigationBarItem(
 			icon = {
 				Icon(
-					painterResource(id = R.drawable.all_classes),
+					painterResource(id = R.drawable.core_ui_classes),
 					contentDescription = null
 				)
 			},
@@ -412,7 +411,7 @@ fun ElementPickerTypeSelection(
 		NavigationBarItem(
 			icon = {
 				Icon(
-					painterResource(id = R.drawable.all_teachers),
+					painterResource(id = R.drawable.core_ui_teachers),
 					contentDescription = null
 				)
 			},
@@ -423,7 +422,7 @@ fun ElementPickerTypeSelection(
 		NavigationBarItem(
 			icon = {
 				Icon(
-					painterResource(id = R.drawable.all_rooms),
+					painterResource(id = R.drawable.core_ui_rooms),
 					contentDescription = null
 				)
 			},

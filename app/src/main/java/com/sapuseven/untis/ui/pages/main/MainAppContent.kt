@@ -30,11 +30,12 @@ import com.sapuseven.untis.core.datastore.model.DarkTheme
 import com.sapuseven.untis.core.datastore.model.UserSettings
 import com.sapuseven.untis.core.ui.common.AppScaffold
 import com.sapuseven.untis.core.ui.common.ReportsInfoBottomSheet
+import com.sapuseven.untis.feature.login.navigation.LoginRoute
+import com.sapuseven.untis.feature.timetable.navigation.TimetableRoute
 import com.sapuseven.untis.helpers.AppTheme
 import com.sapuseven.untis.helpers.ThemeMode
-import com.sapuseven.untis.ui.navigation.AppNavHost
+import com.sapuseven.untis.navigation.AppNavHost
 import com.sapuseven.untis.ui.navigation.AppNavigator
-import com.sapuseven.untis.ui.navigation.AppRoutes
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
@@ -87,7 +88,7 @@ fun MainAppContent(
 				is UserState.NoUsers -> {
 					AppNavHost(
 						navigator = navigator,
-						startDestination = AppRoutes.Login
+						startDestination = LoginRoute
 					)
 				}
 
@@ -95,7 +96,7 @@ fun MainAppContent(
 					key(userState.user.id) {
 						AppNavHost(
 							navigator = navigator,
-							startDestination = AppRoutes.Timetable()
+							startDestination = TimetableRoute()
 						)
 					}
 

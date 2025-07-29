@@ -29,7 +29,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.sapuseven.untis.R
-import com.sapuseven.untis.data.repository.LocalMasterDataRepository
+import com.sapuseven.untis.core.data.repository.LocalMasterDataRepository
 import com.sapuseven.untis.ui.animations.fullscreenDialogAnimationEnter
 import com.sapuseven.untis.ui.animations.fullscreenDialogAnimationExit
 import com.sapuseven.untis.core.ui.common.AppScaffold

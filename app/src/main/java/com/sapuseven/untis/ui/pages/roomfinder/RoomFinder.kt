@@ -308,7 +308,7 @@ fun RoomListItem(
 						id = when {
 							isOccupied -> R.drawable.all_cross
 							isFree -> R.drawable.all_check
-							else -> R.drawable.all_error
+							else -> R.drawable.core_ui_error
 						}
 					),
 					tint = when {

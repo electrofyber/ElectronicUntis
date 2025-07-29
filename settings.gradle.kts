@@ -34,10 +34,13 @@ enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 
 include(":app")
 include(":feature:glance")
+include(":feature:login")
+include(":feature:timetable")
 include(":core:api")
 include(":core:data")
 include(":core:database")
 include(":core:datastore")
+include(":core:domain")
 include(":core:model")
 include(":core:ui")
 

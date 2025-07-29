@@ -1,15 +1,20 @@
 package com.sapuseven.untis.core.data.repository
 
 import androidx.datastore.core.DataStore
-import com.sapuseven.untis.core.database.entity.User
+import com.sapuseven.untis.core.api.model.untis.MasterData
+import com.sapuseven.untis.core.data.mapper.toDomain
+import com.sapuseven.untis.core.data.mapper.toEntity
 import com.sapuseven.untis.core.database.entity.UserDao
+import com.sapuseven.untis.core.database.entity.UserEntity
 import com.sapuseven.untis.core.datastore.model.Settings
+import com.sapuseven.untis.core.model.User
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withTimeout
@@ -22,7 +27,7 @@ interface UserRepository {
 	 *
 	 * Since there is no distinction between "no user" and "loading user",
 	 * prefer to use [userState] and handle each case accordingly,
-	 * or just use [requireUser] from a coroutine context.
+	 * or just use [currentUser] from a coroutine context.
 	 */
 	val currentUser: User?
 
@@ -30,7 +35,7 @@ interface UserRepository {
 	 * The current user state, which can be one of:
 	 * - [UserState.Loading] when the active user is being loaded.
 	 * - [UserState.NoUsers] when there are no users available.
-	 * - [UserState.User] when a user is currently active.
+	 * - [UserState.ActiveUser] when a user is currently active.
 	 */
 	val userState: StateFlow<UserState>
 
@@ -46,10 +51,16 @@ interface UserRepository {
 	 *
 	 * @throws IllegalStateException If no user exists.
 	 */
-	suspend fun requireUser(): User
+	suspend fun currentUser(): User
 
 	/**
 	 * Switches to another user.
+	 * @param userId The ID of the user to switch to.
+	 */
+	suspend fun getUserById(userId: Long): User?
+
+	/**
+	 * Switches the currently active user.
 	 * @param userId The ID of the user to switch to.
 	 */
 	suspend fun switchUser(userId: Long)
@@ -59,6 +70,14 @@ interface UserRepository {
 	 * @param user An instance of the user to delete.
 	 */
 	suspend fun deleteUser(user: User)
+
+	/**
+	 * Updates a user in the database.
+	 * Can be used to create a new user if the ID is 0.
+	 * @param user An instance of the user to add.
+	 * @param masterData The master data for the user.
+	 */
+	suspend fun updateUser(user: User, masterData: MasterData): Long
 }
 
 @Singleton
@@ -69,14 +88,16 @@ class UserRepositoryImpl @Inject constructor(
 	private val _userState = MutableStateFlow<UserState>(UserState.Loading)
 	override val userState: StateFlow<UserState> = _userState
 
-	override val allUsersState: StateFlow<List<User>> = userDao.getAllFlow().stateIn(
-		scope = CoroutineScope(Dispatchers.IO),
-		started = SharingStarted.WhileSubscribed(5_000),
-		initialValue = emptyList()
-	)
+	override val allUsersState: StateFlow<List<User>> = userDao.getAllFlow()
+		.map { it.map(UserEntity::toDomain) }
+		.stateIn(
+			scope = CoroutineScope(Dispatchers.IO),
+			started = SharingStarted.WhileSubscribed(5_000),
+			initialValue = emptyList()
+		)
 
 	override val currentUser: User?
-		get() = (_userState.value as? UserState.User)?.user
+		get() = (_userState.value as? UserState.ActiveUser)?.user
 
 	init {
 		loadActiveUser()
@@ -89,7 +110,7 @@ class UserRepositoryImpl @Inject constructor(
 	}
 
 	fun switchUser(user: User) {
-		_userState.value = UserState.User(user)
+		_userState.value = UserState.ActiveUser(user)
 		CoroutineScope(Dispatchers.IO).launch {
 			settingsDataStore.updateData { currentSettings ->
 				currentSettings.toBuilder()
@@ -99,19 +120,20 @@ class UserRepositoryImpl @Inject constructor(
 		}
 	}
 
-	override suspend fun requireUser(): User {
+	override suspend fun currentUser(): User {
 		return when (val state = withTimeout(1_000) {
 			userState.first { it !is UserState.Loading }
 		}) {
-			is UserState.User -> state.user
+			is UserState.ActiveUser -> state.user
 			UserState.NoUsers -> error("There are no users available.")
 			UserState.Loading -> error("Users are still loading.") // should never happen
 		}
 	}
 
+	override suspend fun getUserById(userId: Long) = userDao.getByIdAsync(userId)?.toDomain()
+
 	override suspend fun switchUser(userId: Long) {
-		val user = userDao.getByIdAsync(userId)
-			?: userDao.getAllFlow().first().firstOrNull()
+		val user = (userDao.getByIdAsync(userId) ?: userDao.getAllFlow().first().firstOrNull())?.toDomain()
 
 		user?.let {
 			switchUser(it)
@@ -121,22 +143,37 @@ class UserRepositoryImpl @Inject constructor(
 	}
 
 	override suspend fun deleteUser(user: User) {
-		userDao.delete(user)
+		userDao.delete(user.id)
 
 		val remainingUsers = userDao.getAllAsync()
 		val currentState = _userState.value
-		if (currentState is UserState.User && currentState.user == user) {
+		if (currentState is UserState.ActiveUser && currentState.user == user) {
 			if (remainingUsers.isEmpty()) {
 				_userState.value = UserState.NoUsers
 			} else {
-				_userState.value = UserState.User(remainingUsers.first())
+				_userState.value = UserState.ActiveUser(remainingUsers.first().toDomain())
 			}
 		}
+	}
+
+	override suspend fun updateUser(
+		user: User,
+		masterData: MasterData
+	): Long {
+		val userId = user.id.takeIf { it > 0L }?.also {
+			userDao.update(user.toEntity())
+		} ?: run {
+			userDao.insert(user.toEntity())
+		}
+
+		userDao.deleteUserData(userId)
+		userDao.insertMasterData(userId, masterData)
+		return userId
 	}
 }
 
 sealed class UserState {
 	data object Loading : UserState()
 	data object NoUsers : UserState()
-	data class User(val user: com.sapuseven.untis.core.database.entity.User) : UserState()
+	data class ActiveUser(val user: User) : UserState()
 }

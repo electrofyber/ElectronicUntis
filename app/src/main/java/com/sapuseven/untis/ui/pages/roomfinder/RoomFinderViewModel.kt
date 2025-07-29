@@ -3,7 +3,7 @@ package com.sapuseven.untis.ui.pages.roomfinder
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sapuseven.untis.core.api.model.untis.enumeration.ElementType
-import com.sapuseven.untis.data.repository.MasterDataRepository
+import com.sapuseven.untis.core.data.repository.MasterDataRepository
 import com.sapuseven.untis.data.repository.UserRepository
 import com.sapuseven.untis.domain.GetRoomFinderItemsUseCase
 import com.sapuseven.untis.models.RoomFinderHour

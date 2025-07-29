@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<dimen name="feature_login_size_icon">192dp</dimen>
+	<dimen name="feature_login_margin_input_horizontal">16dp</dimen>
+	<dimen name="feature_login_margin_input_vertical">8dp</dimen>
+	<dimen name="feature_login_margin_pleaselogin_top">24dp</dimen>
+	<dimen name="feature_login_margin_scrollview">48dp</dimen>
+</resources>

@@ -11,6 +11,7 @@ package com.sapuseven.untis.core.model
  * @property backColor The suggested background color for the element, if any.
  * @property replaced Indicates whether this element was replaced by another element of the same type.
  * This is typically used for cases like teacher substitutions or room changes.
+ * @property timetableAllowed Indicates whether or not it is allowed to view the timetable of this element.
  * @see Timetable
  * @see Period
  */
@@ -22,4 +23,5 @@ data class Element(
 	val foreColor: String?,
 	val backColor: String?,
 	val replaced: Boolean,
+	val timetableAllowed: Boolean,
 )

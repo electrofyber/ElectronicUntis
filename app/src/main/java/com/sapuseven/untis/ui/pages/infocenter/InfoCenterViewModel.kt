@@ -3,7 +3,7 @@ package com.sapuseven.untis.ui.pages.infocenter
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sapuseven.untis.core.api.model.untis.enumeration.Right
-import com.sapuseven.untis.data.repository.MasterDataRepository
+import com.sapuseven.untis.core.data.repository.MasterDataRepository
 import com.sapuseven.untis.data.repository.UserRepository
 import com.sapuseven.untis.data.repository.UserSettingsRepository
 import com.sapuseven.untis.domain.GetAbsencesUseCase

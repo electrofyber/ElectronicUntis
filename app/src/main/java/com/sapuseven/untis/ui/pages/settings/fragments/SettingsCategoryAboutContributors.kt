@@ -100,7 +100,7 @@ fun SettingsCategoryAboutContributors(navController: NavController) {
 						.padding(horizontal = 16.dp, vertical = 8.dp),
 					icon = {
 						Icon(
-							painter = painterResource(id = R.drawable.all_error),
+							painter = painterResource(id = R.drawable.core_ui_error),
 							contentDescription = stringResource(id = R.string.all_error)
 						)
 					},

@@ -13,6 +13,6 @@ class UserRepositoryUserProvider @Inject constructor(
 	}
 
 	override suspend fun requireUserId(): Long {
-		return userRepository.requireUser().id
+		return userRepository.currentUser().id
 	}
 }
