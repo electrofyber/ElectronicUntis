@@ -6,8 +6,8 @@ import androidx.hilt.work.HiltWorkerFactory
 import androidx.work.Configuration
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
+import com.sapuseven.untis.core.datastore.GlobalSettingsDataSource
 import com.sapuseven.untis.helpers.analytics.initSentry
-import com.sapuseven.untis.data.repository.GlobalSettingsRepository
 import com.sapuseven.untis.workers.DailyWorker
 import com.sapuseven.untis.workers.DailyWorker.Companion.TAG_DAILY_WORK
 import dagger.hilt.android.HiltAndroidApp
@@ -22,7 +22,7 @@ import javax.inject.Inject
 
 @HiltAndroidApp
 class App : Application(), Configuration.Provider {
-	@Inject lateinit var globalSettingsRepository: GlobalSettingsRepository;
+	@Inject lateinit var globalSettings: GlobalSettingsDataSource;
 
 	@Inject lateinit var workerFactory: HiltWorkerFactory;
 
@@ -33,7 +33,7 @@ class App : Application(), Configuration.Provider {
 		super.onCreate()
 
 		ioScope.launch {
-			val settings = globalSettingsRepository.getSettings().first()
+			val settings = globalSettings.getSettings().first()
 			initSentry(
 				settings.errorReportingEnable,
 				settings.errorReportingEnableBreadcrumbs

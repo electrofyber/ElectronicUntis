@@ -36,15 +36,14 @@ import com.sapuseven.compose.protostore.ui.preferences.SwitchPreference
 import com.sapuseven.compose.protostore.ui.utils.LocalListItemColors
 import com.sapuseven.untis.core.ui.R
 import com.sapuseven.untis.core.ui.functional.insetsPaddingValues
-import com.sapuseven.untis.data.repository.GlobalSettingsRepository
 import kotlinx.coroutines.launch
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ReportsInfoBottomSheet(
-	repository: GlobalSettingsRepository,
-	sheetState: SheetState
+	sheetState: SheetState,
+	onSave: () -> Unit,
 ) {
 	val scope = rememberCoroutineScope()
 	var saveEnabled by rememberSaveable { mutableStateOf(true) }
@@ -141,12 +140,7 @@ fun ReportsInfoBottomSheet(
 						enabled = saveEnabled,
 						onClick = {
 							saveEnabled = false
-							scope.launch {
-								repository.updateSettings {
-									errorReportingSet = true
-								}
-								sheetState.hide()
-							}
+							onSave()
 						}
 					) {
 						Text(text = stringResource(R.string.main_dialog_reports_save))

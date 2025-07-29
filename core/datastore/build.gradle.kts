@@ -47,11 +47,11 @@ protobuf {
 }
 
 dependencies {
-	implementation(libs.sapuseven.protostore)
 	implementation(libs.kotlinx.serialization.json)
 
 	api(libs.androidx.datastore)
 	api(libs.protobuf.kotlin.lite)
+	api(libs.sapuseven.protostore)
 	api(projects.core.model)
 	/*
 	api(projects.core.datastoreProto)

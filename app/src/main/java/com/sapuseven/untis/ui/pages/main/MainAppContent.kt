@@ -19,32 +19,35 @@ import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import com.sapuseven.untis.R
-import com.sapuseven.untis.data.repository.GlobalSettingsRepository
-import com.sapuseven.untis.data.repository.UserRepository
-import com.sapuseven.untis.data.settings.model.DarkTheme
-import com.sapuseven.untis.data.settings.model.UserSettings
-import com.sapuseven.untis.helpers.AppTheme
-import com.sapuseven.untis.helpers.ThemeMode
+import com.sapuseven.untis.core.data.repository.UserState
+import com.sapuseven.untis.core.datastore.GlobalSettingsDataSource
+import com.sapuseven.untis.core.datastore.model.DarkTheme
+import com.sapuseven.untis.core.datastore.model.UserSettings
 import com.sapuseven.untis.core.ui.common.AppScaffold
 import com.sapuseven.untis.core.ui.common.ReportsInfoBottomSheet
+import com.sapuseven.untis.helpers.AppTheme
+import com.sapuseven.untis.helpers.ThemeMode
 import com.sapuseven.untis.ui.navigation.AppNavHost
 import com.sapuseven.untis.ui.navigation.AppNavigator
 import com.sapuseven.untis.ui.navigation.AppRoutes
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainAppContent(
-	userState: UserRepository.UserState,
-	globalSettingsRepository: GlobalSettingsRepository,
+	userState: UserState,
+	globalSettings: GlobalSettingsDataSource,
 	settingsFlow: Flow<UserSettings>,
 	navigator: AppNavigator
 ) {
+	val scope = rememberCoroutineScope()
 	val settings by settingsFlow.collectAsState(initial = UserSettings.getDefaultInstance())
 
 	val darkTheme = when (settings.darkTheme) {
@@ -58,7 +61,7 @@ fun MainAppContent(
 	AppTheme(darkTheme, darkThemeOled, themeColor) {
 		Surface(modifier = Modifier.fillMaxSize()) {
 			when (userState) {
-				is UserRepository.UserState.Loading -> {
+				is UserState.Loading -> {
 					AppScaffold(
 						topBar = {
 							CenterAlignedTopAppBar(
@@ -81,14 +84,14 @@ fun MainAppContent(
 					) {}
 				}
 
-				is UserRepository.UserState.NoUsers -> {
+				is UserState.NoUsers -> {
 					AppNavHost(
 						navigator = navigator,
 						startDestination = AppRoutes.Login
 					)
 				}
 
-				is UserRepository.UserState.User -> {
+				is UserState.User -> {
 					key(userState.user.id) {
 						AppNavHost(
 							navigator = navigator,
@@ -97,14 +100,21 @@ fun MainAppContent(
 					}
 
 					val bottomSheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
-					LaunchedEffect(globalSettingsRepository) {
-						globalSettingsRepository.getSettings().first().let {
+					LaunchedEffect(globalSettings) {
+						globalSettings.getSettings().first().let {
 							if (!it.errorReportingSet) {
 								bottomSheetState.show()
 							}
 						}
 					}
-					ReportsInfoBottomSheet(globalSettingsRepository, bottomSheetState)
+					ReportsInfoBottomSheet(bottomSheetState) {
+						scope.launch {
+							globalSettings.updateSettings {
+								errorReportingSet = true
+							}
+							bottomSheetState.hide()
+						}
+					}
 				}
 			}
 		}

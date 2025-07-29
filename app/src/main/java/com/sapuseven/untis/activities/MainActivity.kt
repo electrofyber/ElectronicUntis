@@ -9,11 +9,11 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.sapuseven.untis.core.datastore.GlobalSettingsDataSource
 import com.sapuseven.untis.ui.navigation.AppNavigator
 import com.sapuseven.untis.ui.navigation.AppRoutes
 import com.sapuseven.untis.ui.pages.main.MainAppContent
 import com.sapuseven.untis.ui.pages.main.MainViewModel
-import com.sapuseven.untis.data.repository.GlobalSettingsRepository
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -26,7 +26,7 @@ class MainActivity : ComponentActivity() {
 	}
 
 	@Inject
-	lateinit var globalSettingsRepository: GlobalSettingsRepository
+	lateinit var globalSettings: GlobalSettingsDataSource
 
 	@Inject
 	lateinit var appNavigator: AppNavigator
@@ -55,7 +55,7 @@ class MainActivity : ComponentActivity() {
 
 			MainAppContent(
 				userState = userState,
-				globalSettingsRepository = globalSettingsRepository,
+				globalSettings = globalSettings,
 				settingsFlow = viewModel.userSettingsFlow,
 				navigator = viewModel.appNavigator
 			)
