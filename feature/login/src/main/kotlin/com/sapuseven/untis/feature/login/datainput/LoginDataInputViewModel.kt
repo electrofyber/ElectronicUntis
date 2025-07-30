@@ -181,6 +181,8 @@ class LoginDataInputViewModel @Inject constructor(
 				// TODO: Go to timetable
 			},
 			onFailure = { e ->
+				loading = false
+
 				if (e is UntisApiException) {
 					Log.e(LoginDataInputViewModel::class.simpleName, "loadData Untis error", e)
 
@@ -200,8 +202,6 @@ class LoginDataInputViewModel @Inject constructor(
 				}
 			}
 		)
-
-		loading = false
 	}
 
 	fun disableSearchMode() {
