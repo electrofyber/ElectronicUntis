@@ -22,6 +22,7 @@ import com.sapuseven.untis.core.domain.LoginAndSaveUserUseCase
 import com.sapuseven.untis.core.model.School
 import com.sapuseven.untis.core.model.User
 import com.sapuseven.untis.core.ui.R
+import com.sapuseven.untis.feature.login.CodeScanService
 import com.sapuseven.untis.feature.login.navigation.LoginDataInputRoute
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -39,6 +40,7 @@ sealed class ExistingDataSource {
 class LoginDataInputViewModel @Inject constructor(
 	private val loginUseCase: LoginAndSaveUserUseCase,
 	private val userRepository: UserRepository,
+	private val codeScanService: CodeScanService,
 	savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
 	private val args = savedStateHandle.toRoute<LoginDataInputRoute>()
@@ -92,9 +94,10 @@ class LoginDataInputViewModel @Inject constructor(
 		} ?: true
 	}
 
-	val codeScanResultHandler: (String?) -> Unit = {
+	val codeScanResultHandler: (String) -> Unit = {
 		try {
-			it?.let { loadFromData(it) }
+			loadFromSetSchoolUri(it)
+			login()
 		} catch (_: Exception) {
 			showQrCodeErrorDialog = true
 		}
@@ -120,15 +123,15 @@ class LoginDataInputViewModel @Inject constructor(
 			loginData.apiUrl.value = DEMO_API_URL
 		}
 
+		args.autoLoginData?.let(codeScanResultHandler)
+
 		if (args.autoLogin) {
 			login()
 		}
-
-		//codeScanResultHandler(args.autoLoginData)
 	}
 
 	fun setCodeScanLauncher(launcher: ManagedActivityResultLauncher<ScanOptions, ScanIntentResult>) {
-		//codeScanService.setLauncher(launcher)
+		codeScanService.setLauncher(launcher)
 	}
 
 	fun onLoginClick() {
@@ -140,7 +143,7 @@ class LoginDataInputViewModel @Inject constructor(
 		}
 	}
 
-	private fun loadFromData(data: String?) {
+	private fun loadFromSetSchoolUri(data: String?) {
 		if (data == null) return
 		val appLinkData = data.toUri()
 
@@ -155,8 +158,6 @@ class LoginDataInputViewModel @Inject constructor(
 			loginData.apiUrl.value = appLinkData.getQueryParameter("apiUrl")
 
 			advanced = loginData.apiUrl.value?.isNotEmpty() == true
-
-			//login()
 		} else {
 			showQrCodeErrorDialog = true
 		}
@@ -165,41 +166,46 @@ class LoginDataInputViewModel @Inject constructor(
 	private fun login() = viewModelScope.launch {
 		loading = true
 
-		try {
-			val anonymous = loginData.anonymous.value == true
-			val userId = loginUseCase(
-				loginData.schoolName.value.orEmpty(),
-				loginData.profileName.value,
-				loginData.username.value.takeIf { !anonymous },
-				loginData.password.value.takeIf { !anonymous },
-				loginData.secondFactor.value,
-				loginData.apiUrl.value.takeIf { advanced }
+		val anonymous = loginData.anonymous.value == true
+		with(loginData) {
+			loginUseCase(
+				schoolName.value.orEmpty(),
+				profileName.value,
+				username.value.takeIf { !anonymous },
+				password.value.takeIf { !anonymous },
+				secondFactor.value,
+				apiUrl.value.takeIf { advanced }
 			)
-			// TODO: Maybe store the user id somewhere and navigate to timetable
-		} catch (e: UntisApiException) {
-			Log.e(LoginDataInputViewModel::class.simpleName, "loadData Untis error", e)
+		}.fold(
+			onSuccess = {
+				// TODO: Go to timetable
+			},
+			onFailure = { e ->
+				if (e is UntisApiException) {
+					Log.e(LoginDataInputViewModel::class.simpleName, "loadData Untis error", e)
 
-			val errorTextRes: Int? = null//ErrorMessageDictionary.getErrorMessageResource(e.error?.code, false)
-			errorText = errorTextRes ?: R.string.errormessagedictionary_generic
-			if (e.error?.code == UntisErrorCode.REQUIRE2_FACTOR_AUTHENTICATION_TOKEN) {
-				showSecondFactorInput = true
-			} else {
-				errorTextRaw = when (e.error?.code) {
-					else -> if (errorTextRes == null) e.error?.message else null
+					val errorTextRes: Int? = null// TODO ErrorMessageDictionary.getErrorMessageResource(e.error?.code, false)
+					errorText = errorTextRes ?: R.string.errormessagedictionary_generic
+					if (e.error?.code == UntisErrorCode.REQUIRE2_FACTOR_AUTHENTICATION_TOKEN) {
+						showSecondFactorInput = true
+					} else {
+						errorTextRaw = when (e.error?.code) {
+							else -> if (errorTextRes == null) e.error?.message else null
+						}
+					}
+				} else {
+					Log.e(LoginDataInputViewModel::class.simpleName, "loadData error", e)
+					errorText = R.string.errormessagedictionary_generic
+					errorTextRaw = e.message
 				}
 			}
-		} catch (e: Exception) {
-			Log.e(LoginDataInputViewModel::class.simpleName, "loadData error", e)
-			errorText = R.string.errormessagedictionary_generic
-			errorTextRaw = e.message
-		} finally {
-			loading = false
-		}
+		)
+
+		loading = false
 	}
 
-	fun goBack() {
+	fun disableSearchMode() {
 		if (searchMode) searchMode = false
-		//else navigator.popBackStack()
 	}
 
 	fun onQrCodeErrorDialogDismiss() {
@@ -207,7 +213,7 @@ class LoginDataInputViewModel @Inject constructor(
 	}
 
 	fun onCodeScanClick() {
-		//codeScanService.scanCode(codeScanResultHandler)
+		codeScanService.scanCode(codeScanResultHandler)
 	}
 
 	fun selectSchool(it: School) {

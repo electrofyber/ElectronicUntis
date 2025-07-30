@@ -1,78 +1,15 @@
 package com.sapuseven.untis.feature.timetable
 
-import android.content.Context
-import android.util.Log
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.sp
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import androidx.navigation.NavOptionsBuilder
-import androidx.navigation.toRoute
-import com.sapuseven.compose.protostore.ui.preferences.convertRangeToPair
-import com.sapuseven.untis.core.api.exception.UntisApiException
-import com.sapuseven.untis.core.api.model.untis.timetable.Period
-import com.sapuseven.untis.core.api.model.untis.timetable.PeriodElement
-import com.sapuseven.untis.core.data.repository.DebugInfoRepository
-import com.sapuseven.untis.core.data.repository.MasterDataRepository
-import com.sapuseven.untis.core.data.repository.TimetableRepository
-import com.sapuseven.untis.core.data.repository.UserRepository
-import com.sapuseven.untis.data.repository.MasterDataRepository
-import com.sapuseven.untis.helpers.BuildConfigFieldsProvider
-import com.sapuseven.untis.mappers.TimetableMapper
-import com.sapuseven.untis.core.database.entity.ElementEntity
-import com.sapuseven.untis.core.database.entity.User
-import com.sapuseven.untis.core.datastore.UserSettingsDataSource
 import com.sapuseven.untis.core.model.ElementType
-import com.sapuseven.untis.core.model.Timetable
-import com.sapuseven.untis.services.WeekLogicService
-import com.sapuseven.untis.ui.navigation.AppNavigator
-import com.sapuseven.untis.ui.navigation.AppRoutes
-import com.sapuseven.untis.ui.preferences.toPeriodElement
-import com.sapuseven.untis.ui.weekview.Event
-import com.sapuseven.untis.ui.weekview.EventStyle
-import com.sapuseven.untis.ui.weekview.Holiday
-import com.sapuseven.untis.ui.weekview.WeekViewColorScheme
-import com.sapuseven.untis.ui.weekview.WeekViewEventStyle
-import com.sapuseven.untis.ui.weekview.WeekViewHour
-import com.sapuseven.untis.ui.weekview.startDateForPageIndex
-import crocodile8.universal_cache.CachedSourceResult
-import crocodile8.universal_cache.FromCache
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.async
-import kotlinx.coroutines.awaitAll
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.FlowCollector
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.emptyFlow
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.stateIn
-import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withTimeoutOrNull
-import java.time.Clock
-import java.time.Instant
-import java.time.LocalDate
-import javax.inject.Inject
-import kotlin.collections.isNotEmpty
-import kotlin.collections.toList
 
 @HiltViewModel
 class TimetableViewModel @AssistedInject constructor(
-	private val userSettingsDataSource: UserSettingsDataSource,
+	/*private val userSettingsDataSource: UserSettingsDataSource,
 	private val timetableMapper: TimetableMapper,
 	internal val userRepository: UserRepository,
 	internal val timetableRepository: TimetableRepository,
@@ -80,7 +17,7 @@ class TimetableViewModel @AssistedInject constructor(
 	internal val debugInfoRepository: DebugInfoRepository,
 	internal val clock: Clock,
 	internal val weekLogicService: WeekLogicService,
-	buildConfigFieldsProvider: BuildConfigFieldsProvider,
+	buildConfigFieldsProvider: BuildConfigFieldsProvider,*/
 	@Assisted val elementId: Long?,
 	@Assisted val elementType: ElementType?,
 ) : ViewModel() {
@@ -89,7 +26,7 @@ class TimetableViewModel @AssistedInject constructor(
 		fun create(elementId: Long?, elementType: ElementType?): TimetableViewModel
 	}
 
-	private val allElements = masterDataRepository.timetableElements
+	/*private val allElements = masterDataRepository.timetableElements
 		.stateIn(
 			scope = viewModelScope,
 			started = SharingStarted.WhileSubscribed(5_000),
@@ -368,5 +305,5 @@ class TimetableViewModel @AssistedInject constructor(
 		emitEvents(mapOf(startDate to events))
 		if (updateLastRefresh)
 			_lastRefresh.emit(refreshTimestamp)
-	}
+	}*/
 }

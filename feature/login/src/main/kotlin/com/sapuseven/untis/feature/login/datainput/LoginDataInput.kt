@@ -1,17 +1,25 @@
 package com.sapuseven.untis.feature.login.datainput
 
 import android.content.res.Configuration
+import androidx.activity.compose.BackHandler
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.ime
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeDrawing
+import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.windowInsetsBottomHeight
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.relocation.BringIntoViewRequester
 import androidx.compose.foundation.relocation.bringIntoViewRequester
 import androidx.compose.foundation.rememberScrollState
@@ -33,6 +41,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -66,13 +75,12 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.journeyapps.barcodescanner.ScanContract
 import com.sapuseven.untis.core.ui.R
-import com.sapuseven.untis.core.ui.common.AppScaffold
 import com.sapuseven.untis.core.ui.common.LabeledCheckbox
 import com.sapuseven.untis.core.ui.common.LabeledSwitch
 import com.sapuseven.untis.core.ui.common.MessageBubble
 import com.sapuseven.untis.core.ui.common.SmallCircularProgressIndicator
 import com.sapuseven.untis.core.ui.common.ifNotNull
-import com.sapuseven.untis.core.ui.functional.bottomInsets
+import com.sapuseven.untis.core.ui.functional.None
 import com.sapuseven.untis.feature.login.schoolsearch.SchoolSearch
 import kotlinx.coroutines.launch
 
@@ -83,6 +91,10 @@ fun LoginDataInputScreen(
 	viewModel: LoginDataInputViewModel = hiltViewModel()
 ) {
 	viewModel.setCodeScanLauncher(rememberLauncherForActivityResult(ScanContract()) { viewModel.codeScanResultHandler(it.contents) })
+
+	BackHandler(viewModel.searchMode) {
+		viewModel.disableSearchMode()
+	}
 
 	if (viewModel.showProfileUpdate)
 		Surface {
@@ -109,12 +121,13 @@ fun LoginDataInputScreen(
 			}
 		}
 	else
-		AppScaffold(
+		Scaffold(
+			contentWindowInsets = WindowInsets.None,
 			floatingActionButtonPosition = FabPosition.End,
 			floatingActionButton = {
 				if (!viewModel.searchMode) {
 					ExtendedFloatingActionButton(
-						modifier = Modifier.Companion.bottomInsets(),
+						modifier = Modifier.windowInsetsPadding(WindowInsets.safeDrawing),
 						containerColor = MaterialTheme.colorScheme.primary,
 						icon = {
 							if (viewModel.loading)
@@ -162,9 +175,10 @@ fun LoginDataInputScreen(
 			if (viewModel.searchMode) {
 				Column(
 					modifier = Modifier
-						.padding(innerPadding)
 						.fillMaxSize()
-						.bottomInsets()
+						.padding(innerPadding)
+						.consumeWindowInsets(innerPadding)
+						.windowInsetsPadding(WindowInsets.safeDrawing)
 				) {
 					SchoolSearch(
 						modifier = Modifier
@@ -204,11 +218,11 @@ fun LoginDataInputScreen(
 			} else {
 				Column(
 					modifier = Modifier
-						.padding(innerPadding)
 						.fillMaxSize()
-						.bottomInsets()
+						.padding(innerPadding)
+						.consumeWindowInsets(innerPadding)
+						.windowInsetsPadding(WindowInsets.ime)
 						.verticalScroll(rememberScrollState())
-						.padding(bottom = 88.dp) // Space for FAB
 				) {
 					if (LocalConfiguration.current.orientation != Configuration.ORIENTATION_LANDSCAPE)
 						Icon(
@@ -352,6 +366,9 @@ fun LoginDataInputScreen(
 							)
 						}
 					}
+
+					Spacer(Modifier.height(80.dp)) // Space for FAB
+					Spacer(Modifier.windowInsetsBottomHeight(WindowInsets.systemBars))
 
 					if (viewModel.showQrCodeErrorDialog) {
 						AlertDialog(

@@ -91,9 +91,9 @@ aboutLibraries {
 }
 
 dependencies {
-	implementation(projects.feature.glance)
+	//implementation(projects.feature.glance)
 	implementation(projects.feature.login)
-	implementation(projects.feature.timetable)
+	//implementation(projects.feature.timetable)
 
 	implementation(projects.core.api)
 	implementation(projects.core.data)
@@ -112,6 +112,7 @@ dependencies {
 	implementation(libs.androidx.compose.runtime.livedata)
 	implementation(libs.androidx.compose.ui)
 	implementation(libs.androidx.compose.ui.tooling)
+	implementation(libs.androidx.core.splashscreen)
 	implementation(libs.androidx.constraintlayout)
 	implementation(libs.androidx.datastore)
 	implementation(libs.androidx.fragment)

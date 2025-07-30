@@ -8,7 +8,7 @@ import javax.inject.Inject
 
 class GlobalSettingsDataSource @Inject constructor(
 	dataStore: DataStore<Settings>
-) : MultiUserSettingsDataSource<Settings, Settings.Builder, GlobalSettings, GlobalSettings.Builder>(
+) : MultiUserSettingsDataSource<Settings, GlobalSettings, GlobalSettings.Builder>(
 	dataStore
 ) {
 	override fun getUserSettings(dataStore: Settings): GlobalSettings =

@@ -11,7 +11,8 @@ internal fun SchoolInfo.toDomain() = School(
 	apiUrl = UserEntity.buildJsonRpcApiUrl(
 		buildApiUrl("", this),
 		loginName
-	).toString()
+	).toString(),
+	address = address
 )
 
 internal fun School.toEntity(): SchoolInfo = SchoolInfo(

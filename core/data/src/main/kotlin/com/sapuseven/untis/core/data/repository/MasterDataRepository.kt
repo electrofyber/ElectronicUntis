@@ -2,12 +2,9 @@ package com.sapuseven.untis.core.data.repository
 
 import com.sapuseven.untis.core.database.entity.ElementEntity
 import com.sapuseven.untis.core.database.entity.UserDao
-import com.sapuseven.untis.core.database.entity.UserWithData
 import com.sapuseven.untis.core.model.ElementType
-import com.sapuseven.untis.core.model.User
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flatMapLatest
@@ -17,11 +14,6 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 interface MasterDataRepository {
-	val user: User?
-
-	@Deprecated("Use the specific flows for user data.")
-	val userData: UserWithData?
-
 	/**
 	 * This flow provides all active classes for the active user, sorted by name.
 	 *
@@ -147,9 +139,6 @@ interface MasterDataRepository {
 
 @Singleton
 class DefaultMasterDataRepository : MasterDataRepository {
-	override val user: User? = null
-	override val userData: UserWithData? = null
-
 	override val classes: Flow<List<ElementEntity>> = flowOf(emptyList())
 	override val teachers: Flow<List<ElementEntity>> = flowOf(emptyList())
 	override val subjects: Flow<List<ElementEntity>> = flowOf(emptyList())
@@ -166,18 +155,8 @@ class UntisMasterDataRepository @Inject constructor(
 	private val userDao: UserDao,
 	private val userRepository: UserRepository
 ) : MasterDataRepository {
-	override val user: User?
-		get() = (userRepository.userState.value as? UserState.ActiveUser)?.user
-
-	private val _userData = MutableStateFlow<UserWithData?>(null)
-	@Deprecated("Use the specific flows for user data.")
-	override val userData: UserWithData?
-		get() = _userData.value
-
-	// TODO Delete userData and UserWithData and add flows for all required attributes
-
-	private val userIdFlow = userRepository.userState
-		.map { (it as? UserState.ActiveUser)?.user?.id }
+	private val userIdFlow = userRepository.observeActiveUser()
+		.map { it?.id }
 		.distinctUntilChanged()
 
 	override val classes = userIdFlow

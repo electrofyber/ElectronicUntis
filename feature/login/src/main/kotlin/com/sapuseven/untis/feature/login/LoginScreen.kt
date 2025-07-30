@@ -2,14 +2,17 @@ package com.sapuseven.untis.feature.login
 
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.safeDrawingPadding
+import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.ArrowBack
@@ -19,6 +22,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBarDefaults
@@ -36,19 +40,24 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.journeyapps.barcodescanner.ScanContract
-import com.sapuseven.untis.core.ui.common.AppScaffold
+import com.sapuseven.untis.core.model.School
 import com.sapuseven.untis.feature.login.schoolsearch.SchoolSearch
 import kotlinx.coroutines.flow.collectLatest
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
 @Composable
 fun LoginScreen(
+	onBackClick: () -> Unit,
 	onDemoClick: () -> Unit,
 	onManualDataInputClick: () -> Unit,
+	onSchoolSelected: (School) -> Unit,
+	onSetSchoolUri: (String) -> Unit,
 	viewModel: LoginViewModel = hiltViewModel()
 ) {
 	val focusManager = LocalFocusManager.current
-	viewModel.setCodeScanLauncher(rememberLauncherForActivityResult(ScanContract()) { viewModel.codeScanResultHandler(it.contents) })
+	viewModel.setCodeScanLauncher(rememberLauncherForActivityResult(ScanContract()) {
+		onSetSchoolUri(it.contents)
+	})
 
 	LaunchedEffect(Unit) {
 		viewModel.events.collectLatest { event ->
@@ -60,18 +69,16 @@ fun LoginScreen(
 		}
 	}
 
-	BackHandler(
-		enabled = viewModel.searchMode
-	) {
-		viewModel.goBack()
+	BackHandler(viewModel.searchMode) {
+		viewModel.disableSearchMode()
 	}
 
-	AppScaffold(
+	Scaffold(
 		topBar = {
 			CenterAlignedTopAppBar(
 				title = { Text(stringResource(id = com.sapuseven.untis.core.ui.R.string.app_name)) },
 				actions = {
-					IconButton(onClick = { viewModel.onCodeScanClick() }) {
+					IconButton(onClick = { viewModel.onCodeScanClick(onSetSchoolUri) }) {
 						Icon(
 							painter = painterResource(id = R.drawable.feature_login_scan_code),
 							contentDescription = stringResource(id = com.sapuseven.untis.core.ui.R.string.login_scan_code)
@@ -79,14 +86,13 @@ fun LoginScreen(
 					}
 				},
 				navigationIcon = {
-					if (viewModel.shouldShowBackButton.value) IconButton(onClick = {
-						viewModel.goBack()
-					}) {
-						Icon(
-							imageVector = Icons.AutoMirrored.Outlined.ArrowBack,
-							contentDescription = stringResource(id = com.sapuseven.untis.core.ui.R.string.all_back)
-						)
-					}
+					if (viewModel.shouldShowBackButton.value)
+						IconButton(onClick = onBackClick) {
+							Icon(
+								imageVector = Icons.AutoMirrored.Outlined.ArrowBack,
+								contentDescription = stringResource(id = com.sapuseven.untis.core.ui.R.string.all_back)
+							)
+						}
 				},
 				colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
 					containerColor = Color.Transparent,
@@ -94,8 +100,7 @@ fun LoginScreen(
 				)
 			)
 		},
-		modifier = Modifier
-			.safeDrawingPadding()
+		contentWindowInsets = WindowInsets.safeDrawing
 	) { innerPadding ->
 		val schoolSearchText = viewModel.schoolSearchText.collectAsState("")
 
@@ -132,7 +137,7 @@ fun LoginScreen(
 						.fillMaxWidth()
 						.weight(1f),
 					searchText = schoolSearchText.value,
-					onSchoolSelected = { viewModel.onSchoolSelected(it) }
+					onSchoolSelected = onSchoolSelected
 				)
 			}
 
@@ -159,20 +164,23 @@ fun LoginScreen(
 						Text(stringResource(id = com.sapuseven.untis.core.ui.R.string.login_search_by_school_name_or_address))
 					}
 				)
-				if (!viewModel.searchMode) Row(
-					modifier = Modifier
-						.fillMaxWidth()
-						.padding(
-							horizontal = dimensionResource(id = R.dimen.feature_login_margin_input_horizontal),
-							vertical = dimensionResource(id = R.dimen.feature_login_margin_input_vertical)
-						), horizontalArrangement = Arrangement.SpaceBetween
-				) {
-					TextButton(onClick = { onDemoClick() }) {
-						Text(text = stringResource(id = com.sapuseven.untis.core.ui.R.string.login_demo))
-					}
 
-					TextButton(onClick = { onManualDataInputClick() }) {
-						Text(text = stringResource(id = com.sapuseven.untis.core.ui.R.string.login_manual_data_input))
+				AnimatedVisibility(!viewModel.searchMode) {
+					Row(
+						modifier = Modifier
+							.fillMaxWidth()
+							.padding(
+								horizontal = dimensionResource(id = R.dimen.feature_login_margin_input_horizontal),
+								vertical = dimensionResource(id = R.dimen.feature_login_margin_input_vertical)
+							), horizontalArrangement = Arrangement.SpaceBetween
+					) {
+						TextButton(onClick = { onDemoClick() }) {
+							Text(text = stringResource(id = com.sapuseven.untis.core.ui.R.string.login_demo))
+						}
+
+						TextButton(onClick = { onManualDataInputClick() }) {
+							Text(text = stringResource(id = com.sapuseven.untis.core.ui.R.string.login_manual_data_input))
+						}
 					}
 				}
 			}

@@ -2,6 +2,7 @@ package com.sapuseven.untis.core.data.repository
 
 import androidx.datastore.core.DataStore
 import com.sapuseven.untis.core.api.model.untis.MasterData
+import com.sapuseven.untis.core.data.di.ApplicationScope
 import com.sapuseven.untis.core.data.mapper.toDomain
 import com.sapuseven.untis.core.data.mapper.toEntity
 import com.sapuseven.untis.core.database.entity.UserDao
@@ -9,49 +10,32 @@ import com.sapuseven.untis.core.database.entity.UserEntity
 import com.sapuseven.untis.core.datastore.model.Settings
 import com.sapuseven.untis.core.model.User
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withTimeout
 import javax.inject.Inject
 import javax.inject.Singleton
 
 interface UserRepository {
 	/**
-	 * The currently active user, or null if no user is available or the active user is still loading.
+	 * Returns the currently active user, or throws an exception if no user is active.
 	 *
-	 * Since there is no distinction between "no user" and "loading user",
-	 * prefer to use [userState] and handle each case accordingly,
-	 * or just use [currentUser] from a coroutine context.
+	 * @throws IllegalStateException If no user is active.
 	 */
-	val currentUser: User?
+	fun getActiveUser(): User
 
 	/**
-	 * The current user state, which can be one of:
-	 * - [UserState.Loading] when the active user is being loaded.
-	 * - [UserState.NoUsers] when there are no users available.
-	 * - [UserState.ActiveUser] when a user is currently active.
-	 */
-	val userState: StateFlow<UserState>
-
-	/**
-	 * A state flow that contains a list of all users.
-	 */
-	val allUsersState: StateFlow<List<User>>
-
-	/**
-	 * Returns the currently active user, or throws an exception if no user is available.
-	 * If the user state is still loading, this will suspend until the user is loaded
-	 * until a timeout is reached.
+	 * Observes the currently active user.
+	 * It will not emit a value until the user state is loaded.
 	 *
-	 * @throws IllegalStateException If no user exists.
+	 * If no user is active, it will emit `null`. This can also happen if the last active user was deleted.
+	 *
+	 * @return A flow that emits the currently active user, or `null` if no user is active.
 	 */
-	suspend fun currentUser(): User
+	fun observeActiveUser(): Flow<User?>
 
 	/**
 	 * Switches to another user.
@@ -61,12 +45,17 @@ interface UserRepository {
 
 	/**
 	 * Switches the currently active user.
-	 * @param userId The ID of the user to switch to.
+	 * If the user is `null`, it will clear the active user.
+	 *
+	 * @param userId The id of the user to switch to.
 	 */
-	suspend fun switchUser(userId: Long)
+	suspend fun switchUser(userId: Long?)
 
 	/**
 	 * Deletes a user from the database.
+	 * If the user to delete is active,
+	 * it will switch to the first available user or clear the active user.
+	 *
 	 * @param user An instance of the user to delete.
 	 */
 	suspend fun deleteUser(user: User)
@@ -82,76 +71,51 @@ interface UserRepository {
 
 @Singleton
 class UserRepositoryImpl @Inject constructor(
+	@ApplicationScope appScope: CoroutineScope,
 	private val userDao: UserDao,
 	private val settingsDataStore: DataStore<Settings>,
 ) : UserRepository {
-	private val _userState = MutableStateFlow<UserState>(UserState.Loading)
-	override val userState: StateFlow<UserState> = _userState
-
-	override val allUsersState: StateFlow<List<User>> = userDao.getAllFlow()
-		.map { it.map(UserEntity::toDomain) }
+	private val userStateFlow = observeActiveUser()
 		.stateIn(
-			scope = CoroutineScope(Dispatchers.IO),
-			started = SharingStarted.WhileSubscribed(5_000),
-			initialValue = emptyList()
+			scope = appScope,
+			initialValue = null,
+			started = SharingStarted.Eagerly
 		)
 
-	override val currentUser: User?
-		get() = (_userState.value as? UserState.ActiveUser)?.user
-
-	init {
-		loadActiveUser()
+	override fun getActiveUser(): User {
+		return userStateFlow.value ?: throw IllegalStateException("No user is currently active.")
 	}
 
-	private fun loadActiveUser() {
-		CoroutineScope(Dispatchers.IO).launch {
-			switchUser(settingsDataStore.data.first().activeUser)
-		}
-	}
+	override fun observeActiveUser(): Flow<User?> =
+		settingsDataStore.data.map { globalSettings ->
+			globalSettings.activeUser.takeIf { globalSettings.hasActiveUser() }
+				?.let { activeUserId ->
+					getUserById(activeUserId) ?: run {
+						userDao.getAllFlow().first().firstOrNull()?.toDomain()?.also {
+							switchUser(it.id)
+						}
+					}
+				}
+		}.distinctUntilChanged()
 
-	fun switchUser(user: User) {
-		_userState.value = UserState.ActiveUser(user)
-		CoroutineScope(Dispatchers.IO).launch {
-			settingsDataStore.updateData { currentSettings ->
-				currentSettings.toBuilder()
-					.setActiveUser(user.id)
-					.build()
-			}
-		}
-	}
-
-	override suspend fun currentUser(): User {
-		return when (val state = withTimeout(1_000) {
-			userState.first { it !is UserState.Loading }
-		}) {
-			is UserState.ActiveUser -> state.user
-			UserState.NoUsers -> error("There are no users available.")
-			UserState.Loading -> error("Users are still loading.") // should never happen
+	override suspend fun switchUser(userId: Long?) {
+		settingsDataStore.updateData { currentSettings ->
+			currentSettings.toBuilder()
+				.apply {
+					userId?.let(::setActiveUser) ?: clearActiveUser()
+				}
+				.build()
 		}
 	}
 
 	override suspend fun getUserById(userId: Long) = userDao.getByIdAsync(userId)?.toDomain()
 
-	override suspend fun switchUser(userId: Long) {
-		val user = (userDao.getByIdAsync(userId) ?: userDao.getAllFlow().first().firstOrNull())?.toDomain()
-
-		user?.let {
-			switchUser(it)
-		} ?: run {
-			_userState.value = UserState.NoUsers
-		}
-	}
-
 	override suspend fun deleteUser(user: User) {
 		userDao.delete(user.id)
-
-		val remainingUsers = userDao.getAllAsync()
-		val currentState = _userState.value
-		if (currentState is UserState.ActiveUser && currentState.user == user) {
+		if (user == getActiveUser()) {
+			val remainingUsers = userDao.getAllAsync().map(UserEntity::toDomain)
 			if (remainingUsers.isEmpty()) {
-				_userState.value = UserState.NoUsers
-			} else {
-				_userState.value = UserState.ActiveUser(remainingUsers.first().toDomain())
+				switchUser(remainingUsers.firstOrNull()?.id)
 			}
 		}
 	}
@@ -170,10 +134,4 @@ class UserRepositoryImpl @Inject constructor(
 		userDao.insertMasterData(userId, masterData)
 		return userId
 	}
-}
-
-sealed class UserState {
-	data object Loading : UserState()
-	data object NoUsers : UserState()
-	data class ActiveUser(val user: User) : UserState()
 }

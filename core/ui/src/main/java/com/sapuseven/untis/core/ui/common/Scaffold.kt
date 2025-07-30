@@ -14,6 +14,7 @@ import com.sapuseven.untis.core.ui.functional.None
 
 // Wrapper for Material 3 Scaffold to remove contentWindowInsets by default
 @ExperimentalMaterial3Api
+@Deprecated("Use the default Scaffold from Material 3 instead with `contentWindowInsets = WindowInsets.safeDrawing`")
 @Composable
 fun AppScaffold(
 	modifier: Modifier = Modifier,

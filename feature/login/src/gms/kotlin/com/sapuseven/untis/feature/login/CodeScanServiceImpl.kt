@@ -6,6 +6,7 @@ import androidx.activity.compose.ManagedActivityResultLauncher
 import androidx.activity.result.ActivityResultLauncher
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.GoogleApiAvailability
+import com.google.mlkit.common.MlKitException
 import com.google.mlkit.vision.barcode.common.Barcode
 import com.google.mlkit.vision.codescanner.GmsBarcodeScannerOptions
 import com.google.mlkit.vision.codescanner.GmsBarcodeScanning
@@ -24,21 +25,22 @@ class CodeScanServiceImpl @Inject constructor(
 		this.scanCodeLauncher = launcher
 	}
 
-	override fun scanCode(onSuccess: (String?) -> Unit) {
+	override fun scanCode(onSuccess: (String) -> Unit) {
 		val googleApiAvailability = GoogleApiAvailability.getInstance()
 		val status = googleApiAvailability.isGooglePlayServicesAvailable(context)
 		if (status == ConnectionResult.SUCCESS) scanCodeMlKit(onSuccess)
 		else scanCodeFallback()
 	}
 
-	private fun scanCodeMlKit(onSuccess: (String?) -> Unit) {
+	private fun scanCodeMlKit(onSuccess: (String) -> Unit) {
 		Log.d(CodeScanService::class.java.simpleName, "Using ML Kit")
 		val options = GmsBarcodeScannerOptions.Builder().setBarcodeFormats(Barcode.FORMAT_QR_CODE).build()
 
 		GmsBarcodeScanning.getClient(context, options).startScan().addOnSuccessListener { barcode ->
 			barcode.rawValue?.let { url -> onSuccess(url) }
 		}.addOnFailureListener {
-			scanCodeFallback()
+			if ((it as MlKitException).errorCode != MlKitException.INTERNAL) // INTERNAL is thrown when back button is pressed
+				scanCodeFallback()
 		}
 	}
 

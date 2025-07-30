@@ -9,7 +9,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.journeyapps.barcodescanner.ScanIntentResult
 import com.journeyapps.barcodescanner.ScanOptions
-import com.sapuseven.untis.core.model.School
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -33,10 +32,6 @@ class LoginViewModel @Inject constructor(
 
 	val events = MutableSharedFlow<LoginEvents>()
 
-	val codeScanResultHandler: (String?) -> Unit = {
-		//navigator.navigate(AppRoutes.LoginDataInput(autoLoginData = it))
-	}
-
 	fun setCodeScanLauncher(launcher: ManagedActivityResultLauncher<ScanOptions, ScanIntentResult>) {
 		codeScanService.setLauncher(launcher)
 	}
@@ -45,9 +40,9 @@ class LoginViewModel @Inject constructor(
 		if (focused) searchMode = true
 	}
 
-	private fun updateSearchMode(enabled: Boolean) {
-		searchMode = enabled
-		if (!enabled) {
+	fun disableSearchMode() {
+		if (searchMode) {
+			searchMode = false
 			viewModelScope.launch {
 				events.emit(LoginEvents.ClearFocus)
 				_schoolSearchText.value = ""
@@ -55,25 +50,11 @@ class LoginViewModel @Inject constructor(
 		}
 	}
 
-	fun goBack() {
-		if (searchMode) {
-			updateSearchMode(false)
-		} else {
-			//navigator.popBackStack()
-		}
-	}
-
 	fun updateSchoolSearchText(text: String) {
 		_schoolSearchText.value = text
 	}
 
-	fun onSchoolSelected(school: School) {
-		//navigator.navigate(
-			//AppRoutes.LoginDataInput(schoolInfoSerialized = getJSON().encodeToString<SchoolInfo>(school))
-		//)
-	}
-
-	fun onCodeScanClick() {
-		codeScanService.scanCode(codeScanResultHandler)
+	fun onCodeScanClick(onSuccess: (String) -> Unit) {
+		codeScanService.scanCode(onSuccess)
 	}
 }

@@ -30,7 +30,6 @@ fun SchoolSearch(
 ) {
 	LaunchedEffect(searchText) {
 		viewModel.setSearchText(searchText)
-
 	}
 
 	if (viewModel.schoolSearchItems.isNotEmpty()) LazyColumn(modifier) {

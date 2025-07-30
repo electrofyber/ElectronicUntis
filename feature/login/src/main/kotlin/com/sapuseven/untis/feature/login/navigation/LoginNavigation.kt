@@ -8,6 +8,7 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.navDeepLink
+import com.sapuseven.untis.core.model.School
 import com.sapuseven.untis.feature.login.LoginScreen
 import com.sapuseven.untis.feature.login.datainput.LoginDataInputScreen
 import kotlinx.serialization.Serializable
@@ -21,6 +22,7 @@ data class LoginDataInputRoute(
 	val schoolName: String? = null,
 	val demoSchool: Boolean = false,
 	val autoLogin: Boolean = false,
+	val autoLoginData: String? = null,
 	val showProfileUpdate: Boolean = false,
 )
 
@@ -28,8 +30,16 @@ fun NavController.navigateToLogin() {
 	navigate(route = LoginRoute)
 }
 
-fun NavController.navigateToLoginDataInputExistingUser(userId: Long?) {
-	navigate(route = LoginDataInputRoute(userId = userId ?: -1))
+fun NavController.navigateToLoginDataInputManual() {
+	navigate(route = LoginDataInputRoute(userId = -1))
+}
+
+fun NavController.navigateToLoginDataInputSetSchoolUri(uriString: String) {
+	navigate(route = LoginDataInputRoute(autoLogin = true, autoLoginData = uriString))
+}
+
+fun NavController.navigateToLoginDataInputExistingUser(userId: Long) {
+	navigate(route = LoginDataInputRoute(userId = userId))
 }
 
 fun NavController.navigateToLoginDataInputExistingUserProfileUpdate(userId: Long) {
@@ -40,14 +50,16 @@ fun NavController.navigateToLoginDataInputFromSchoolSearch(schoolName: String) {
 	navigate(route = LoginDataInputRoute(schoolName = schoolName))
 }
 
-fun NavController.navigateToLoginDataInputDemo(demoSchool: Boolean) {
-	navigate(route = LoginDataInputRoute(demoSchool = demoSchool, autoLogin = true))
+fun NavController.navigateToLoginDataInputDemo() {
+	navigate(route = LoginDataInputRoute(autoLogin = true, demoSchool = true))
 }
 
 fun NavGraphBuilder.loginScreen(
 	onBackClick: () -> Unit,
 	onDemoClick: () -> Unit,
 	onManualDataInputClick: () -> Unit,
+	onSchoolSelected: (School) -> Unit,
+	onSetSchoolUri: (String) -> Unit,
 ) {
 	composable<LoginRoute>(
 		enterTransition = {
@@ -73,8 +85,11 @@ fun NavGraphBuilder.loginScreen(
 		},
 	) {
 		LoginScreen(
+			onBackClick = onBackClick,
 			onDemoClick = onDemoClick,
 			onManualDataInputClick = onManualDataInputClick,
+			onSchoolSelected = onSchoolSelected,
+			onSetSchoolUri = onSetSchoolUri,
 		)
 	}
 

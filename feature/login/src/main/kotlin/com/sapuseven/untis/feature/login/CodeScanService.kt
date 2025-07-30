@@ -6,5 +6,5 @@ import com.journeyapps.barcodescanner.ScanOptions
 
 interface CodeScanService {
 	fun setLauncher(launcher: ManagedActivityResultLauncher<ScanOptions, ScanIntentResult>)
-	fun scanCode(onSuccess: (String?) -> Unit)
+	fun scanCode(onSuccess: (String) -> Unit)
 }

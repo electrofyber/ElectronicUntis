@@ -63,7 +63,7 @@ class UntisTimetableRepository @Inject constructor(
 		fromCache: FromCache
 	): Flow<Timetable> {
 		// TODO: Add error handling
-		val user = userRepository.currentUser()
+		val user = userRepository.getActiveUser()
 		return CachedSource<TimetableParams, TimetableResult>(
 			source = { params ->
 				api.getTimetable(
@@ -95,7 +95,7 @@ class UntisTimetableRepository @Inject constructor(
 
 	override suspend fun getPeriodData(periods: Set<Period>): Result<PeriodDataResult> {
 		return runCatching {
-			val user = userRepository.currentUser()
+			val user = userRepository.getActiveUser()
 			CachedSource<Set<Period>, PeriodDataResult>(
 				source = { params ->
 					api.getPeriodData(
@@ -115,7 +115,7 @@ class UntisTimetableRepository @Inject constructor(
 
 	override suspend fun postLessonTopic(periodId: Long, lessonTopic: String): Result<Boolean> {
 		return runCatching {
-			val user = userRepository.currentUser()
+			val user = userRepository.getActiveUser()
 			api.postLessonTopic(
 				periodId = periodId,
 				lessonTopic = lessonTopic,
@@ -133,7 +133,7 @@ class UntisTimetableRepository @Inject constructor(
 		endTime: LocalTime
 	): Result<List<StudentAbsence>> {
 		return runCatching {
-			val user = userRepository.currentUser()
+			val user = userRepository.getActiveUser()
 			api.postAbsence(
 				periodId = periodId,
 				studentId = studentId,
@@ -148,7 +148,7 @@ class UntisTimetableRepository @Inject constructor(
 
 	override suspend fun deleteAbsence(absenceId: Long): Result<Boolean> {
 		return runCatching {
-			val user = userRepository.currentUser()
+			val user = userRepository.getActiveUser()
 			api.deleteAbsence(
 				absenceId = absenceId, apiUrl = user.school.apiUrl, user = user.user, key = user.key
 			)
@@ -157,7 +157,7 @@ class UntisTimetableRepository @Inject constructor(
 
 	override suspend fun postAbsencesChecked(periodIds: Set<Long>): Result<Unit> {
 		return runCatching {
-			val user = userRepository.currentUser()
+			val user = userRepository.getActiveUser()
 			api.postAbsencesChecked(
 				periodIds = periodIds, apiUrl = user.school.apiUrl, user = user.user, key = user.key
 			)

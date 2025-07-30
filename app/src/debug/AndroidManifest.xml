@@ -18,6 +18,6 @@
 
 	<application tools:ignore="MissingApplicationIcon">
 		<activity
-			android:name=".activities.MainActivity" />
+			android:name=".activity.MainActivity" />
 	</application>
 </manifest>
