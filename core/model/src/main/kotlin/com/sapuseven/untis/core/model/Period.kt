@@ -1,6 +1,6 @@
 package com.sapuseven.untis.core.model
 
-import java.time.LocalDateTime
+import kotlinx.datetime.LocalDateTime
 
 /**
  * Represents a period in a [Timetable].

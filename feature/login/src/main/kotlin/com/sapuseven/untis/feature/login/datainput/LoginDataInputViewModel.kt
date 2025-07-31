@@ -116,6 +116,7 @@ class LoginDataInputViewModel @Inject constructor(
 		val anonymous = _uiState.value.formData.anonymous
 		with(_uiState.value.formData) {
 			loginUseCase(
+				existingUserId,
 				schoolName,
 				profileName,
 				username.takeIf { !anonymous },

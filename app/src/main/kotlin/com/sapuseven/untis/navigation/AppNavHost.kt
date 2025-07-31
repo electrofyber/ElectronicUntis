@@ -6,6 +6,9 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
 import com.sapuseven.untis.feature.login.navigation.loginScreen
+import com.sapuseven.untis.feature.login.navigation.navigateToLoginDataInput
+import com.sapuseven.untis.feature.timetable.navigation.navigateToTimetable
+import com.sapuseven.untis.feature.timetable.navigation.timetableScreen
 
 @Composable
 fun AppNavHost(
@@ -21,13 +24,13 @@ fun AppNavHost(
 		loginScreen(
 			navController = navController,
 			onComplete = {
-				//navController.navigateToTimetable { popUpTo(0) }
+				navController.navigateToTimetable { popUpTo(0) }
 			}
 		)
 
-		/*timetableScreen(
+		timetableScreen(
 			onUserEdit = navController::navigateToLoginDataInput
-		)*/
+		)
 
 		/*infoCenterScreen(
 			onBackClick = navController::popBackStack

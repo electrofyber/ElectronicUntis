@@ -1,6 +1,6 @@
 package com.sapuseven.untis.core.model
 
-import java.time.LocalDate
+import kotlinx.datetime.LocalDate
 
 data class Homework(
 	val id: Long,

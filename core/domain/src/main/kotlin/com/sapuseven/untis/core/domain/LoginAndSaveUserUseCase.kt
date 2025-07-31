@@ -2,19 +2,20 @@ package com.sapuseven.untis.core.domain
 
 import com.sapuseven.untis.core.api.exception.UntisApiException
 import com.sapuseven.untis.core.api.model.response.UntisErrorCode
-import com.sapuseven.untis.core.data.repository.AuthRepository
+import com.sapuseven.untis.core.data.repository.LoginRepository
 import com.sapuseven.untis.core.data.repository.SchoolRepository
 import com.sapuseven.untis.core.data.repository.UserRepository
 import com.sapuseven.untis.core.model.School
-import com.sapuseven.untis.core.model.User
+import com.sapuseven.untis.core.model.UserCredentials
 import javax.inject.Inject
 
 class LoginAndSaveUserUseCase @Inject constructor(
-	private val authRepository: AuthRepository,
+	private val loginRepository: LoginRepository,
 	private val userRepository: UserRepository,
 	private val schoolRepository: SchoolRepository,
 ) {
 	suspend operator fun invoke(
+		existingUserId: Long? = null,
 		schoolName: String,
 		displayName: String? = null,
 		username: String? = null,
@@ -28,20 +29,13 @@ class LoginAndSaveUserUseCase @Inject constructor(
 			//return@launch
 		}
 
-		val appSharedSecret = loadAppSharedSecret(school, username, password, secondFactor)
-		val userData = authRepository.getUserData(school, username, appSharedSecret).getOrThrow()
-
-		val userId = userRepository.updateUser(
-			User(
-				id = 0L,
-				displayName = displayName ?: userData.userData.displayName,
-				school = school,
-				user = username,
-				key = appSharedSecret,
-				anonymous = username == null && appSharedSecret == null,
-			), userData.masterData
-		)
-
+		val credentials = username?.let {
+			UserCredentials(
+				username,
+				loadAppSharedSecret(school, username, password, secondFactor)
+			)
+		}
+		val userId = loginRepository.persistUser(existingUserId, displayName, school, credentials).getOrThrow()
 		userRepository.switchUser(userId)
 		userId
 	}
@@ -74,8 +68,8 @@ class LoginAndSaveUserUseCase @Inject constructor(
 		username: String? = null,
 		password: String? = null,
 		secondFactor: String? = null
-	): String? {
-		return authRepository.getAppSharedSecret(
+	): String {
+		return loginRepository.getAppSharedSecret(
 			school.apiUrl,
 			username,
 			password,

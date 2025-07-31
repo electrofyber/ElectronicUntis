@@ -26,8 +26,8 @@ data class LoginDataInputRoute(
 	val showProfileUpdate: Boolean = false,
 )
 
-fun NavController.navigateToLogin() {
-	navigate(route = LoginRoute)
+fun NavController.navigateToLoginDataInput(userId: Long?) {
+	navigate(route = LoginDataInputRoute(userId ?: -1))
 }
 
 fun NavGraphBuilder.loginScreen(

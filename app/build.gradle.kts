@@ -93,7 +93,7 @@ aboutLibraries {
 dependencies {
 	//implementation(projects.feature.glance)
 	implementation(projects.feature.login)
-	//implementation(projects.feature.timetable)
+	implementation(projects.feature.timetable)
 
 	implementation(projects.core.api)
 	implementation(projects.core.data)

@@ -1,25 +1,53 @@
 package com.sapuseven.untis.core.data.mapper
 
+import com.sapuseven.untis.core.api.model.untis.UserData
+import com.sapuseven.untis.core.api.model.untis.enumeration.ElementType
+import com.sapuseven.untis.core.api.model.untis.enumeration.Right
 import com.sapuseven.untis.core.database.entity.UserEntity
+import com.sapuseven.untis.core.model.Element
 import com.sapuseven.untis.core.model.User
+import com.sapuseven.untis.core.model.UserCredentials
+import kotlinx.coroutines.NonCancellable.children
+import kotlin.time.Clock
+import kotlin.time.ExperimentalTime
 
+// Map Entity -> Domain
 internal fun UserEntity.toDomain() = User(
 	id = id,
-	user = user,
-	key = key,
+	name = userData.displayName,
 	displayName = profileName,
+	credentials = UserCredentials(user.orEmpty(), key.orEmpty()).takeIf { !anonymous },
 	school = schoolInfo!!.toDomain(),
+	element = userData.elemType?.let { elementType ->
+		Element.personal(
+			id = userData.elemId,
+			type = elementType.toDomain(),
+			name = userData.displayName,
+		)
+	},
+	rights = userData.rights.map(Right::toDomain)
 )
 
+// Map Domain -> Entity
+@OptIn(ExperimentalTime::class)
 internal fun User.toEntity(): UserEntity = UserEntity(
 	id = id,
 	profileName = displayName,
 	apiHost = school.apiUrl,
 	schoolInfo = school.toEntity(),
-	user = user,
-	key = key,
-	anonymous = anonymous,
-	timeGrid = TODO(),
-	masterDataTimestamp = TODO(),
-	userData = TODO(),
+	user = credentials?.user,
+	key = credentials?.key,
+	anonymous = isAnonymous,
+	timeGrid =,
+	masterDataTimestamp = Clock.System.now().epochSeconds,
+	userData = UserData(
+		elemId = element?.id ?: -1,
+		elemType = element?.type?.let { ElementType.valueOf(it.toString()) },
+		displayName = name,
+		schoolName = school.name,
+		departmentId = -1L,
+		children = emptyList(),
+		klassenIds = emptyList(),
+		rights = emptyList(),
+	),
 )

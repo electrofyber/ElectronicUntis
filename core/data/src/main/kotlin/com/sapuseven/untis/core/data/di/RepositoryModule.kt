@@ -1,10 +1,10 @@
 package com.sapuseven.untis.core.data.di
 
-import com.sapuseven.untis.core.data.repository.AuthRepository
+import com.sapuseven.untis.core.data.repository.LoginRepository
 import com.sapuseven.untis.core.data.repository.MasterDataRepository
 import com.sapuseven.untis.core.data.repository.SchoolRepository
 import com.sapuseven.untis.core.data.repository.TimetableRepository
-import com.sapuseven.untis.core.data.repository.UntisAuthRepository
+import com.sapuseven.untis.core.data.repository.UntisLoginRepository
 import com.sapuseven.untis.core.data.repository.UntisMasterDataRepository
 import com.sapuseven.untis.core.data.repository.UntisSchoolRepository
 import com.sapuseven.untis.core.data.repository.UntisTimetableRepository
@@ -36,8 +36,8 @@ internal interface RepositoryModule {
 
 	@Binds
 	fun bindAuthRepository(
-		impl: UntisAuthRepository,
-	): AuthRepository
+		impl: UntisLoginRepository,
+	): LoginRepository
 
 	@Binds
 	fun bindMasterDataRepository(

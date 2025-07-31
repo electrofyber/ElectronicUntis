@@ -20,8 +20,18 @@ data class Element(
 	val type: ElementType,
 	val shortName: String,
 	val longName: String,
-	val foreColor: String?,
-	val backColor: String?,
-	val replaced: Boolean,
+	val foreColor: String? = null,
+	val backColor: String? = null,
+	val replaced: Boolean = false,
 	val timetableAllowed: Boolean,
-)
+) {
+	companion object {
+		fun personal(id: Long, type: ElementType, name: String) = Element(
+			id = id,
+			type = type,
+			shortName = name,
+			longName = name,
+			timetableAllowed = true
+		)
+	}
+}

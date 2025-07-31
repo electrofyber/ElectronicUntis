@@ -1,7 +1,7 @@
 package com.sapuseven.untis.core.model
 
-import java.time.Instant
-import java.time.LocalDate
+import kotlinx.datetime.Instant
+import kotlinx.datetime.LocalDate
 
 /**
  * A timetable represents the timetable for a specific time period, usually a week.
@@ -10,7 +10,7 @@ import java.time.LocalDate
  *
  * @property startDate The start date of the timetable.
  * @property endDate The end date of the timetable.
- * @property timestamp The timestamp of when the periods
+ * @property timestamp The timestamp of the timetable. May be used to indicate when the timetable for this period last changed.
  * @property periods A list of periods within the timetable.
  * @see Period
  * @see Element
