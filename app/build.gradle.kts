@@ -117,12 +117,12 @@ dependencies {
 	implementation(libs.androidx.hilt.work)
 	implementation(libs.androidx.work)
 
-	// TODO: Move relevant modules to :core:api
+	// TODO: Move to relevant modules
 	implementation(libs.ktor.client.cio)
 	implementation(libs.ktor.client.content.negotiation)
 	implementation(libs.ktor.serialization)
 
-	// TODO: Move relevant modules to :core:api
+	// TODO: Move to relevant modules
 	implementation(libs.andrew0000.cache)
 
 	ksp(libs.hilt.compiler)

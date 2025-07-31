@@ -42,11 +42,7 @@ class UntisSchoolRepository @Inject constructor(
 
 	override suspend fun searchSchools(schoolName: String): Result<List<School>> {
 		return runCatching {
-			val schoolId = schoolName.toLongOrNull()
-
-			val schoolSearchResult = schoolId?.let {
-				api.searchSchools(schoolId = it)
-			} ?: api.searchSchools(schoolName = schoolName)
+			val schoolSearchResult = api.searchSchools(search = schoolName)
 
 			schoolSearchResult.schools.map( SchoolInfo::toDomain)
 		}

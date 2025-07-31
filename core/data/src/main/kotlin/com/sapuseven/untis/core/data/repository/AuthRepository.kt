@@ -11,7 +11,7 @@ interface AuthRepository {
 		username: String? = null,
 		password: String? = null,
 		secondFactor: String? = null
-	): String?
+	): Result<String>
 
 	suspend fun getUserData(
 		school: School,
@@ -28,14 +28,14 @@ class UntisAuthRepository @Inject constructor(
 		username: String?,
 		password: String?,
 		secondFactor: String?
-	): String? = runCatching {
+	): Result<String> = runCatching {
 		userDataApi.getAppSharedSecret(
 			apiUrl,
 			username ?: "",
 			password ?: "",
 			secondFactor
 		)
-	}.getOrNull()
+	}
 
 	override suspend fun getUserData(
 		school: School,

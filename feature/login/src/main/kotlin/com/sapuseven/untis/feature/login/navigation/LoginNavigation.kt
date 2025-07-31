@@ -6,9 +6,9 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.navDeepLink
-import com.sapuseven.untis.core.model.School
 import com.sapuseven.untis.feature.login.LoginScreen
 import com.sapuseven.untis.feature.login.datainput.LoginDataInputScreen
 import kotlinx.serialization.Serializable
@@ -30,36 +30,9 @@ fun NavController.navigateToLogin() {
 	navigate(route = LoginRoute)
 }
 
-fun NavController.navigateToLoginDataInputManual() {
-	navigate(route = LoginDataInputRoute(userId = -1))
-}
-
-fun NavController.navigateToLoginDataInputSetSchoolUri(uriString: String) {
-	navigate(route = LoginDataInputRoute(autoLogin = true, autoLoginData = uriString))
-}
-
-fun NavController.navigateToLoginDataInputExistingUser(userId: Long) {
-	navigate(route = LoginDataInputRoute(userId = userId))
-}
-
-fun NavController.navigateToLoginDataInputExistingUserProfileUpdate(userId: Long) {
-	navigate(route = LoginDataInputRoute(userId = userId, showProfileUpdate = true, autoLogin = true))
-}
-
-fun NavController.navigateToLoginDataInputFromSchoolSearch(schoolName: String) {
-	navigate(route = LoginDataInputRoute(schoolName = schoolName))
-}
-
-fun NavController.navigateToLoginDataInputDemo() {
-	navigate(route = LoginDataInputRoute(autoLogin = true, demoSchool = true))
-}
-
 fun NavGraphBuilder.loginScreen(
-	onBackClick: () -> Unit,
-	onDemoClick: () -> Unit,
-	onManualDataInputClick: () -> Unit,
-	onSchoolSelected: (School) -> Unit,
-	onSetSchoolUri: (String) -> Unit,
+	navController: NavHostController,
+	onComplete: () -> Unit,
 ) {
 	composable<LoginRoute>(
 		enterTransition = {
@@ -85,11 +58,10 @@ fun NavGraphBuilder.loginScreen(
 		},
 	) {
 		LoginScreen(
-			onBackClick = onBackClick,
-			onDemoClick = onDemoClick,
-			onManualDataInputClick = onManualDataInputClick,
-			onSchoolSelected = onSchoolSelected,
-			onSetSchoolUri = onSetSchoolUri,
+			onDemoClick = { navController.navigate(LoginDataInputRoute(autoLogin = true, demoSchool = true, schoolName = "demo")) },
+			onManualDataInputClick = { navController.navigate(LoginDataInputRoute(userId = -1)) },
+			onSchoolSelected = { navController.navigate(LoginDataInputRoute(schoolName = it.name)) },
+			onSetSchoolUri = { navController.navigate(LoginDataInputRoute(autoLogin = true, autoLoginData = it)) },
 		)
 	}
 
@@ -126,7 +98,8 @@ fun NavGraphBuilder.loginScreen(
 		)
 	) {
 		LoginDataInputScreen(
-			onBackClick = onBackClick
+			onBackClick = navController::popBackStack,
+			onComplete = onComplete,
 		)
 	}
 }

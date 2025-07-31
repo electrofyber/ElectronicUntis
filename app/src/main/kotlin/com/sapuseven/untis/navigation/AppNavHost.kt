@@ -6,10 +6,6 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
 import com.sapuseven.untis.feature.login.navigation.loginScreen
-import com.sapuseven.untis.feature.login.navigation.navigateToLoginDataInputDemo
-import com.sapuseven.untis.feature.login.navigation.navigateToLoginDataInputFromSchoolSearch
-import com.sapuseven.untis.feature.login.navigation.navigateToLoginDataInputManual
-import com.sapuseven.untis.feature.login.navigation.navigateToLoginDataInputSetSchoolUri
 
 @Composable
 fun AppNavHost(
@@ -23,11 +19,10 @@ fun AppNavHost(
 		startDestination = startDestination,
 	) {
 		loginScreen(
-			onBackClick = navController::popBackStack,
-			onDemoClick = { navController.navigateToLoginDataInputDemo() },
-			onManualDataInputClick = { navController.navigateToLoginDataInputManual() },
-			onSchoolSelected = { navController.navigateToLoginDataInputFromSchoolSearch(it.name) },
-			onSetSchoolUri = { navController.navigateToLoginDataInputSetSchoolUri(it) },
+			navController = navController,
+			onComplete = {
+				//navController.navigateToTimetable { popUpTo(0) }
+			}
 		)
 
 		/*timetableScreen(

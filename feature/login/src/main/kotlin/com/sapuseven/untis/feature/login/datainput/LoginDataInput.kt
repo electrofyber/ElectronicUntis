@@ -5,7 +5,6 @@ import androidx.activity.compose.BackHandler
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
@@ -32,7 +31,6 @@ import androidx.compose.material.icons.automirrored.outlined.ArrowForward
 import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.CenterAlignedTopAppBar
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.FabPosition
@@ -42,14 +40,16 @@ import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
@@ -70,67 +70,56 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.journeyapps.barcodescanner.ScanContract
 import com.sapuseven.untis.core.ui.R
-import com.sapuseven.untis.core.ui.common.LabeledCheckbox
 import com.sapuseven.untis.core.ui.common.LabeledSwitch
 import com.sapuseven.untis.core.ui.common.MessageBubble
 import com.sapuseven.untis.core.ui.common.SmallCircularProgressIndicator
 import com.sapuseven.untis.core.ui.common.ifNotNull
 import com.sapuseven.untis.core.ui.functional.None
-import com.sapuseven.untis.feature.login.schoolsearch.SchoolSearch
+import com.sapuseven.untis.feature.login.schoolsearch.SchoolSearchResults
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
 @Composable
 fun LoginDataInputScreen(
 	onBackClick: () -> Unit,
+	onComplete: () -> Unit,
 	viewModel: LoginDataInputViewModel = hiltViewModel()
 ) {
-	viewModel.setCodeScanLauncher(rememberLauncherForActivityResult(ScanContract()) { viewModel.codeScanResultHandler(it.contents) })
+	viewModel.setCodeScanLauncher(rememberLauncherForActivityResult(ScanContract()) { viewModel.onCodeScanned(it.contents) })
 
-	BackHandler(viewModel.searchMode) {
-		viewModel.disableSearchMode()
+	val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+
+	LaunchedEffect(uiState.isLoggedIn) {
+		if (uiState.isLoggedIn) {
+			onComplete()
+		}
 	}
 
-	if (viewModel.showProfileUpdate)
-		Surface {
-			Column(
-				verticalArrangement = Arrangement.Center,
-				horizontalAlignment = Alignment.CenterHorizontally,
-				modifier = Modifier.fillMaxSize()
-			) {
-				Text(
-					text = "A new school year has begun.",
-					style = MaterialTheme.typography.titleLarge,
-					textAlign = TextAlign.Center,
-					modifier = Modifier.padding(horizontal = 8.dp, vertical = 8.dp)
-				)
-				Text(
-					text = "Please wait, BetterUntis is loading the new timetable data.\nThis may take a moment.",
-					style = MaterialTheme.typography.bodyMedium,
-					textAlign = TextAlign.Center,
-					modifier = Modifier.padding(horizontal = 8.dp, vertical = 16.dp)
-				)
-				CircularProgressIndicator(
-					modifier = Modifier.padding(top = 16.dp)
-				)
-			}
-		}
+	var showSchoolSearch by rememberSaveable { mutableStateOf(false) }
+	var showAdvanced by rememberSaveable { mutableStateOf(uiState.formData.apiUrl.isNotEmpty()) }
+
+	BackHandler(showSchoolSearch) {
+		showSchoolSearch = false
+	}
+
+	if (uiState.showProfileUpdate)
+		ProfileUpdateScreen()
 	else
 		Scaffold(
 			contentWindowInsets = WindowInsets.None,
 			floatingActionButtonPosition = FabPosition.End,
 			floatingActionButton = {
-				if (!viewModel.searchMode) {
+				if (!showSchoolSearch) {
 					ExtendedFloatingActionButton(
 						modifier = Modifier.windowInsetsPadding(WindowInsets.safeDrawing),
 						containerColor = MaterialTheme.colorScheme.primary,
 						icon = {
-							if (viewModel.loading)
+							if (uiState.isLoading)
 								SmallCircularProgressIndicator(color = LocalContentColor.current)
 							else
 								Icon(Icons.AutoMirrored.Outlined.ArrowForward, contentDescription = null)
@@ -144,7 +133,7 @@ fun LoginDataInputScreen(
 				CenterAlignedTopAppBar(
 					title = {
 						Text(
-							if (viewModel.isExistingUser)
+							if (uiState.isExistingUser)
 								stringResource(id = R.string.logindatainput_title_edit)
 							else
 								stringResource(id = R.string.logindatainput_title_add)
@@ -169,10 +158,15 @@ fun LoginDataInputScreen(
 				)
 			}
 		) { innerPadding ->
-			val focusRequester = remember { FocusRequester() }
+			val schoolNameFocusRequester = remember { FocusRequester() }
+			val secondFactorFocusRequester = remember { FocusRequester() }
 			val focusManager = LocalFocusManager.current
 
-			if (viewModel.searchMode) {
+			LaunchedEffect(uiState.isSecondFactorRequired) {
+				if (uiState.isSecondFactorRequired) secondFactorFocusRequester.requestFocus()
+			}
+
+			if (showSchoolSearch) {
 				Column(
 					modifier = Modifier
 						.fillMaxSize()
@@ -180,24 +174,28 @@ fun LoginDataInputScreen(
 						.consumeWindowInsets(innerPadding)
 						.windowInsetsPadding(WindowInsets.safeDrawing)
 				) {
-					SchoolSearch(
+					SchoolSearchResults(
 						modifier = Modifier
 							.fillMaxWidth()
 							.weight(1f),
-						searchText = viewModel.loginData.schoolName.value ?: "",
-						onSchoolSelected = { viewModel.selectSchool(it) }
+						query = uiState.formData.schoolName,
+						onSchoolSelected = {
+							viewModel.onSchoolNameChanged(it.name)
+							showSchoolSearch = false
+						}
 					)
 
 					InputField(
-						state = viewModel.loginData.schoolName,
+						value = uiState.formData.schoolName,
+						onValueChange = viewModel.onSchoolNameChanged,
 						label = { Text(stringResource(id = R.string.logindatainput_school)) },
-						enabled = !viewModel.loading && !viewModel.schoolIdLocked,
-						valid = !viewModel.validate || viewModel.schoolNameValid.value,
+						enabled = !uiState.isLoading && !uiState.isSchoolNameLocked,
+						valid = !uiState.validate || uiState.formData.isSchoolNameValid,
 						errorText = stringResource(id = R.string.logindatainput_error_field_empty),
 						trailingIcon = {
 							IconButton(
-								enabled = !viewModel.loading && !viewModel.schoolIdLocked,
-								onClick = { viewModel.searchMode = true }
+								enabled = !uiState.isLoading && !uiState.isSchoolNameLocked,
+								onClick = { showSchoolSearch = true }
 							) {
 								Icon(
 									imageVector = Icons.Outlined.Search,
@@ -207,12 +205,12 @@ fun LoginDataInputScreen(
 						},
 						focusManager = focusManager,
 						modifier = Modifier
-							.focusRequester(focusRequester)
+							.focusRequester(schoolNameFocusRequester)
 							.padding(bottom = 8.dp)
 					)
 
 					LaunchedEffect(Unit) {
-						focusRequester.requestFocus()
+						schoolNameFocusRequester.requestFocus()
 					}
 				}
 			} else {
@@ -236,6 +234,7 @@ fun LoginDataInputScreen(
 								.padding(bottom = dimensionResource(id = com.sapuseven.untis.feature.login.R.dimen.feature_login_margin_pleaselogin_top))
 						)
 
+					// TODO: Better error text handling
 					MessageBubble(
 						modifier = Modifier
 							.fillMaxWidth()
@@ -246,26 +245,28 @@ fun LoginDataInputScreen(
 								contentDescription = stringResource(id = R.string.all_error)
 							)
 						},
-						messageText = viewModel.errorText,
-						messageTextRaw = viewModel.errorTextRaw
+						messageText = if (uiState.isSecondFactorRequired) R.string.errormessagedictionary_second_factor_requried else uiState.errorText,
+						messageTextRaw = uiState.errorTextRaw
 					)
 
 					InputField(
-						state = viewModel.loginData.profileName,
+						value = uiState.formData.profileName,
+						onValueChange = viewModel.onProfileNameChanged,
 						label = { Text(stringResource(id = R.string.logindatainput_profilename)) },
-						enabled = !viewModel.loading,
+						enabled = !uiState.isLoading,
 						focusManager = focusManager
 					)
 					InputField(
-						state = viewModel.loginData.schoolName,
+						value = uiState.formData.schoolName,
+						onValueChange = viewModel.onSchoolNameChanged,
 						label = { Text(stringResource(id = R.string.logindatainput_school)) },
-						enabled = !viewModel.loading && !viewModel.schoolIdLocked,
-						valid = !viewModel.validate || viewModel.schoolNameValid.value,
+						enabled = !uiState.isLoading && !uiState.isSchoolNameLocked,
+						valid = !uiState.validate || uiState.formData.isSchoolNameValid,
 						errorText = stringResource(id = R.string.logindatainput_error_field_empty),
 						trailingIcon = {
 							IconButton(
-								enabled = !viewModel.loading && !viewModel.schoolIdLocked,
-								onClick = { viewModel.searchMode = true }
+								enabled = !uiState.isLoading && !uiState.isSchoolNameLocked,
+								onClick = { showSchoolSearch = true }
 							) {
 								Icon(
 									imageVector = Icons.Outlined.Search,
@@ -279,56 +280,54 @@ fun LoginDataInputScreen(
 						modifier = Modifier.height(32.dp)
 					)
 					InputSwitch(
-						state = viewModel.loginData.anonymous,
+						value = uiState.formData.anonymous,
+						onValueChange = viewModel.onAnonymousToggled,
 						label = { Text(stringResource(id = R.string.logindatainput_anonymous_login)) },
-						enabled = !viewModel.loading
+						enabled = !uiState.isLoading
 					)
-					AnimatedVisibility(visible = viewModel.loginData.anonymous.value != true) {
+					AnimatedVisibility(visible = !uiState.formData.anonymous) {
 						Column {
 							InputField(
-								state = viewModel.loginData.username,
+								value = uiState.formData.username,
+								onValueChange = viewModel.onUsernameChanged,
 								label = { Text(stringResource(id = R.string.logindatainput_username)) },
-								enabled = !viewModel.loading,
-								valid = !viewModel.validate || viewModel.usernameValid.value,
+								enabled = !uiState.isLoading,
+								valid = !uiState.validate || uiState.formData.isUsernameValid,
 								errorText = stringResource(id = R.string.logindatainput_error_field_empty),
 								contentType = ContentType.Username,
 								focusManager = focusManager
 							)
 							InputField(
-								state = viewModel.loginData.password,
+								value = uiState.formData.password,
+								onValueChange = viewModel.onPasswordChanged,
 								type = KeyboardType.Password,
 								label = {
 									Text(
-										if (viewModel.useStoredPassword)
+										if (uiState.formData.storedPassword != null)
 											stringResource(id = R.string.logindatainput_key_saved)
 										else
 											stringResource(id = R.string.logindatainput_key)
 									)
 								},
-								enabled = !viewModel.loading,
+								enabled = !uiState.isLoading,
 								contentType = ContentType.Password,
 								focusManager = focusManager
 							)
-							AnimatedVisibility(visible = viewModel.showSecondFactorInput) {
-								val focusRequester = remember { FocusRequester() }
-
+							AnimatedVisibility(visible = uiState.isSecondFactorRequired) {
 								InputField(
-									state = viewModel.loginData.secondFactor,
+									value = uiState.formData.secondFactor,
+									onValueChange = viewModel.onSecondFactorChanged,
 									type = KeyboardType.NumberPassword,
 									label = {
 										Text(
 											stringResource(id = R.string.logindatainput_2fa)
 										)
 									},
-									enabled = !viewModel.loading,
+									enabled = !uiState.isLoading,
 									focusManager = focusManager,
 									modifier = Modifier
-										.focusRequester(focusRequester)
+										.focusRequester(secondFactorFocusRequester)
 								)
-
-								LaunchedEffect(Unit) {
-									focusRequester.requestFocus()
-								}
 							}
 							Spacer(
 								modifier = Modifier.height(32.dp)
@@ -340,15 +339,15 @@ fun LoginDataInputScreen(
 						modifier = Modifier
 							.fillMaxWidth()
 							.padding(horizontal = 16.dp),
-						checked = viewModel.advanced,
-						onCheckedChange = { viewModel.advanced = it },
-						enabled = !viewModel.loading
+						checked = showAdvanced,
+						onCheckedChange = { showAdvanced = it },
+						enabled = !uiState.isLoading
 					)
-					AnimatedVisibility(visible = viewModel.advanced) {
+					AnimatedVisibility(visible = showAdvanced) {
 						Column {
 							// Proxy is not supported currently
 							/*InputField(
-								state = viewModel.loginData.proxyUrl,
+								state = uiState.formData.proxyUrl,
 								type = KeyboardType.Uri,
 								label = { Text(stringResource(id = R.string.logindatainput_proxy_host)) },
 								enabled = !viewModel.loading,
@@ -356,11 +355,12 @@ fun LoginDataInputScreen(
 								errorText = stringResource(id = R.string.logindatainput_error_invalid_url)
 							)*/
 							InputField(
-								state = viewModel.loginData.apiUrl,
+								value = uiState.formData.apiUrl,
+								onValueChange = viewModel.onApiUrlChanged,
 								type = KeyboardType.Uri,
 								label = { Text(stringResource(id = R.string.logindatainput_api_url)) },
-								enabled = !viewModel.loading,
-								valid = !viewModel.validate || viewModel.apiUrlValid.value,
+								enabled = !uiState.isLoading,
+								valid = !uiState.validate || uiState.formData.isApiUrlValid,
 								errorText = stringResource(id = R.string.logindatainput_error_invalid_url),
 								focusManager = focusManager
 							)
@@ -370,10 +370,10 @@ fun LoginDataInputScreen(
 					Spacer(Modifier.height(80.dp)) // Space for FAB
 					Spacer(Modifier.windowInsetsBottomHeight(WindowInsets.systemBars))
 
-					if (viewModel.showQrCodeErrorDialog) {
+					if (uiState.showQrError) {
 						AlertDialog(
 							onDismissRequest = {
-								viewModel.onQrCodeErrorDialogDismiss()
+								viewModel.dismissQrCodeError()
 							},
 							title = {
 								Text(stringResource(id = R.string.logindatainput_dialog_qrcodeinvalid_title))
@@ -384,7 +384,7 @@ fun LoginDataInputScreen(
 							confirmButton = {
 								TextButton(
 									onClick = {
-										viewModel.onQrCodeErrorDialogDismiss()
+										viewModel.dismissQrCodeError()
 									}) {
 									Text(stringResource(id = R.string.all_ok))
 								}
@@ -402,7 +402,8 @@ fun LoginDataInputScreen(
 )
 @Composable
 private fun InputField(
-	state: MutableState<String?>,
+	value: String,
+	onValueChange: (String) -> Unit,
 	type: KeyboardType = KeyboardType.Text,
 	label: @Composable (() -> Unit)? = null,
 	enabled: Boolean = true,
@@ -423,8 +424,8 @@ private fun InputField(
 			.bringIntoViewRequester(bringIntoViewRequester)
 	) {
 		OutlinedTextField(
-			value = state.value ?: "",
-			onValueChange = { state.value = it },
+			value = value,
+			onValueChange = onValueChange,
 			singleLine = true,
 			keyboardOptions = KeyboardOptions(
 				keyboardType = type,
@@ -467,7 +468,8 @@ private fun InputField(
 
 @Composable
 private fun InputSwitch(
-	state: MutableState<Boolean?>,
+	value: Boolean,
+	onValueChange: (Boolean) -> Unit,
 	label: @Composable () -> Unit,
 	enabled: Boolean = true
 ) {
@@ -476,25 +478,8 @@ private fun InputSwitch(
 		modifier = Modifier
 			.fillMaxWidth()
 			.padding(horizontal = 16.dp),
-		checked = state.value ?: false,
-		onCheckedChange = { state.value = it },
-		enabled = enabled
-	)
-}
-
-@Composable
-private fun InputCheckbox(
-	state: MutableState<Boolean?>,
-	label: @Composable () -> Unit,
-	enabled: Boolean = true
-) {
-	LabeledCheckbox(
-		label = label,
-		modifier = Modifier
-			.fillMaxWidth()
-			.padding(horizontal = 16.dp),
-		checked = state.value ?: false,
-		onCheckedChange = { state.value = it },
+		checked = value,
+		onCheckedChange = onValueChange,
 		enabled = enabled
 	)
 }

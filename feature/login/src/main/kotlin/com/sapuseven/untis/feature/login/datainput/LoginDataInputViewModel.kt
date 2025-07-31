@@ -1,12 +1,7 @@
 package com.sapuseven.untis.feature.login.datainput
 
 import android.util.Log
-import android.util.Patterns
 import androidx.activity.compose.ManagedActivityResultLauncher
-import androidx.compose.runtime.derivedStateOf
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.core.net.toUri
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
@@ -16,25 +11,19 @@ import com.journeyapps.barcodescanner.ScanIntentResult
 import com.journeyapps.barcodescanner.ScanOptions
 import com.sapuseven.untis.core.api.exception.UntisApiException
 import com.sapuseven.untis.core.api.model.response.UntisErrorCode
-import com.sapuseven.untis.core.api.model.untis.SchoolInfo
 import com.sapuseven.untis.core.data.repository.UserRepository
 import com.sapuseven.untis.core.domain.LoginAndSaveUserUseCase
-import com.sapuseven.untis.core.model.School
-import com.sapuseven.untis.core.model.User
 import com.sapuseven.untis.core.ui.R
 import com.sapuseven.untis.feature.login.CodeScanService
 import com.sapuseven.untis.feature.login.navigation.LoginDataInputRoute
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 const val DEMO_API_URL = "https://api.sapuseven.com/untis/testing"
-
-sealed class ExistingDataSource {
-	data class ExistingUser(val userId: Long) : ExistingDataSource()
-	data class FromSchoolSearch(val schoolInfo: SchoolInfo) : ExistingDataSource()
-	object Demo : ExistingDataSource()
-}
 
 @HiltViewModel
 class LoginDataInputViewModel @Inject constructor(
@@ -44,89 +33,52 @@ class LoginDataInputViewModel @Inject constructor(
 	savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
 	private val args = savedStateHandle.toRoute<LoginDataInputRoute>()
+	private val existingUserId = args.userId.takeIf { it != -1L }
 
-	private val existingUserId = if (args.userId == -1L) null else args.userId
-
-	val isExistingUser = existingUserId != null
-
-	val useStoredPassword
-		get() = isExistingUser && loginData.password.value.isNullOrEmpty() && loginData.storedPassword != null
-
-	val loginData = LoginData()
-
-	var advanced by mutableStateOf(false)
-
-	var searchMode by mutableStateOf(false)
-
-	var validate by mutableStateOf(false)
-		private set
-
-	var loading by mutableStateOf(false)
-		private set
-
-	var errorText: Int? by mutableStateOf(null)
-		private set
-
-	var errorTextRaw: String? by mutableStateOf(null)
-		private set
-
-	var showQrCodeErrorDialog by mutableStateOf(false)
-		private set
-
-	var showSecondFactorInput by mutableStateOf(false)
-		private set
-
-	val showProfileUpdate = args.showProfileUpdate
-
-	var schoolIdLocked by mutableStateOf(false)
-
-	val schoolNameValid = derivedStateOf {
-		loginData.schoolName.value?.isNotEmpty() ?: false
-	}
-
-	val usernameValid = derivedStateOf {
-		loginData.username.value?.isNotEmpty() ?: false || (loginData.anonymous.value == true)
-	}
-
-	val apiUrlValid = derivedStateOf {
-		loginData.apiUrl.value?.let {
-			it.isEmpty() || Patterns.WEB_URL.matcher(it).matches()
-		} ?: true
-	}
-
-	val codeScanResultHandler: (String) -> Unit = {
-		try {
-			loadFromSetSchoolUri(it)
-			login()
-		} catch (_: Exception) {
-			showQrCodeErrorDialog = true
-		}
-	}
+	private val _uiState = MutableStateFlow(
+		LoginDataInputUiState(
+			isExistingUser = existingUserId != null,
+			formData = LoginData(
+				schoolName = args.schoolName ?: "",
+				anonymous = args.demoSchool,
+				apiUrl = if (args.demoSchool) DEMO_API_URL else ""
+			),
+			isSchoolNameLocked = args.schoolName != null
+		)
+	)
+	val uiState: StateFlow<LoginDataInputUiState> = _uiState
 
 	init {
-		viewModelScope.launch {
-			existingUserId?.let { userRepository.getUserById(it) }?.let {
-				loginData.loadFromUser(it)
-				advanced = loginData.apiUrl.value?.isNotEmpty() == true
+		existingUserId?.let { id ->
+			viewModelScope.launch {
+				userRepository.getUserById(id)?.let { user ->
+					_uiState.update { it.withLoadedUser(user) }
+				}
 			}
 		}
 
-		args.schoolName?.let {
-			loginData.schoolName.value = it
-			schoolIdLocked = true
-		}
+		args.autoLoginData?.let(::onCodeScanned)
+		if (args.autoLogin) login()
+	}
 
-		if (args.demoSchool) {
-			loginData.anonymous.value = true
-			loginData.schoolName.value = "demo"
-			advanced = true
-			loginData.apiUrl.value = DEMO_API_URL
-		}
+	val onProfileNameChanged = { newValue: String -> updateForm { it.copy(profileName = newValue) } }
+	val onSchoolNameChanged = { value: String -> updateForm { it.copy(schoolName = value) } }
+	val onAnonymousToggled = { newValue: Boolean -> updateForm { it.copy(anonymous = newValue) } }
+	val onUsernameChanged = { newValue: String -> updateForm { it.copy(username = newValue) } }
+	val onPasswordChanged = { newValue: String -> updateForm { it.copy(password = newValue) } }
+	val onSecondFactorChanged = { newValue: String -> updateForm { it.copy(secondFactor = newValue) } }
+	val onApiUrlChanged = { newValue: String -> updateForm { it.copy(apiUrl = newValue) } }
 
-		args.autoLoginData?.let(codeScanResultHandler)
+	private fun updateForm(transform: (LoginData) -> LoginData) {
+		_uiState.update { it.copy(formData = transform(it.formData), errorText = null) }
+	}
 
-		if (args.autoLogin) {
+	fun onCodeScanned(value: String) {
+		tryParseLoginUri(value)?.let { loginUriData ->
+			_uiState.update { it.copy(formData = loginUriData) }
 			login()
+		} ?: run {
+			_uiState.update { it.copy(showQrError = true) }
 		}
 	}
 
@@ -135,115 +87,87 @@ class LoginDataInputViewModel @Inject constructor(
 	}
 
 	fun onLoginClick() {
-		validate = true
-		if (schoolNameValid.value && usernameValid.value && apiUrlValid.value) {
-			errorText = null
-			errorTextRaw = null
-			login()
-		}
+		_uiState.update { it.copy(validate = true, errorText = null, errorTextRaw = null) }
+		if (_uiState.value.formData.isValid) login()
 	}
 
-	private fun loadFromSetSchoolUri(data: String?) {
-		if (data == null) return
+	private fun tryParseLoginUri(data: String): LoginData? {
 		val appLinkData = data.toUri()
 
-		if (appLinkData.isHierarchical && appLinkData.scheme == "untis" && appLinkData.host == "setschool") {
-			// Untis-native values
-			loginData.schoolName.value = appLinkData.getQueryParameter("school")
-			loginData.username.value = appLinkData.getQueryParameter("user")
-			loginData.password.value = appLinkData.getQueryParameter("key")
+		return if (appLinkData.isHierarchical && appLinkData.scheme == "untis" && appLinkData.host == "setschool") {
+			LoginData(
+				// Untis-native values
+				schoolName = appLinkData.getQueryParameter("school") ?: "",
+				username = appLinkData.getQueryParameter("user") ?: "",
+				password = appLinkData.getQueryParameter("key") ?: "",
 
-			// Custom values
-			loginData.anonymous.value = appLinkData.getBooleanQueryParameter("anonymous", false)
-			loginData.apiUrl.value = appLinkData.getQueryParameter("apiUrl")
-
-			advanced = loginData.apiUrl.value?.isNotEmpty() == true
+				// Custom values
+				anonymous = appLinkData.getBooleanQueryParameter("anonymous", false),
+				apiUrl = appLinkData.getQueryParameter("apiUrl") ?: "",
+			)
 		} else {
-			showQrCodeErrorDialog = true
+			null
 		}
 	}
 
 	private fun login() = viewModelScope.launch {
-		loading = true
+		_uiState.update { it.copy(isLoading = true) }
 
-		val anonymous = loginData.anonymous.value == true
-		with(loginData) {
+		val anonymous = _uiState.value.formData.anonymous
+		with(_uiState.value.formData) {
 			loginUseCase(
-				schoolName.value.orEmpty(),
-				profileName.value,
-				username.value.takeIf { !anonymous },
-				password.value.takeIf { !anonymous },
-				secondFactor.value,
-				apiUrl.value.takeIf { advanced }
+				schoolName,
+				profileName,
+				username.takeIf { !anonymous },
+				password.takeIf { !anonymous },
+				secondFactor.takeIf { it.isNotEmpty() },
+				apiUrl.takeIf { it.isNotBlank() && isApiUrlValid }
 			)
 		}.fold(
 			onSuccess = {
-				// TODO: Go to timetable
+				_uiState.update { it.copy(isLoggedIn = true) }
 			},
 			onFailure = { e ->
-				loading = false
+				_uiState.update { it.copy(isLoading = false) }
 
 				if (e is UntisApiException) {
 					Log.e(LoginDataInputViewModel::class.simpleName, "loadData Untis error", e)
 
-					val errorTextRes: Int? = null// TODO ErrorMessageDictionary.getErrorMessageResource(e.error?.code, false)
-					errorText = errorTextRes ?: R.string.errormessagedictionary_generic
+					val errorTextRes: Int? =
+						null// TODO ErrorMessageDictionary.getErrorMessageResource(e.error?.code, false)
+
+					_uiState.update { it.copy(errorText = errorTextRes ?: R.string.errormessagedictionary_generic) }
+
 					if (e.error?.code == UntisErrorCode.REQUIRE2_FACTOR_AUTHENTICATION_TOKEN) {
-						showSecondFactorInput = true
+						_uiState.update { it.copy(isSecondFactorRequired = true) }
 					} else {
-						errorTextRaw = when (e.error?.code) {
-							else -> if (errorTextRes == null) e.error?.message else null
+						_uiState.update {
+							it.copy(
+								isSecondFactorRequired = false,
+								errorTextRaw = when (e.error?.code) {
+									else -> if (errorTextRes == null) e.error?.message else null
+								}
+							)
 						}
 					}
 				} else {
 					Log.e(LoginDataInputViewModel::class.simpleName, "loadData error", e)
-					errorText = R.string.errormessagedictionary_generic
-					errorTextRaw = e.message
+					_uiState.update {
+						it.copy(
+							errorText = R.string.errormessagedictionary_generic,
+							errorTextRaw = e.message
+						)
+					}
 				}
 			}
 		)
 	}
 
-	fun disableSearchMode() {
-		if (searchMode) searchMode = false
-	}
-
-	fun onQrCodeErrorDialogDismiss() {
-		showQrCodeErrorDialog = false
+	fun dismissQrCodeError() {
+		_uiState.update { it.copy(showQrError = false) }
 	}
 
 	fun onCodeScanClick() {
-		codeScanService.scanCode(codeScanResultHandler)
-	}
-
-	fun selectSchool(it: School) {
-		loginData.schoolName.value = it.name
-		searchMode = false
-	}
-
-	class LoginData(
-		initialProfileName: String? = null,
-		initialSchoolName: String? = null,
-		initialAnonymous: Boolean? = null,
-		initialUsername: String? = null,
-		initialApiUrl: String? = null,
-	) {
-		val profileName = mutableStateOf(initialProfileName)
-		val schoolName = mutableStateOf(initialSchoolName)
-		val anonymous = mutableStateOf(initialAnonymous)
-		val username = mutableStateOf(initialUsername)
-		val password = mutableStateOf<String?>(null)
-		val secondFactor = mutableStateOf<String?>(null)
-		val apiUrl = mutableStateOf(initialApiUrl)
-		var storedPassword: String? = null
-
-		fun loadFromUser(user: User) {
-			profileName.value = user.displayName
-			schoolName.value = user.school.name
-			anonymous.value = user.anonymous
-			username.value = user.user
-			apiUrl.value = ""//TODO user.apiHost
-			storedPassword = user.key
-		}
+		codeScanService.scanCode { onCodeScanned(it) }
 	}
 }

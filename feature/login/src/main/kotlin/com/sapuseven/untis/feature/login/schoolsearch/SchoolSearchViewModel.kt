@@ -1,17 +1,14 @@
 package com.sapuseven.untis.feature.login.schoolsearch
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sapuseven.untis.core.data.repository.SchoolRepository
-import com.sapuseven.untis.core.model.School
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.debounce
-import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -20,53 +17,42 @@ import javax.inject.Inject
 class SchoolSearchViewModel @Inject constructor(
 	private val schoolRepository: SchoolRepository,
 ) : ViewModel() {
-	private val _schoolSearchText = MutableStateFlow("")
+	private val _uiState = MutableStateFlow(SchoolSearchUiState())
+	val uiState: StateFlow<SchoolSearchUiState> = _uiState.asStateFlow()
 
-	var schoolSearchItems by mutableStateOf<List<School>>(emptyList())
-		private set
+	fun searchSchools(query: String) = viewModelScope.launch {
+		if (query.isEmpty()) return@launch
 
-	var schoolSearchError: Int? by mutableStateOf(null)
-		private set
-
-	var schoolSearchErrorRaw: String? by mutableStateOf(null)
-		private set
-
-	var schoolSearchLoading by mutableStateOf(false)
-		private set
-
-	init {
-		viewModelScope.launch {
-			_schoolSearchText
-				.debounce(300)
-				.distinctUntilChanged()
-				.collect { input ->
-					searchSchools(input)
-				}
+		_uiState.update {
+			it.copy(
+				results = emptyList(),
+				errorResId = null,
+				errorRaw = null,
+				isLoading = true
+			)
 		}
-	}
 
-	private suspend fun searchSchools(input: String) {
-		if (input.isEmpty()) return
-
-		schoolSearchError = null
-		schoolSearchErrorRaw = null
-		schoolSearchItems = emptyList()
-
-		schoolSearchLoading = true
-		schoolRepository.searchSchools(input).fold(
+		schoolRepository.searchSchools(query).fold(
 			onSuccess = { schools ->
-				schoolSearchItems = schools
+				_uiState.update {
+					it.copy(
+						results = schools,
+						errorResId = null,
+						errorRaw = null,
+						isLoading = false
+					)
+				}
 			},
 			onFailure = { error ->
-				schoolSearchError = null
-				// TODO ErrorMessageDictionary.getErrorMessageResource(e.error?.code, false)
-				schoolSearchErrorRaw = error.message.orEmpty()
+				_uiState.update {
+					it.copy(
+						results = emptyList(),
+						errorResId = null,// TODO ErrorMessageDictionary.getErrorMessageResource(e.error?.code, false)
+						errorRaw = error.message.orEmpty(),
+						isLoading = false
+					)
+				}
 			}
 		)
-		schoolSearchLoading = false
-	}
-
-	fun setSearchText(searchText: String) {
-		_schoolSearchText.value = searchText
 	}
 }

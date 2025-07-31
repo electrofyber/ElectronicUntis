@@ -27,8 +27,8 @@ data class TimetableRoute(
 }
 
 fun NavController.navigateToTimetable(
-	elementId: Long,
-	elementType: ElementType,
+	elementId: Long? = null,
+	elementType: ElementType? = null,
 	navOptions: NavOptionsBuilder.() -> Unit = {}
 ) {
 	navigate(route = TimetableRoute(elementId, elementType)) {
