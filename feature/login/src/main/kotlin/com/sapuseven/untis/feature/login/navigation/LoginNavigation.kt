@@ -18,7 +18,7 @@ data object LoginRoute
 
 @Serializable
 data class LoginDataInputRoute(
-	val userId: Long = -1,
+	val userId: Long? = null,
 	val schoolName: String? = null,
 	val demoSchool: Boolean = false,
 	val autoLogin: Boolean = false,
@@ -27,7 +27,7 @@ data class LoginDataInputRoute(
 )
 
 fun NavController.navigateToLoginDataInput(userId: Long?) {
-	navigate(route = LoginDataInputRoute(userId ?: -1))
+	navigate(route = LoginDataInputRoute(userId ?: 0L))
 }
 
 fun NavGraphBuilder.loginScreen(

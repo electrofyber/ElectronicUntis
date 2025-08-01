@@ -33,7 +33,7 @@ class LoginDataInputViewModel @Inject constructor(
 	savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
 	private val args = savedStateHandle.toRoute<LoginDataInputRoute>()
-	private val existingUserId = args.userId.takeIf { it != -1L }
+	private val existingUserId = args.userId
 
 	private val _uiState = MutableStateFlow(
 		LoginDataInputUiState(
