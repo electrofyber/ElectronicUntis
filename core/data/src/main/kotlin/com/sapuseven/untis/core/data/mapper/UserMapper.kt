@@ -7,7 +7,6 @@ import com.sapuseven.untis.core.database.entity.UserEntity
 import com.sapuseven.untis.core.model.Element
 import com.sapuseven.untis.core.model.User
 import com.sapuseven.untis.core.model.UserCredentials
-import kotlinx.coroutines.NonCancellable.children
 import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
 
@@ -25,7 +24,8 @@ internal fun UserEntity.toDomain() = User(
 			name = userData.displayName,
 		)
 	},
-	rights = userData.rights.map(Right::toDomain)
+	rights = userData.rights.map(Right::toDomain),
+	timeGrid = timeGrid
 )
 
 // Map Domain -> Entity
@@ -38,7 +38,7 @@ internal fun User.toEntity(): UserEntity = UserEntity(
 	user = credentials?.user,
 	key = credentials?.key,
 	anonymous = isAnonymous,
-	timeGrid =,
+	timeGrid = timeGrid,
 	masterDataTimestamp = Clock.System.now().epochSeconds,
 	userData = UserData(
 		elemId = element?.id ?: -1,

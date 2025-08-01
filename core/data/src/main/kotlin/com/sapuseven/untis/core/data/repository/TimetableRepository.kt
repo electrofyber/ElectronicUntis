@@ -17,11 +17,14 @@ import crocodile8.universal_cache.time.TimeProvider
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.last
 import kotlinx.coroutines.flow.map
+import kotlinx.datetime.Clock
+import kotlinx.datetime.DatePeriod
+import kotlinx.datetime.Instant
+import kotlinx.datetime.LocalDate
+import kotlinx.datetime.LocalTime
+import kotlinx.datetime.plus
 import kotlinx.serialization.serializer
 import java.io.File
-import java.time.Instant
-import java.time.LocalDate
-import java.time.LocalTime
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -47,7 +50,7 @@ interface TimetableRepository {
 		val elementId: Long,
 		val elementType: ElementType,
 		val startDate: LocalDate,
-		val endDate: LocalDate = startDate.plusDays(5 /*TODO*/)
+		val endDate: LocalDate = startDate.plus(DatePeriod(days = 5 /*TODO*/))
 	)
 }
 
@@ -73,8 +76,8 @@ class UntisTimetableRepository @Inject constructor(
 					endDate = params.endDate,
 					masterDataTimestamp = 0L,//TODO user.masterData.timestamp,
 					apiUrl = user.school.apiUrl,
-					user = user.user,
-					key = user.key
+					user = user.credentials?.user,
+					key = user.credentials?.key
 				)
 			},
 			cache = DiskCache(File(cacheDir, "timetable"), serializer()),
@@ -88,7 +91,7 @@ class UntisTimetableRepository @Inject constructor(
 				userDao.upsertMasterData(user.id, result.value.masterData)
 			}
 			result.value.timetable.toDomain(emptyMap(/* TODO: Pass allElements */)).copy(
-				timestamp = result.originTimeStamp?.let(Instant::ofEpochMilli) ?: Instant.now()
+				timestamp = result.originTimeStamp?.let(Instant::fromEpochMilliseconds) ?: Clock.System.now()
 			)
 		}
 	}
@@ -101,8 +104,8 @@ class UntisTimetableRepository @Inject constructor(
 					api.getPeriodData(
 						periodIds = params.map { it.id }.toSet(),
 						apiUrl = user.school.apiUrl,
-						user = user.user,
-						key = user.key
+						user = user.credentials?.user,
+						key = user.credentials?.key
 					)
 				},
 				cache = DiskCache(File(cacheDir, "periodData"), serializer()),
@@ -120,8 +123,8 @@ class UntisTimetableRepository @Inject constructor(
 				periodId = periodId,
 				lessonTopic = lessonTopic,
 				apiUrl = user.school.apiUrl,
-				user = user.user,
-				key = user.key
+				user = user.credentials?.user,
+				key = user.credentials?.key
 			)
 		}
 	}
@@ -140,8 +143,8 @@ class UntisTimetableRepository @Inject constructor(
 				startTime = startTime,
 				endTime = endTime,
 				apiUrl = user.school.apiUrl,
-				user = user.user,
-				key = user.key
+				user = user.credentials?.user,
+				key = user.credentials?.key
 			)
 		}
 	}
@@ -150,7 +153,10 @@ class UntisTimetableRepository @Inject constructor(
 		return runCatching {
 			val user = userRepository.getActiveUser()
 			api.deleteAbsence(
-				absenceId = absenceId, apiUrl = user.school.apiUrl, user = user.user, key = user.key
+				absenceId = absenceId,
+				apiUrl = user.school.apiUrl,
+				user = user.credentials?.user,
+				key = user.credentials?.key
 			)
 		}
 	}
@@ -159,7 +165,10 @@ class UntisTimetableRepository @Inject constructor(
 		return runCatching {
 			val user = userRepository.getActiveUser()
 			api.postAbsencesChecked(
-				periodIds = periodIds, apiUrl = user.school.apiUrl, user = user.user, key = user.key
+				periodIds = periodIds,
+				apiUrl = user.school.apiUrl,
+				user = user.credentials?.user,
+				key = user.credentials?.key
 			)
 		}
 	}

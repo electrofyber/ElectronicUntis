@@ -5,7 +5,7 @@ import androidx.room.ForeignKey
 import androidx.room.Index
 import com.sapuseven.untis.core.api.model.untis.masterdata.SchoolYear
 import com.sapuseven.untis.core.database.utils.EntityMapper
-import java.time.LocalDate
+import kotlinx.datetime.LocalDate
 
 @Entity(
 	tableName = "SchoolYear",

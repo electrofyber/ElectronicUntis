@@ -8,7 +8,6 @@ import androidx.room.TypeConverters
 import com.sapuseven.untis.core.api.model.untis.SchoolInfo
 import com.sapuseven.untis.core.api.model.untis.Settings
 import com.sapuseven.untis.core.api.model.untis.UserData
-import com.sapuseven.untis.core.api.model.untis.masterdata.TimeGrid
 import com.sapuseven.untis.core.database.entity.AbsenceReasonEntity
 import com.sapuseven.untis.core.database.entity.DepartmentEntity
 import com.sapuseven.untis.core.database.entity.DutyEntity
@@ -24,10 +23,11 @@ import com.sapuseven.untis.core.database.entity.TeacherEntity
 import com.sapuseven.untis.core.database.entity.TeachingMethodEntity
 import com.sapuseven.untis.core.database.entity.UserDao
 import com.sapuseven.untis.core.database.entity.UserEntity
+import com.sapuseven.untis.core.model.TimeGrid
+import kotlinx.datetime.LocalDate
+import kotlinx.datetime.LocalTime
+import kotlinx.datetime.format
 import kotlinx.serialization.json.Json
-import java.time.LocalDate
-import java.time.LocalTime
-import java.time.format.DateTimeFormatter
 
 @Database(
 	version = 13,
@@ -98,16 +98,16 @@ internal class UserConverters {
 	fun decodeLongList(string: String?): List<Long>? = decode(string)
 
 	@TypeConverter
-	fun encodeDate(date: LocalDate?): String? = date?.format(DateTimeFormatter.ISO_LOCAL_DATE)
+	fun encodeDate(date: LocalDate?): String? = date?.format(LocalDate.Formats.ISO)
 
 	@TypeConverter
 	fun decodeDate(date: String?): LocalDate? =
-		date?.let { runCatching { LocalDate.parse(it, DateTimeFormatter.ISO_LOCAL_DATE) }.getOrNull() }
+		date?.let { runCatching { LocalDate.parse(it, LocalDate.Formats.ISO) }.getOrNull() }
 
 	@TypeConverter
-	fun encodeTime(time: LocalTime?): String? = time?.format(DateTimeFormatter.ISO_LOCAL_TIME)
+	fun encodeTime(time: LocalTime?): String? = time?.format(LocalTime.Formats.ISO)
 
 	@TypeConverter
 	fun decodeTime(time: String?): LocalTime? =
-		time?.let { runCatching { LocalTime.parse(it, DateTimeFormatter.ISO_LOCAL_TIME) }.getOrNull() }
+		time?.let { runCatching { LocalTime.parse(it, LocalTime.Formats.ISO) }.getOrNull() }
 }

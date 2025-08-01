@@ -6,7 +6,7 @@ package com.sapuseven.untis.core.model
  * Every user has it's own data and preferences.
  * There may be multiple users for the same person.
  *
- * @property id A unique identifier for every user instance.
+ * @property id A unique identifier for every user instance. Must be positive. `0` indicates the user has not yet been persisted.
  * @property name The name of the element this user corresponds to. Should only be used if referring to the actual element of the user.
  * @property displayName A custom display name for this user profile. Can be freely customized. Should be used when referring to this user profile.
  * @property school Information about the user's school. Contains API information.
@@ -21,9 +21,14 @@ data class User(
 	val credentials: UserCredentials? = null,
 	val element: Element? = null,
 	val rights: List<UserRight>,
+	val timeGrid: TimeGrid
 ) {
 	val isAnonymous: Boolean
 		get() = credentials == null
 
 	fun hasRight(right: UserRight) = rights.contains(right)
+
+	init {
+		require(id >= 0)
+	}
 }

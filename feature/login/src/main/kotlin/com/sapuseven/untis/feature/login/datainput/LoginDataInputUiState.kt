@@ -49,9 +49,9 @@ data class LoginData(
 		fun fromUser(user: User) = LoginData(
 			profileName = user.displayName,
 			schoolName = user.school.name,
-			anonymous = user.anonymous,
-			username = user.user ?: "",
-			storedPassword = user.key,
+			anonymous = user.isAnonymous,
+			username = user.credentials?.user ?: "",
+			storedPassword = user.credentials?.key,
 			apiUrl = user.school.apiUrl
 		)
 	}

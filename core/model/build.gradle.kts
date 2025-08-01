@@ -1,5 +1,6 @@
 plugins {
 	alias(libs.plugins.betteruntis.jvm.library)
+	id("kotlinx-serialization")
 }
 
 dependencies {

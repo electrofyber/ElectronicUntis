@@ -5,7 +5,7 @@ import androidx.room.ForeignKey
 import androidx.room.Ignore
 import androidx.room.Index
 import com.sapuseven.untis.core.model.ElementType
-import java.time.LocalDate
+import kotlinx.datetime.LocalDate
 
 @Entity(
 	tableName = "Klasse",

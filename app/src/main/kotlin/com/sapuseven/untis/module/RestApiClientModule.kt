@@ -68,7 +68,7 @@ class DefaultMessagesApiFactory @Inject constructor(
 	override suspend fun create(): MessagesApi = messagesApi.apply {
 		val user = userRepository.getActiveUser()
 		// TODO: Only fetch token if missing or expired
-		val token = userDataApi.getAuthToken(user.school.apiUrl, user.user, user.key)
+		val token = userDataApi.getAuthToken(user.school.apiUrl, user.credentials?.user, user.credentials?.key)
 		setBearerToken(token)
 	}
 }
