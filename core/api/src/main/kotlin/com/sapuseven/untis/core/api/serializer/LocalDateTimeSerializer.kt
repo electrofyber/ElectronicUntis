@@ -1,22 +1,26 @@
 package com.sapuseven.untis.core.api.serializer
 
+import kotlinx.datetime.Instant
+import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.format
+import kotlinx.datetime.format.char
+import kotlinx.datetime.toLocalDateTime
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.descriptors.PrimitiveKind
 import kotlinx.serialization.descriptors.PrimitiveSerialDescriptor
 import kotlinx.serialization.descriptors.SerialDescriptor
 import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
-import java.time.Instant
-import java.time.LocalDateTime
-import java.time.ZoneId
-import java.time.format.DateTimeFormatter
-import java.time.format.DateTimeParseException
 
 object LocalDateTimeSerializer : KSerializer<LocalDateTime> {
-	private val format = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm[:ss]['Z']")
+	private val format = LocalDateTime.Format {
+		dateTime(LocalDateTime.Formats.ISO)
+		char('Z')
+	}
 
 	override val descriptor: SerialDescriptor =
-		PrimitiveSerialDescriptor("kotlin.time.LocalDateTime", PrimitiveKind.STRING)
+		PrimitiveSerialDescriptor("kotlinx.datetime.LocalDateTime", PrimitiveKind.STRING)
 
 	override fun serialize(encoder: Encoder, value: LocalDateTime) {
 		val string = value.format(format)
@@ -27,8 +31,8 @@ object LocalDateTimeSerializer : KSerializer<LocalDateTime> {
 		val string = decoder.decodeString()
 		return try {
 			LocalDateTime.parse(string, format)
-		} catch (e: DateTimeParseException) {
-			Instant.ofEpochMilli(0).atZone(ZoneId.systemDefault()).toLocalDateTime()
+		} catch (e: IllegalArgumentException) {
+			Instant.fromEpochMilliseconds(0).toLocalDateTime(TimeZone.currentSystemDefault())
 		}
 	}
 }

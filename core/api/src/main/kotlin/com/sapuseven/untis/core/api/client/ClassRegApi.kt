@@ -13,8 +13,8 @@ import com.sapuseven.untis.core.api.model.untis.enumeration.ElementType
 import io.ktor.client.HttpClientConfig
 import io.ktor.client.call.body
 import io.ktor.client.engine.HttpClientEngineFactory
+import kotlinx.datetime.LocalDate
 import kotlinx.serialization.json.Json
-import java.time.LocalDate
 
 open class ClassRegApi(
 	engineFactory: HttpClientEngineFactory<*>,

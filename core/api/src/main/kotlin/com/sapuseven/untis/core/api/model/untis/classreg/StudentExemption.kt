@@ -1,8 +1,8 @@
 package com.sapuseven.untis.core.api.model.untis.classreg
 
 import com.sapuseven.untis.core.api.serializer.DayOfWeekSerializer
+import kotlinx.datetime.DayOfWeek
 import kotlinx.serialization.Serializable
-import java.time.DayOfWeek
 
 @Serializable
 data class StudentExemption(

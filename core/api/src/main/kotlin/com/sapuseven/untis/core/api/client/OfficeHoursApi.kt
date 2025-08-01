@@ -3,17 +3,14 @@ package com.sapuseven.untis.core.api.client
 import com.sapuseven.untis.core.api.exception.UntisApiException
 import com.sapuseven.untis.core.api.model.request.OfficeHoursParams
 import com.sapuseven.untis.core.api.model.request.RequestData
-import com.sapuseven.untis.core.api.model.request.StudentAbsencesParams
 import com.sapuseven.untis.core.api.model.response.OfficeHoursResponse
 import com.sapuseven.untis.core.api.model.response.OfficeHoursResult
-import com.sapuseven.untis.core.api.model.response.StudentAbsencesResponse
-import com.sapuseven.untis.core.api.model.response.StudentAbsencesResult
 import com.sapuseven.untis.core.api.model.untis.Auth
 import io.ktor.client.HttpClientConfig
 import io.ktor.client.call.body
 import io.ktor.client.engine.HttpClientEngineFactory
+import kotlinx.datetime.LocalDate
 import kotlinx.serialization.json.Json
-import java.time.LocalDate
 
 open class OfficeHoursApi(
 	engineFactory: HttpClientEngineFactory<*>,

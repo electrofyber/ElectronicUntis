@@ -10,6 +10,7 @@ plugins {
 dependencies {
 	implementation(projects.core.model)
 
+	implementation(libs.kotlinx.datetime)
 	implementation(libs.kotlinx.serialization.json)
 	implementation(libs.ktor.client.core)
 	implementation(libs.ktor.client.content.negotiation)
@@ -35,7 +36,7 @@ apiSpecList.forEach { file ->
 		inputSpec.set("${layout.projectDirectory}/spec/untis-intern/untis-$apiName.yaml")
 		outputDir.set("${layout.buildDirectory.get()}/generated")
 		apiPackage.set("com.sapuseven.untis.core.api.$packageName")
-		modelPackage.set("com.sapuseven.untis.model.$packageName")
+		modelPackage.set("com.sapuseven.untis.core.api.model.$packageName")
 		configOptions.set(
 			mapOf(
 				"library" to "jvm-ktor",

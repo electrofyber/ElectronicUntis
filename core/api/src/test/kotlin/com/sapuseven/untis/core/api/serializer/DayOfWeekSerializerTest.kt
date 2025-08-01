@@ -1,11 +1,9 @@
 package com.sapuseven.untis.core.api.serializer
 
-import com.sapuseven.untis.core.api.model.untis.masterdata.timegrid.Day
+import kotlinx.datetime.DayOfWeek
 import kotlinx.serialization.json.Json
 import org.junit.Assert
 import org.junit.Test
-import java.time.DayOfWeek
-import java.time.LocalDate
 
 class DayOfWeekSerializerTest {
 	@Test

@@ -1,9 +1,9 @@
 package com.sapuseven.untis.core.api.serializer
 
 import kotlinx.serialization.Serializable
-import java.time.LocalDate
-import java.time.LocalDateTime
-import java.time.LocalTime
+import kotlinx.datetime.LocalDate
+import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.LocalTime
 
 internal typealias Date = @Serializable(LocalDateSerializer::class) LocalDate
 internal typealias DateTime = @Serializable(LocalDateTimeSerializer::class) LocalDateTime

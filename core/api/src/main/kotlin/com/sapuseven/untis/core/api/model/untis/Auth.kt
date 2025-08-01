@@ -1,10 +1,10 @@
 package com.sapuseven.untis.core.api.model.untis
 
 import com.sapuseven.untis.core.api.util.Base32.decode
+import kotlinx.datetime.Clock
 import kotlinx.serialization.Serializable
 import java.security.InvalidKeyException
 import java.security.NoSuchAlgorithmException
-import java.time.Clock
 import java.util.Locale
 import javax.crypto.Mac
 import javax.crypto.spec.SecretKeySpec
@@ -59,9 +59,9 @@ data class Auth(
 		}
 	}
 
-	constructor(user: String? = null, key: String? = null, clock: Clock = Clock.systemDefaultZone()) : this(
+	constructor(user: String? = null, key: String? = null, clock: Clock = Clock.System) : this(
 		user ?: DEFAULT_USER,
-		createTimeBasedCode(clock.millis(), key),
-		clock.millis()
+		createTimeBasedCode(clock.now().toEpochMilliseconds(), key),
+		clock.now().toEpochMilliseconds()
 	)
 }
