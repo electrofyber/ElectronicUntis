@@ -1,5 +1,5 @@
 package com.sapuseven.untis.feature.timetable.details
-
+/*
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.ExperimentalFoundationApi
@@ -266,3 +266,4 @@ internal fun AbsenceCheck(
 		}
 	}
 }
+*/

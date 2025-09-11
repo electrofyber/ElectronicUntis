@@ -1,5 +1,5 @@
 package com.sapuseven.untis.feature.timetable.details
-
+/*
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sapuseven.untis.R
@@ -128,3 +128,4 @@ data class LessonTopicUiState(
 	val loading: Boolean = false,
 	val error: StringResourceDescriptor? = null
 )
+*/

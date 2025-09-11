@@ -1,5 +1,5 @@
 package com.sapuseven.untis.feature.timetable
-
+/*
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -276,3 +276,4 @@ fun TimetableDrawer(
 		)
 	}
 }
+*/

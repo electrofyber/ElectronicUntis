@@ -1,14 +1,24 @@
 package com.sapuseven.untis.feature.timetable
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
-import com.sapuseven.untis.core.model.ElementType
-import dagger.assisted.Assisted
-import dagger.assisted.AssistedFactory
-import dagger.assisted.AssistedInject
+import androidx.lifecycle.viewModelScope
+import androidx.navigation.toRoute
+import com.sapuseven.untis.core.data.repository.UserRepository
+import com.sapuseven.untis.core.model.User
+import com.sapuseven.untis.feature.timetable.navigation.TimetableRoute
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
+import java.time.Clock
+import java.time.LocalDateTime
+import javax.inject.Inject
 
 @HiltViewModel
-class TimetableViewModel @AssistedInject constructor(
+class TimetableViewModel @Inject constructor(
 	/*private val userSettingsDataSource: UserSettingsDataSource,
 	private val timetableMapper: TimetableMapper,
 	internal val userRepository: UserRepository,
@@ -18,13 +28,41 @@ class TimetableViewModel @AssistedInject constructor(
 	internal val clock: Clock,
 	internal val weekLogicService: WeekLogicService,
 	buildConfigFieldsProvider: BuildConfigFieldsProvider,*/
-	@Assisted val elementId: Long?,
-	@Assisted val elementType: ElementType?,
+	private val clock: Clock,
+	userRepository: UserRepository,
+	savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
-	@AssistedFactory
-	interface Factory {
-		fun create(elementId: Long?, elementType: ElementType?): TimetableViewModel
+	private val args = savedStateHandle.toRoute<TimetableRoute>()
+
+	private val _uiState = MutableStateFlow(
+		TimetableUiState(
+			user = userRepository.getActiveUser(),
+			title = "Timetable TODO",
+			currentTime = LocalDateTime.now(clock)
+		)
+	)
+	val uiState: StateFlow<TimetableUiState> = _uiState
+
+	init {
+		viewModelScope.launch {
+			while (true) {
+				_uiState.update { it.copy(
+					currentTime = LocalDateTime.now(clock),
+					lastRefresh = null //TODO
+				) }
+				delay(10_000)
+			}
+		}
 	}
+
+	fun switchUser(it: User) {
+		// TODO
+	}
+
+	fun editUsers() {
+		// TODO
+	}
+
 
 	/*private val allElements = masterDataRepository.timetableElements
 		.stateIn(

@@ -1,6 +1,6 @@
 package com.sapuseven.untis.feature.timetable
 
-import androidx.compose.runtime.getValue
+/*import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
@@ -90,4 +90,4 @@ class TimetableDrawerViewModel @Inject constructor(
 
 private fun TimetableElement.matches(bookmark: ElementEntity): Boolean {
 	return elementType == bookmark.getType().id && elementId == bookmark.id
-}
+}*/

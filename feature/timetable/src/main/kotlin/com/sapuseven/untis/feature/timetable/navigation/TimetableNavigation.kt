@@ -3,17 +3,14 @@ package com.sapuseven.untis.feature.timetable.navigation
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptionsBuilder
 import androidx.navigation.NavType
 import androidx.navigation.compose.composable
-import androidx.navigation.toRoute
 import com.sapuseven.untis.core.model.Element
 import com.sapuseven.untis.core.model.ElementType
 import com.sapuseven.untis.feature.timetable.TimetableScreen
-import com.sapuseven.untis.feature.timetable.TimetableViewModel
 import kotlinx.serialization.Serializable
 import kotlin.reflect.typeOf
 
@@ -54,15 +51,8 @@ fun NavGraphBuilder.timetableScreen(
 			fadeOut(animationSpec = tween(500))
 		},
 	) { entry ->
-		val id = entry.toRoute<TimetableRoute>().id
-		val type = entry.toRoute<TimetableRoute>().type
 		TimetableScreen(
 			onUserEdit = onUserEdit,
-			viewModel = hiltViewModel<TimetableViewModel, TimetableViewModel.Factory>(
-				key = (type.toString() + id.toString()),
-			) { factory ->
-				factory.create(id, type)
-			},
 		)
 	}
 }

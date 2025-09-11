@@ -1,5 +1,5 @@
 package com.sapuseven.untis.feature.timetable.details
-
+/*
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sapuseven.untis.core.api.model.untis.Person
@@ -166,3 +166,4 @@ data class AbsenceCheckUiState(
 	fun existingAbsenceFor(studentId: Long): StudentAbsence? =
 		periodData?.absences?.findLast { it.studentId == studentId }
 }
+*/

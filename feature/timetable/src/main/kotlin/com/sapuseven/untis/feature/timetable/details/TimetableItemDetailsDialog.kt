@@ -1,5 +1,5 @@
 package com.sapuseven.untis.feature.timetable.details
-
+/*
 import android.util.Log
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedVisibility
@@ -702,3 +702,4 @@ private fun TimetableItemDetailsDialogElement(
 			leadingContent = icon
 		)
 }
+*/

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<string name="feature_timetable_last_refreshed">Last refreshed: %1$s</string>
+	<string name="feature_timetable_last_refreshed_never">never</string>
+	<string name="feature_timetable_time_diff_just_now">just now</string>
+	<plurals name="feature_timetable_time_diff_minutes">
+		<item quantity="one">a minute ago</item>
+		<item quantity="other">%d minutes ago</item>
+	</plurals>
+	<plurals name="feature_timetable_time_diff_hours">
+		<item quantity="one">an hour ago</item>
+		<item quantity="other">%d hours ago</item>
+	</plurals>
+	<plurals name="feature_timetable_time_diff_days">
+		<item quantity="one">a day ago</item>
+		<item quantity="other">%d days ago</item>
+	</plurals>
+</resources>
