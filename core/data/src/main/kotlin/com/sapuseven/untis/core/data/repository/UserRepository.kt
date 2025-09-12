@@ -12,8 +12,9 @@ import com.sapuseven.untis.core.model.User
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import javax.inject.Inject
@@ -24,8 +25,18 @@ interface UserRepository {
 	 * Returns the currently active user, or throws an exception if no user is active.
 	 *
 	 * @throws IllegalStateException If no user is active.
+	 * @see observeActiveUser
 	 */
 	fun getActiveUser(): User
+
+	/**
+	 * Returns all users in the database.
+	 *
+	 * If there are no users, an empty list is returned.
+	 *
+	 * @see observeAllUsers
+	 */
+	fun getAllUsers(): List<User>
 
 	/**
 	 * Observes the currently active user.
@@ -34,8 +45,19 @@ interface UserRepository {
 	 * If no user is active, it will emit `null`. This can also happen if the last active user was deleted.
 	 *
 	 * @return A flow that emits the currently active user, or `null` if no user is active.
+	 * @see getActiveUser
 	 */
 	fun observeActiveUser(): Flow<User?>
+
+	/**
+	 * Observes all users in the database.
+	 *
+	 * If there are no users, it will emit an empty list.
+	 *
+	 * @return A flow that emits the list of all users whenever it changes.
+	 * @see getAllUsers
+	 */
+	fun observeAllUsers(): Flow<List<User>>
 
 	/**
 	 * Switches to another user.
@@ -75,28 +97,30 @@ class UserRepositoryImpl @Inject constructor(
 	private val userDao: UserDao,
 	private val settingsDataStore: DataStore<Settings>,
 ) : UserRepository {
+	private val allUsersStateFlow = observeAllUsers()
+		.stateIn(appScope, SharingStarted.Eagerly, emptyList())
+
 	private val userStateFlow = observeActiveUser()
-		.stateIn(
-			scope = appScope,
-			initialValue = null,
-			started = SharingStarted.Eagerly
-		)
+		.stateIn(appScope, SharingStarted.Eagerly, null)
 
-	override fun getActiveUser(): User {
-		return userStateFlow.value ?: throw IllegalStateException("No user is currently active.")
-	}
+	override fun getActiveUser(): User =
+		checkNotNull(userStateFlow.value) { "No user is currently active" }
 
-	override fun observeActiveUser(): Flow<User?> =
-		settingsDataStore.data.map { globalSettings ->
+	override fun getAllUsers(): List<User> = allUsersStateFlow.value
+
+	override fun observeAllUsers(): Flow<List<User>> = userDao.getAllFlow()
+		.map { entities -> entities.map(UserEntity::toDomain) }
+		.distinctUntilChanged()
+
+	override fun observeActiveUser(): Flow<User?> = settingsDataStore.data
+		.map { globalSettings ->
 			globalSettings.activeUser.takeIf { globalSettings.hasActiveUser() }
-				?.let { activeUserId ->
-					getUserById(activeUserId) ?: run {
-						userDao.getAllFlow().first().firstOrNull()?.toDomain()?.also {
-							switchUser(it.id)
-						}
-					}
-				}
-		}.distinctUntilChanged()
+		}
+		.combine(allUsersStateFlow.filterNotNull()) { activeUserId, allUsers ->
+			allUsers.firstOrNull { it.id == activeUserId }
+				?: allUsers.firstOrNull()?.also { switchUser(it.id) }
+		}
+		.distinctUntilChanged()
 
 	override suspend fun switchUser(userId: Long?) {
 		settingsDataStore.updateData { currentSettings ->

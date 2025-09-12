@@ -11,6 +11,8 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.time.Clock
@@ -46,13 +48,19 @@ class TimetableViewModel @Inject constructor(
 	init {
 		viewModelScope.launch {
 			while (true) {
-				_uiState.update { it.copy(
-					currentTime = LocalDateTime.now(clock),
-					lastRefresh = null //TODO
-				) }
+				_uiState.update {
+					it.copy(
+						currentTime = LocalDateTime.now(clock),
+						lastRefresh = null //TODO
+					)
+				}
 				delay(10_000)
 			}
 		}
+
+		userRepository.observeAllUsers()
+			.onEach { users -> _uiState.update { it.copy(userList = users) } }
+			.launchIn(viewModelScope)
 	}
 
 	fun switchUser(it: User) {
