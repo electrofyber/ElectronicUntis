@@ -29,6 +29,7 @@ fun AppNavHost(
 		)
 
 		timetableScreen(
+			onElementClicked = navController::navigateToTimetable,
 			onUserEdit = navController::navigateToLoginDataInput
 		)
 

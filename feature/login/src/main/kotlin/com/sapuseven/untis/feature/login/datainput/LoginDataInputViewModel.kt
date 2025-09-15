@@ -1,6 +1,5 @@
 package com.sapuseven.untis.feature.login.datainput
 
-import android.util.Log
 import androidx.activity.compose.ManagedActivityResultLauncher
 import androidx.core.net.toUri
 import androidx.lifecycle.SavedStateHandle
@@ -9,10 +8,9 @@ import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import com.journeyapps.barcodescanner.ScanIntentResult
 import com.journeyapps.barcodescanner.ScanOptions
-import com.sapuseven.untis.core.api.exception.UntisApiException
-import com.sapuseven.untis.core.api.model.response.UntisErrorCode
 import com.sapuseven.untis.core.data.repository.UserRepository
 import com.sapuseven.untis.core.domain.LoginAndSaveUserUseCase
+import com.sapuseven.untis.core.domain.exception.LoginException
 import com.sapuseven.untis.core.ui.R
 import com.sapuseven.untis.feature.login.CodeScanService
 import com.sapuseven.untis.feature.login.navigation.LoginDataInputRoute
@@ -131,34 +129,17 @@ class LoginDataInputViewModel @Inject constructor(
 			onFailure = { e ->
 				_uiState.update { it.copy(isLoading = false) }
 
-				if (e is UntisApiException) {
-					Log.e(LoginDataInputViewModel::class.simpleName, "loadData Untis error", e)
+				val errorTextRes: Int? = when ((e as? LoginException)?.type) {
+					LoginException.Type.REQUIRE_2_FACTOR -> null//R.string.login_error_2factor
+					else -> R.string.errormessagedictionary_generic
+				}
 
-					val errorTextRes: Int? =
-						null// TODO ErrorMessageDictionary.getErrorMessageResource(e.error?.code, false)
-
-					_uiState.update { it.copy(errorText = errorTextRes ?: R.string.errormessagedictionary_generic) }
-
-					if (e.error?.code == UntisErrorCode.REQUIRE2_FACTOR_AUTHENTICATION_TOKEN) {
-						_uiState.update { it.copy(isSecondFactorRequired = true) }
-					} else {
-						_uiState.update {
-							it.copy(
-								isSecondFactorRequired = false,
-								errorTextRaw = when (e.error?.code) {
-									else -> if (errorTextRes == null) e.error?.message else null
-								}
-							)
-						}
-					}
-				} else {
-					Log.e(LoginDataInputViewModel::class.simpleName, "loadData error", e)
-					_uiState.update {
-						it.copy(
-							errorText = R.string.errormessagedictionary_generic,
-							errorTextRaw = e.message
-						)
-					}
+				_uiState.update {
+					it.copy(
+						isSecondFactorRequired = (e as? LoginException)?.type == LoginException.Type.REQUIRE_2_FACTOR,
+						errorText = errorTextRes,
+						errorTextRaw = e.message.takeIf { errorTextRes == R.string.errormessagedictionary_generic }
+					)
 				}
 			}
 		)

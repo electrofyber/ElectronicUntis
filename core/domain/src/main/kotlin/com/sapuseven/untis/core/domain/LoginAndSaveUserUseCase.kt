@@ -5,6 +5,7 @@ import com.sapuseven.untis.core.api.model.response.UntisErrorCode
 import com.sapuseven.untis.core.data.repository.LoginRepository
 import com.sapuseven.untis.core.data.repository.SchoolRepository
 import com.sapuseven.untis.core.data.repository.UserRepository
+import com.sapuseven.untis.core.domain.exception.LoginException
 import com.sapuseven.untis.core.model.School
 import com.sapuseven.untis.core.model.UserCredentials
 import javax.inject.Inject
@@ -59,9 +60,9 @@ class LoginAndSaveUserUseCase @Inject constructor(
 	 * This method tries to get the app secret from the supplied password.
 	 *
 	 * If the call fails, the password is assumed to be the app secret already and is returned directly.
-	 * If a second factor is required, the corresponding [UntisApiException] is thrown.
+	 * If a second factor is required, a [LoginException] with type [LoginException.Type.REQUIRE_2_FACTOR] is thrown.
 	 *
-	 * @see UntisErrorCode.REQUIRE2_FACTOR_AUTHENTICATION_TOKEN
+	 * @see LoginException.Type.REQUIRE_2_FACTOR
 	 */
 	private suspend fun loadAppSharedSecret(
 		school: School,
@@ -79,9 +80,10 @@ class LoginAndSaveUserUseCase @Inject constructor(
 				// If it is an Untis error, there are 2 possible cases:
 				//  1. 2FA required: Throw it and show the second factor input field
 				//  2. Bad credentials: Assume the supplied password is already an app secret and pass it through
-				if (it.error?.code == UntisErrorCode.REQUIRE2_FACTOR_AUTHENTICATION_TOKEN) throw it
+				if (it.error?.code == UntisErrorCode.REQUIRE2_FACTOR_AUTHENTICATION_TOKEN)
+					throw LoginException(LoginException.Type.REQUIRE_2_FACTOR, it.message)
 				else password ?: ""
-			} else throw it // Throw all other errors
+			} else throw LoginException(LoginException.Type.UNKNOWN, it.message) // Throw all other errors
 		}
 	}
 }

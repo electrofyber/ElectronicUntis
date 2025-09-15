@@ -11,7 +11,7 @@ android {
 dependencies {
 	implementation(libs.andrew0000.cache)
 
-	api(projects.core.api) // TODO: Remove references to :core:api and use :core:model instead
+	implementation(projects.core.api) // TODO: Remove references to :core:api and use :core:model instead
 	api(projects.core.model)
 
 	// <editor-fold desc="Fix crash from missing `beginTransactionReadOnly()` method in Room due to sqlite version mismatch">

@@ -15,4 +15,11 @@
 		<item quantity="one">a day ago</item>
 		<item quantity="other">%d days ago</item>
 	</plurals>
+	<string name="feature_timetable_favourites">Favourites</string>
+	<string name="feature_timetable_personal_timetable">Personal Timetable</string>
+	<string name="feature_timetable_add_bookmark">Add Timetable</string>
+	<string name="feature_timetable_navigation_timetables">Timetables</string>
+	<string name="feature_timetable_delete_bookmark_dialog_message">Would you like to delete this bookmark?</string>
+	<string name="feature_timetable_delete">Delete</string>
+	<string name="feature_timetable_cancel">Cancel</string>
 </resources>

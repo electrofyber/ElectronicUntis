@@ -23,13 +23,15 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.sapuseven.untis.core.model.ElementType
 import com.sapuseven.untis.core.ui.common.ProfileSelectorAction
 import com.sapuseven.untis.core.ui.functional.insetsPaddingValues
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun TimetableScreen(
-	onUserEdit: (Long?) -> Unit,
+	onElementClicked: (id: Long?, type: ElementType?) -> Unit,
+	onUserEdit: (userId: Long?) -> Unit,
 	viewModel: TimetableViewModel = hiltViewModel()
 	//factory: TimetableViewModel.Factory = hiltEntryPointViewModelFactory() // explained below
 	/*viewModel: TimetableViewModel = hiltViewModel<TimetableViewModel, TimetableViewModel.Factory>(
@@ -40,7 +42,6 @@ internal fun TimetableScreen(
 
 	/*val ready by viewModel.ready.collectAsStateWithLifecycle()
 
-	val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
 	val scope = rememberCoroutineScope()
 	val user = viewModel.currentUser
 	val users by viewModel.allUsersState.collectAsStateWithLifecycle()
@@ -101,6 +102,7 @@ internal fun TimetableScreen(
 							},
 							onActionEdit = {
 								viewModel.editUsers()
+								onUserEdit(null) // TODO show management dialog
 							}
 						)
 					}

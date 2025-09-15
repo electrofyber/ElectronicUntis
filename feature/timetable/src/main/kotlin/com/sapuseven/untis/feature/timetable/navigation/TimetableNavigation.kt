@@ -34,6 +34,7 @@ fun NavController.navigateToTimetable(
 }
 
 fun NavGraphBuilder.timetableScreen(
+	onElementClicked: (id: Long?, type: ElementType?) -> Unit,
 	onUserEdit: (Long?) -> Unit,
 ) {
 	composable<TimetableRoute>(
@@ -52,6 +53,7 @@ fun NavGraphBuilder.timetableScreen(
 		},
 	) { entry ->
 		TimetableScreen(
+			onElementClicked = onElementClicked,
 			onUserEdit = onUserEdit,
 		)
 	}
