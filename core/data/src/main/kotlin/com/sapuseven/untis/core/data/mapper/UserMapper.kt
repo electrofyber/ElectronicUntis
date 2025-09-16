@@ -14,7 +14,7 @@ import kotlin.time.ExperimentalTime
 internal fun UserEntity.toDomain() = User(
 	id = id,
 	name = userData.displayName,
-	displayName = profileName,
+	displayName = profileName.takeIf(String::isNotBlank) ?: userData.displayName,
 	credentials = UserCredentials(user.orEmpty(), key.orEmpty()).takeIf { !anonymous },
 	school = schoolInfo!!.toDomain(),
 	element = userData.elemType?.let { elementType ->

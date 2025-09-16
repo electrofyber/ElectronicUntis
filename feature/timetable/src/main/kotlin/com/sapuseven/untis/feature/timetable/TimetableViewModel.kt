@@ -40,7 +40,7 @@ class TimetableViewModel @Inject constructor(
 	private val _uiState = MutableStateFlow(
 		TimetableUiState(
 			user = userRepository.getActiveUser(),
-			title = "Timetable TODO",
+			title = userRepository.getActiveUser().displayName,
 			currentTime = LocalDateTime.now(clock)
 		)
 	)
