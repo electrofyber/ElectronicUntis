@@ -10,7 +10,7 @@ android {
 
 dependencies {
 	api(projects.core.model)
-	implementation(projects.core.datastore)
+	api(projects.core.datastore)
 
 	implementation(libs.kotlinx.coroutines)
 	implementation(libs.javax.inject)

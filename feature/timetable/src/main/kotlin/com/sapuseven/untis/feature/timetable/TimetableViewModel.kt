@@ -4,10 +4,13 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
+import com.sapuseven.compose.protostore.ui.preferences.convertRangeToPair
+import com.sapuseven.untis.core.datastore.UserSettingsDataSource
 import com.sapuseven.untis.core.domain.repository.UserRepository
 import com.sapuseven.untis.core.domain.timetable.WeekLogicService
 import com.sapuseven.untis.core.model.user.User
 import com.sapuseven.untis.feature.timetable.navigation.TimetableRoute
+import com.sapuseven.untis.feature.timetable.weekview.WeekViewHour
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -16,6 +19,7 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.datetime.toJavaLocalTime
 import java.time.Clock
 import java.time.LocalDateTime
 import javax.inject.Inject
@@ -32,16 +36,18 @@ class TimetableViewModel @Inject constructor(
 	buildConfigFieldsProvider: BuildConfigFieldsProvider,*/
 	private val clock: Clock,
 	internal val weekLogicService: WeekLogicService,
+	private val userSettingsDataSource: UserSettingsDataSource,
 	userRepository: UserRepository,
 	savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
 	private val args = savedStateHandle.toRoute<TimetableRoute>()
+	private val user = userRepository.getActiveUser();
 
 	private val _uiState = MutableStateFlow(
 		TimetableUiState(
-			user = userRepository.getActiveUser(),
-			title = userRepository.getActiveUser().displayName,
-			currentTime = LocalDateTime.now(clock)
+			user = user,
+			title = user.displayName,
+			currentTime = LocalDateTime.now(clock),
 		)
 	)
 	val uiState: StateFlow<TimetableUiState> = _uiState
@@ -61,6 +67,20 @@ class TimetableViewModel @Inject constructor(
 
 		userRepository.observeAllUsers()
 			.onEach { users -> _uiState.update { it.copy(userList = users) } }
+			.launchIn(viewModelScope)
+
+		userSettingsDataSource.getSettings()
+			.onEach { settings ->
+				_uiState.update {
+					it.copy(
+						hourList = buildHourList(
+							user = user,
+							range = settings.timetableRange.convertRangeToPair(),
+							rangeIndexReset = settings.timetableRangeIndexReset
+						)
+					)
+				}
+			}
 			.launchIn(viewModelScope)
 	}
 
@@ -284,7 +304,7 @@ class TimetableViewModel @Inject constructor(
 
 		// Convert the map to an immutable version if needed
 		return groupedEvents.mapValues { it.value.toList() }
-	}
+	}*/
 
 	// TODO: Extract to usecase
 	private fun buildHourList(
@@ -303,13 +323,13 @@ class TimetableViewModel @Inject constructor(
 				hour.label.ifEmpty { (index + 1).toString() }
 			}
 
-			hourList.add(WeekViewHour(hour.startTime, hour.endTime, label))
+			hourList.add(WeekViewHour(hour.startTime.toJavaLocalTime(), hour.endTime.toJavaLocalTime(), label))
 		}
 
 		return hourList
 	}
 
-	val onAnonymousSettingsClick = {
+	/*val onAnonymousSettingsClick = {
 		navigator.navigate(AppRoutes.Settings.Timetable(highlightTitle = R.string.preference_timetable_personal_timetable))
 	}
 
