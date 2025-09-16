@@ -18,10 +18,6 @@ class MainActivityViewModel @Inject constructor(
 	userRepository: UserRepository,
 	userSettingsDataSource: UserSettingsDataSource,
 ) : ViewModel() {
-
-	// Expose the userState directly
-	//val userState: StateFlow<UserState> = userRepository.userState
-
 	val uiState = userRepository.observeActiveUser()
 		.combine(userSettingsDataSource.getSettings()) { activeUserId, userSettings ->
 			if (activeUserId != null) {
@@ -31,7 +27,6 @@ class MainActivityViewModel @Inject constructor(
 				MainActivityUiState.Login
 			}
 		}
-
 		.stateIn(
 			scope = viewModelScope,
 			initialValue = MainActivityUiState.Loading,

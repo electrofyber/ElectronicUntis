@@ -1,26 +1,25 @@
 package com.sapuseven.untis.ui
 
-//import com.sapuseven.untis.feature.timetable.navigation.TimetableRoute
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import com.sapuseven.untis.feature.login.navigation.LoginRoute
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import com.sapuseven.untis.navigation.AppNavHost
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainApp(
-	appState: MainAppState,
 	modifier: Modifier = Modifier,
+	navController: NavHostController = rememberNavController(),
+	startDestination: Any,
 	//windowAdaptiveInfo: WindowAdaptiveInfo = currentWindowAdaptiveInfo(),
 ) {
-	//key(appState.user.id) {
-		AppNavHost(
-			modifier = modifier,
-			navController = appState.navController,
-			startDestination = LoginRoute
-		)
-	//}
+	AppNavHost(
+		modifier = modifier,
+		navController = navController,
+		startDestination = startDestination
+	)
 
 	/*val bottomSheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
 	LaunchedEffect(globalSettings) {

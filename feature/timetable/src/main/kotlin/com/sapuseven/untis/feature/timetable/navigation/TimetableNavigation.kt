@@ -21,6 +21,8 @@ data class TimetableRoute(
 	val type: ElementType? = null,
 ) {
 	constructor(element: Element?) : this(element?.id, element?.type)
+
+	private companion object
 }
 
 fun NavController.navigateToTimetable(

@@ -13,10 +13,12 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.Color
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import com.sapuseven.untis.feature.login.navigation.LoginRoute
+import com.sapuseven.untis.feature.timetable.navigation.TimetableRoute
 import com.sapuseven.untis.ui.MainApp
-import com.sapuseven.untis.ui.rememberMainAppState
 import com.sapuseven.untis.ui.theme.AppTheme
 import com.sapuseven.untis.util.isSystemInDarkTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -88,18 +90,22 @@ class MainActivity : ComponentActivity() {
 		//handleIntent(intent)
 
 		setContent {
-			val appState = rememberMainAppState()
+			val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
-			// could wrap this in CompositionLocalProvider and provide dependencies injected at the top
-			AppTheme(
-				darkTheme = themeSettings.darkTheme,
-				darkThemeOled = themeSettings.darkThemeOled,
-				themeColor = themeSettings.themeColor,
-			) {
-				//val state = viewModel.uiState.collectAsStateWithLifecycle()
-				//Text(state.value.toString(), fontSize = 24.sp, color = Color.White, modifier = Modifier.padding(24.dp))
+			if (!uiState.shouldKeepSplashScreen()) {
+				val startDestination = when (uiState) {
+					is MainActivityUiState.Success -> TimetableRoute() // TODO: Check for intent data and pass requested element if present
+					else -> LoginRoute
+				}
 
-				MainApp(appState)
+				// could wrap this in CompositionLocalProvider and provide dependencies injected at the top
+				AppTheme(
+					darkTheme = themeSettings.darkTheme,
+					darkThemeOled = themeSettings.darkThemeOled,
+					themeColor = themeSettings.themeColor,
+				) {
+					MainApp(startDestination = startDestination)
+				}
 			}
 
 			/*// ViewModel (or other injector) that exposes current userState + settings

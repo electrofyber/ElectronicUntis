@@ -7,15 +7,18 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Menu
 import androidx.compose.material3.CenterAlignedTopAppBar
+import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
@@ -26,6 +29,8 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.sapuseven.untis.core.model.ElementType
 import com.sapuseven.untis.core.ui.common.ProfileSelectorAction
 import com.sapuseven.untis.core.ui.functional.insetsPaddingValues
+import com.sapuseven.untis.feature.timetable.drawer.TimetableDrawer
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -38,11 +43,12 @@ internal fun TimetableScreen(
 		creationCallback = { factory -> factory.create(colorScheme, typography) }
 	)*/
 ) {
+	val scope = rememberCoroutineScope()
 	val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+	val drawerState = rememberDrawerState(DrawerValue.Closed)
 
 	/*val ready by viewModel.ready.collectAsStateWithLifecycle()
 
-	val scope = rememberCoroutineScope()
 	val user = viewModel.currentUser
 	val users by viewModel.allUsersState.collectAsStateWithLifecycle()
 
@@ -64,13 +70,13 @@ internal fun TimetableScreen(
 		}
 	}
 
-	/*TimetableDrawer(
+	TimetableDrawer(
 		drawerState = drawerState,
-		displayedElement = viewModel.requestedElement,
+		displayedElement = uiState.currentElement,
 		onElementPicked = {
-			viewModel.showElement(it)
+			//viewModel.showElement(it)
 		}
-	) {*/
+	) {
 		Scaffold(
 			topBar = {
 				CenterAlignedTopAppBar(
@@ -79,7 +85,7 @@ internal fun TimetableScreen(
 					},
 					navigationIcon = {
 						IconButton(onClick = {
-							//TODO viewModel.onDrawerOpenClick()
+							scope.launch { drawerState.open() }
 						}) {
 							Icon(
 								imageVector = Icons.Outlined.Menu,
@@ -215,7 +221,7 @@ internal fun TimetableScreen(
 				}
 			//}
 		}
-	//}
+	}
 
 	// TODO: Implement a nicer animation (see https://m3.material.io/components/dialogs/guidelines#007536b9-76b1-474a-a152-2f340caaff6f)
 	/*AnimatedVisibility(
