@@ -2,7 +2,7 @@ package com.sapuseven.untis.feature.login.schoolsearch
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.sapuseven.untis.core.data.repository.SchoolRepository
+import com.sapuseven.untis.core.domain.repository.SchoolRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableStateFlow

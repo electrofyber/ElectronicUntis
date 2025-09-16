@@ -1,6 +1,5 @@
 package com.sapuseven.untis.feature.timetable
 
-import com.sapuseven.untis.core.database.entity.ElementEntity
 import com.sapuseven.untis.core.model.timetable.Element
 import com.sapuseven.untis.core.model.user.User
 import java.time.Duration
@@ -20,7 +19,7 @@ data class TimetableUiState(
 	val lastRefresh: Duration? = null,
 
 	// Timetable
-	val currentElement: ElementEntity? = null,
+	val currentElement: Element? = null,
 ) {
 	/*fun withLoadedUser(user: User): LoginDataInputUiState = copy(
 		formData = LoginData.fromUser(user),

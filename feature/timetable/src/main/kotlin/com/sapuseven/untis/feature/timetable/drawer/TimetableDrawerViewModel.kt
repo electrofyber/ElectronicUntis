@@ -5,11 +5,11 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.sapuseven.untis.core.database.entity.ElementEntity
-import com.sapuseven.untis.core.domain.timetable.GetTimetableElementTypesUseCase
 import com.sapuseven.untis.core.domain.bookmarks.AddBookmarkUseCase
 import com.sapuseven.untis.core.domain.bookmarks.GetBookmarksUseCase
 import com.sapuseven.untis.core.domain.bookmarks.RemoveBookmarkUseCase
+import com.sapuseven.untis.core.domain.timetable.GetTimetableElementTypesUseCase
+import com.sapuseven.untis.core.model.timetable.Element
 import com.sapuseven.untis.core.model.timetable.ElementType
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
@@ -28,7 +28,7 @@ class TimetableDrawerViewModel @Inject constructor(
 	var enableDrawerGestures: Boolean = true
 		private set
 
-	var bookmarkDeleteDialog by mutableStateOf<ElementEntity?>(null)
+	var bookmarkDeleteDialog by mutableStateOf<Element?>(null)
 		private set
 
 	val elements: StateFlow<Set<ElementType>> = getTimetableElementTypes().stateIn(
@@ -37,22 +37,22 @@ class TimetableDrawerViewModel @Inject constructor(
 		initialValue = emptySet()
 	)
 
-	val bookmarks: StateFlow<List<ElementEntity>> = getBookmarks().stateIn(
+	val bookmarks: StateFlow<List<Element>> = getBookmarks().stateIn(
 		scope = viewModelScope,
 		started = SharingStarted.WhileSubscribed(5_000),
 		initialValue = emptyList()
 	)
 
-	fun onBookmarkAdd(item: ElementEntity) = viewModelScope.launch {
+	fun onBookmarkAdd(item: Element) = viewModelScope.launch {
 		addBookmark(item)
 	}
 
-	fun onBookmarkRemove(bookmark: ElementEntity) = viewModelScope.launch {
+	fun onBookmarkRemove(bookmark: Element) = viewModelScope.launch {
 		removeBookmark(bookmark)
 		dismissBookmarkDeleteDialog()
 	}
 
-	fun showBookmarkDeleteDialog(bookmark: ElementEntity) {
+	fun showBookmarkDeleteDialog(bookmark: Element) {
 		bookmarkDeleteDialog = bookmark
 	}
 
@@ -60,7 +60,7 @@ class TimetableDrawerViewModel @Inject constructor(
 		bookmarkDeleteDialog = null
 	}
 
-	fun getBookmarkDisplayName(bookmark: ElementEntity): String {
-		return bookmark.getLongName()
+	fun getBookmarkDisplayName(bookmark: Element): String {
+		return bookmark.longName
 	}
 }

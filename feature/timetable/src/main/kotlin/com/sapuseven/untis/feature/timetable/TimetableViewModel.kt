@@ -4,7 +4,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
-import com.sapuseven.untis.core.data.repository.UserRepository
+import com.sapuseven.untis.core.domain.repository.UserRepository
 import com.sapuseven.untis.core.model.user.User
 import com.sapuseven.untis.feature.timetable.navigation.TimetableRoute
 import dagger.hilt.android.lifecycle.HiltViewModel

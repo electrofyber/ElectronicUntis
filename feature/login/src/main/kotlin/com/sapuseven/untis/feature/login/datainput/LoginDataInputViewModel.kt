@@ -8,9 +8,9 @@ import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import com.journeyapps.barcodescanner.ScanIntentResult
 import com.journeyapps.barcodescanner.ScanOptions
-import com.sapuseven.untis.core.data.repository.UserRepository
 import com.sapuseven.untis.core.domain.LoginAndSaveUserUseCase
 import com.sapuseven.untis.core.domain.exception.LoginException
+import com.sapuseven.untis.core.domain.repository.UserRepository
 import com.sapuseven.untis.core.ui.R
 import com.sapuseven.untis.feature.login.CodeScanService
 import com.sapuseven.untis.feature.login.navigation.LoginDataInputRoute

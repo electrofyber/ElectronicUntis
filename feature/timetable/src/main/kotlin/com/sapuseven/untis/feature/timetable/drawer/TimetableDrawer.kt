@@ -34,7 +34,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.sapuseven.untis.core.database.entity.ElementEntity
+import com.sapuseven.untis.core.model.timetable.Element
 import com.sapuseven.untis.core.model.timetable.ElementType
 import com.sapuseven.untis.feature.timetable.R
 import kotlinx.coroutines.launch
@@ -43,8 +43,8 @@ import kotlinx.coroutines.launch
 fun TimetableDrawer(
 	viewModel: TimetableDrawerViewModel = hiltViewModel(),
 	drawerState: DrawerState = rememberDrawerState(initialValue = DrawerValue.Closed),
-	displayedElement: ElementEntity? = null,
-	onElementPicked: (ElementEntity?) -> Unit,
+	displayedElement: Element? = null,
+	onElementPicked: (Element?) -> Unit,
 	content: @Composable () -> Unit
 ) {
 	val scope = rememberCoroutineScope()
@@ -271,7 +271,7 @@ fun TimetableDrawer(
 @Composable
 fun DrawerItems(
 	disableTypeSelection: Boolean = false,
-	displayedElement: ElementEntity? = null,
+	displayedElement: Element? = null,
 	//onTimetableClick: (item: NavItemTimetable) -> Unit,
 	//onNavigationClick: (item: NavItemNavigation) -> Unit,
 ) {
