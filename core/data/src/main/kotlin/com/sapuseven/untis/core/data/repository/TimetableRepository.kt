@@ -3,56 +3,29 @@ package com.sapuseven.untis.core.data.repository
 import com.sapuseven.untis.core.api.client.TimetableApi
 import com.sapuseven.untis.core.api.model.response.PeriodDataResult
 import com.sapuseven.untis.core.api.model.response.TimetableResult
-import com.sapuseven.untis.core.api.model.untis.absence.StudentAbsence
-import com.sapuseven.untis.core.api.model.untis.enumeration.ElementType
-import com.sapuseven.untis.core.api.model.untis.timetable.Period
 import com.sapuseven.untis.core.data.cache.DiskCache
+import com.sapuseven.untis.core.data.mapper.toData
 import com.sapuseven.untis.core.data.mapper.toDomain
-import com.sapuseven.untis.core.data.repository.TimetableRepository.TimetableParams
 import com.sapuseven.untis.core.database.entity.UserDao
-import com.sapuseven.untis.core.model.Timetable
+import com.sapuseven.untis.core.domain.cache.FromCache
+import com.sapuseven.untis.core.domain.repository.TimetableRepository
+import com.sapuseven.untis.core.domain.repository.UserRepository
+import com.sapuseven.untis.core.model.absences.Absence
+import com.sapuseven.untis.core.model.timetable.Period
+import com.sapuseven.untis.core.model.timetable.PeriodDetails
+import com.sapuseven.untis.core.model.timetable.Timetable
 import crocodile8.universal_cache.CachedSource
-import crocodile8.universal_cache.FromCache
 import crocodile8.universal_cache.time.TimeProvider
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.last
 import kotlinx.coroutines.flow.map
 import kotlinx.datetime.Clock
-import kotlinx.datetime.DatePeriod
 import kotlinx.datetime.Instant
-import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalTime
-import kotlinx.datetime.plus
 import kotlinx.serialization.serializer
 import java.io.File
 import javax.inject.Inject
 import javax.inject.Named
-
-interface TimetableRepository {
-	suspend fun getTimetable(params: TimetableParams, fromCache: FromCache): Flow<Timetable>
-
-	suspend fun getPeriodData(periods: Set<Period>): Result<PeriodDataResult>
-
-	suspend fun postLessonTopic(periodId: Long, lessonTopic: String): Result<Boolean>
-
-	suspend fun postAbsence(
-		periodId: Long,
-		studentId: Long,
-		startTime: LocalTime,
-		endTime: LocalTime
-	): Result<List<StudentAbsence>>
-
-	suspend fun deleteAbsence(absenceId: Long): Result<Boolean>
-
-	suspend fun postAbsencesChecked(periodIds: Set<Long>): Result<Unit>
-
-	data class TimetableParams(
-		val elementId: Long,
-		val elementType: ElementType,
-		val startDate: LocalDate,
-		val endDate: LocalDate = startDate.plus(DatePeriod(days = 5 /*TODO*/))
-	)
-}
 
 class UntisTimetableRepository @Inject constructor(
 	private val userRepository: UserRepository,
@@ -62,16 +35,16 @@ class UntisTimetableRepository @Inject constructor(
 	private val userDao: UserDao,
 ) : TimetableRepository {
 	override suspend fun getTimetable(
-		params: TimetableParams,
+		params: TimetableRepository.TimetableParams,
 		fromCache: FromCache
 	): Flow<Timetable> {
 		// TODO: Add error handling
 		val user = userRepository.getActiveUser()
-		return CachedSource<TimetableParams, TimetableResult>(
+		return CachedSource<TimetableRepository.TimetableParams, TimetableResult>(
 			source = { params ->
 				api.getTimetable(
 					id = params.elementId,
-					type = params.elementType,
+					type = params.elementType.toData(),
 					startDate = params.startDate,
 					endDate = params.endDate,
 					masterDataTimestamp = 0L,//TODO user.masterData.timestamp,
@@ -84,7 +57,7 @@ class UntisTimetableRepository @Inject constructor(
 			timeProvider = timeProvider
 		).getRaw(
 			params = params,
-			fromCache = fromCache,
+			fromCache = fromCache.toData(),
 			additionalKey = user.id
 		).map { result ->
 			if (!result.fromCache) {
@@ -96,7 +69,7 @@ class UntisTimetableRepository @Inject constructor(
 		}
 	}
 
-	override suspend fun getPeriodData(periods: Set<Period>): Result<PeriodDataResult> {
+	override suspend fun getPeriodData(periods: Set<Period>): Result<Map<Long, PeriodDetails>> {
 		return runCatching {
 			val user = userRepository.getActiveUser()
 			CachedSource<Set<Period>, PeriodDataResult>(
@@ -111,7 +84,8 @@ class UntisTimetableRepository @Inject constructor(
 				cache = DiskCache(File(cacheDir, "periodData"), serializer()),
 				timeProvider = timeProvider
 			)
-				.get(periods, FromCache.IF_FAILED, additionalKey = user.id)
+				.get(periods, FromCache.IF_FAILED.toData(), additionalKey = user.id)
+				.map { result -> result.dataByTTId.mapValues { it.value.toDomain() } }
 				.last()
 		}
 	}
@@ -134,7 +108,7 @@ class UntisTimetableRepository @Inject constructor(
 		studentId: Long,
 		startTime: LocalTime,
 		endTime: LocalTime
-	): Result<List<StudentAbsence>> {
+	): Result<List<Absence>> {
 		return runCatching {
 			val user = userRepository.getActiveUser()
 			api.postAbsence(
@@ -145,7 +119,7 @@ class UntisTimetableRepository @Inject constructor(
 				apiUrl = user.school.apiUrl,
 				user = user.credentials?.user,
 				key = user.credentials?.key
-			)
+			).map { it.toDomain() }
 		}
 	}
 

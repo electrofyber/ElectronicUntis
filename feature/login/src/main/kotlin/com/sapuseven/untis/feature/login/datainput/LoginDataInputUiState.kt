@@ -2,7 +2,7 @@ package com.sapuseven.untis.feature.login.datainput
 
 import android.util.Patterns
 import androidx.annotation.StringRes
-import com.sapuseven.untis.core.model.User
+import com.sapuseven.untis.core.model.user.User
 
 data class LoginDataInputUiState(
 	val isLoading: Boolean = false,

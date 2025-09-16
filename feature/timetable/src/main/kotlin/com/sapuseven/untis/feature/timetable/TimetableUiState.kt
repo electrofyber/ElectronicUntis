@@ -1,8 +1,8 @@
 package com.sapuseven.untis.feature.timetable
 
 import com.sapuseven.untis.core.database.entity.ElementEntity
-import com.sapuseven.untis.core.model.Element
-import com.sapuseven.untis.core.model.User
+import com.sapuseven.untis.core.model.timetable.Element
+import com.sapuseven.untis.core.model.user.User
 import java.time.Duration
 import java.time.LocalDateTime
 

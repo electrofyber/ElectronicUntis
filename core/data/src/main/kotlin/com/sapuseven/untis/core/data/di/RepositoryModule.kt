@@ -1,15 +1,15 @@
 package com.sapuseven.untis.core.data.di
 
-import com.sapuseven.untis.core.data.repository.LoginRepository
-import com.sapuseven.untis.core.data.repository.MasterDataRepository
-import com.sapuseven.untis.core.data.repository.SchoolRepository
-import com.sapuseven.untis.core.data.repository.TimetableRepository
 import com.sapuseven.untis.core.data.repository.UntisLoginRepository
 import com.sapuseven.untis.core.data.repository.UntisMasterDataRepository
 import com.sapuseven.untis.core.data.repository.UntisSchoolRepository
 import com.sapuseven.untis.core.data.repository.UntisTimetableRepository
-import com.sapuseven.untis.core.data.repository.UserRepository
 import com.sapuseven.untis.core.data.repository.UserRepositoryImpl
+import com.sapuseven.untis.core.domain.repository.LoginRepository
+import com.sapuseven.untis.core.domain.repository.MasterDataRepository
+import com.sapuseven.untis.core.domain.repository.SchoolRepository
+import com.sapuseven.untis.core.domain.repository.TimetableRepository
+import com.sapuseven.untis.core.domain.repository.UserRepository
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn

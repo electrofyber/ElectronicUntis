@@ -27,7 +27,7 @@ import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import com.sapuseven.untis.core.model.Attachment
+import com.sapuseven.untis.core.model.timetable.Attachment
 import com.sapuseven.untis.core.ui.R
 
 @OptIn(ExperimentalMaterial3Api::class)

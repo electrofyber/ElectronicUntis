@@ -8,8 +8,8 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptionsBuilder
 import androidx.navigation.NavType
 import androidx.navigation.compose.composable
-import com.sapuseven.untis.core.model.Element
-import com.sapuseven.untis.core.model.ElementType
+import com.sapuseven.untis.core.model.timetable.Element
+import com.sapuseven.untis.core.model.timetable.ElementType
 import com.sapuseven.untis.feature.timetable.TimetableScreen
 import kotlinx.serialization.Serializable
 import kotlin.reflect.typeOf

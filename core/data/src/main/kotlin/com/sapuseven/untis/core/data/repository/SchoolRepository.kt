@@ -3,18 +3,9 @@ package com.sapuseven.untis.core.data.repository
 import com.sapuseven.untis.core.api.client.SchoolSearchApi
 import com.sapuseven.untis.core.api.model.untis.SchoolInfo
 import com.sapuseven.untis.core.data.mapper.toDomain
-import com.sapuseven.untis.core.model.School
+import com.sapuseven.untis.core.domain.repository.SchoolRepository
+import com.sapuseven.untis.core.model.timetable.School
 import javax.inject.Inject
-
-interface SchoolRepository {
-	suspend fun searchSchool(
-		schoolName: String
-	): Result<School>
-
-	suspend fun searchSchools(
-		schoolName: String
-	): Result<List<School>>
-}
 
 class UntisSchoolRepository @Inject constructor(
 	private val api: SchoolSearchApi

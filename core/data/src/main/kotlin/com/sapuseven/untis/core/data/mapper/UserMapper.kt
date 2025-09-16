@@ -4,9 +4,9 @@ import com.sapuseven.untis.core.api.model.untis.UserData
 import com.sapuseven.untis.core.api.model.untis.enumeration.ElementType
 import com.sapuseven.untis.core.api.model.untis.enumeration.Right
 import com.sapuseven.untis.core.database.entity.UserEntity
-import com.sapuseven.untis.core.model.Element
-import com.sapuseven.untis.core.model.User
-import com.sapuseven.untis.core.model.UserCredentials
+import com.sapuseven.untis.core.model.timetable.Element
+import com.sapuseven.untis.core.model.user.User
+import com.sapuseven.untis.core.model.user.UserCredentials
 import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
 

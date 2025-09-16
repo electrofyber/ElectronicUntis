@@ -35,7 +35,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.sapuseven.untis.core.database.entity.ElementEntity
-import com.sapuseven.untis.core.model.ElementType
+import com.sapuseven.untis.core.model.timetable.ElementType
 import com.sapuseven.untis.feature.timetable.R
 import kotlinx.coroutines.launch
 

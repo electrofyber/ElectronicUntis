@@ -1,8 +1,8 @@
 package com.sapuseven.untis.core.data.mapper
 
-import com.sapuseven.untis.core.model.TimeGrid
-import com.sapuseven.untis.core.model.TimeGridDay
-import com.sapuseven.untis.core.model.TimeGridUnit
+import com.sapuseven.untis.core.model.timetable.TimeGrid
+import com.sapuseven.untis.core.model.timetable.TimeGridDay
+import com.sapuseven.untis.core.model.timetable.TimeGridUnit
 
 internal fun com.sapuseven.untis.core.api.model.untis.masterdata.TimeGrid.toDomain() = TimeGrid(
 	days = days.map { it.toDomain() }

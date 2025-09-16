@@ -23,7 +23,7 @@ import com.sapuseven.untis.core.database.entity.TeacherEntity
 import com.sapuseven.untis.core.database.entity.TeachingMethodEntity
 import com.sapuseven.untis.core.database.entity.UserDao
 import com.sapuseven.untis.core.database.entity.UserEntity
-import com.sapuseven.untis.core.model.TimeGrid
+import com.sapuseven.untis.core.model.timetable.TimeGrid
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalTime
 import kotlinx.datetime.format

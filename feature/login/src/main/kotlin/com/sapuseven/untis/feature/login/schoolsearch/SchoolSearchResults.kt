@@ -18,7 +18,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.sapuseven.untis.core.model.School
+import com.sapuseven.untis.core.model.timetable.School
 import com.sapuseven.untis.core.ui.R
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.debounce

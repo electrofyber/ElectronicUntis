@@ -44,7 +44,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.journeyapps.barcodescanner.ScanContract
-import com.sapuseven.untis.core.model.School
+import com.sapuseven.untis.core.model.timetable.School
 import com.sapuseven.untis.core.ui.common.conditional
 import com.sapuseven.untis.feature.login.schoolsearch.SchoolSearchResults
 

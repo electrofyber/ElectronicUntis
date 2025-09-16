@@ -14,10 +14,11 @@ android {
 }
 
 dependencies {
-	implementation(projects.core.api)
-	api(projects.core.database)
-	api(projects.core.datastore)
 	api(projects.core.model)
+	implementation(projects.core.api)
+	implementation(projects.core.domain)
+	implementation(projects.core.database)
+	implementation(projects.core.datastore)
 
 	implementation(libs.andrew0000.cache)
 	implementation(libs.kotlinx.serialization.cbor)

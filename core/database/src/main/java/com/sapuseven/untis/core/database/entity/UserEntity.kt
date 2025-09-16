@@ -18,7 +18,7 @@ import com.sapuseven.untis.core.api.model.untis.MasterData
 import com.sapuseven.untis.core.api.model.untis.SchoolInfo
 import com.sapuseven.untis.core.api.model.untis.Settings
 import com.sapuseven.untis.core.api.model.untis.UserData
-import com.sapuseven.untis.core.model.TimeGrid
+import com.sapuseven.untis.core.model.timetable.TimeGrid
 import kotlinx.coroutines.flow.Flow
 
 @Entity(

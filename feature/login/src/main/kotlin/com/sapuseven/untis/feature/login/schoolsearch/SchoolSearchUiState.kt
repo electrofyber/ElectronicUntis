@@ -1,6 +1,6 @@
 package com.sapuseven.untis.feature.login.schoolsearch
 
-import com.sapuseven.untis.core.model.School
+import com.sapuseven.untis.core.model.timetable.School
 
 data class SchoolSearchUiState(
 	val results: List<School> = emptyList(),

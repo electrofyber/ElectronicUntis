@@ -3,7 +3,7 @@ package com.sapuseven.untis.core.data.mapper
 import com.sapuseven.untis.core.api.model.untis.SchoolInfo
 import com.sapuseven.untis.core.database.entity.UserEntity
 import com.sapuseven.untis.core.database.entity.UserEntity.Companion.buildApiUrl
-import com.sapuseven.untis.core.model.School
+import com.sapuseven.untis.core.model.timetable.School
 
 internal fun SchoolInfo.toDomain() = School(
 	name = loginName,

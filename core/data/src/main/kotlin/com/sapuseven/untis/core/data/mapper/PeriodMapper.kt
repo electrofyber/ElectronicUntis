@@ -1,10 +1,10 @@
 package com.sapuseven.untis.core.data.mapper
 
 import com.sapuseven.untis.core.database.entity.ElementEntity
-import com.sapuseven.untis.core.model.ElementType
-import com.sapuseven.untis.core.model.InfoTextType
-import com.sapuseven.untis.core.model.Period
-import com.sapuseven.untis.core.model.PeriodInfoText
+import com.sapuseven.untis.core.model.timetable.ElementType
+import com.sapuseven.untis.core.model.timetable.InfoTextType
+import com.sapuseven.untis.core.model.timetable.Period
+import com.sapuseven.untis.core.model.timetable.PeriodInfoText
 
 internal fun com.sapuseven.untis.core.api.model.untis.timetable.Period.toDomain(
 	allElements: Map<ElementType, List<ElementEntity>>

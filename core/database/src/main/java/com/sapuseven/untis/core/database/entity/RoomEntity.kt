@@ -4,7 +4,7 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Ignore
 import androidx.room.Index
-import com.sapuseven.untis.core.model.ElementType
+import com.sapuseven.untis.core.model.timetable.ElementType
 
 @Entity(
 	tableName = "Room",

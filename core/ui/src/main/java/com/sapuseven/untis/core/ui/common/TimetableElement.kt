@@ -1,5 +1,5 @@
 import androidx.compose.runtime.Composable
-import com.sapuseven.untis.core.model.Element
+import com.sapuseven.untis.core.model.timetable.Element
 
 @Composable
 fun ElementItem(

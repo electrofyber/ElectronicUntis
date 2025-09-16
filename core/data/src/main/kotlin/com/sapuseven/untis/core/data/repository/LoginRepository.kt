@@ -1,34 +1,23 @@
 package com.sapuseven.untis.core.data.repository
 
 import com.sapuseven.untis.core.api.client.UserDataApi
+import com.sapuseven.untis.core.api.exception.UntisApiException
+import com.sapuseven.untis.core.api.model.response.UntisErrorCode
 import com.sapuseven.untis.core.api.model.untis.enumeration.Right
 import com.sapuseven.untis.core.data.mapper.toDomain
-import com.sapuseven.untis.core.model.Element
-import com.sapuseven.untis.core.model.School
-import com.sapuseven.untis.core.model.TimeGrid
-import com.sapuseven.untis.core.model.TimeGridDay
-import com.sapuseven.untis.core.model.TimeGridUnit
-import com.sapuseven.untis.core.model.User
-import com.sapuseven.untis.core.model.UserCredentials
+import com.sapuseven.untis.core.domain.exception.LoginException
+import com.sapuseven.untis.core.domain.repository.LoginRepository
+import com.sapuseven.untis.core.domain.repository.UserRepository
+import com.sapuseven.untis.core.model.timetable.Element
+import com.sapuseven.untis.core.model.timetable.School
+import com.sapuseven.untis.core.model.timetable.TimeGrid
+import com.sapuseven.untis.core.model.timetable.TimeGridDay
+import com.sapuseven.untis.core.model.timetable.TimeGridUnit
+import com.sapuseven.untis.core.model.user.User
+import com.sapuseven.untis.core.model.user.UserCredentials
 import kotlinx.datetime.DayOfWeek
 import kotlinx.datetime.LocalTime
 import javax.inject.Inject
-
-interface LoginRepository {
-	suspend fun getAppSharedSecret(
-		apiUrl: String,
-		username: String? = null,
-		password: String? = null,
-		secondFactor: String? = null
-	): Result<String>
-
-	suspend fun persistUser(
-		existingUserId: Long? = null,
-		displayName: String? = null,
-		school: School,
-		credentials: UserCredentials?,
-	): Result<Long>
-}
 
 class UntisLoginRepository @Inject constructor(
 	private val userDataApi: UserDataApi,
@@ -40,12 +29,23 @@ class UntisLoginRepository @Inject constructor(
 		password: String?,
 		secondFactor: String?
 	): Result<String> = runCatching {
-		userDataApi.getAppSharedSecret(
-			apiUrl,
-			username ?: "",
-			password ?: "",
-			secondFactor
-		)
+		try {
+			userDataApi.getAppSharedSecret(
+				apiUrl,
+				username ?: "",
+				password ?: "",
+				secondFactor
+			)
+		} catch (e: UntisApiException) {
+			// If it is an Untis error, there are 2 possible cases:
+			//  1. 2FA required: Throw it and show the second factor input field
+			//  2. Bad credentials: Assume the supplied password is already an app secret and pass it through
+			if (e.error?.code == UntisErrorCode.REQUIRE2_FACTOR_AUTHENTICATION_TOKEN)
+				throw LoginException(LoginException.Type.REQUIRE_2_FACTOR, e.message)
+			else password ?: ""
+		} catch (e: Exception) {
+			throw LoginException(LoginException.Type.UNKNOWN, e.message)
+		}
 	}
 
 	override suspend fun persistUser(
@@ -72,7 +72,7 @@ class UntisLoginRepository @Inject constructor(
 				timeGrid = masterData.timeGrid?.toDomain() ?: defaultTimeGrid(1..5, 6..22)
 			)
 
-			userRepository.updateUser(user, masterData)
+			userRepository.updateUser(user, masterData.toDomain())
 		}
 	}
 

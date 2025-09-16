@@ -54,8 +54,8 @@ import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
-import com.sapuseven.untis.core.model.Element
-import com.sapuseven.untis.core.model.ElementType
+import com.sapuseven.untis.core.model.timetable.Element
+import com.sapuseven.untis.core.model.timetable.ElementType
 import com.sapuseven.untis.core.ui.R
 import com.sapuseven.untis.core.ui.common.AbbreviatedText
 import com.sapuseven.untis.core.ui.common.AppScaffold

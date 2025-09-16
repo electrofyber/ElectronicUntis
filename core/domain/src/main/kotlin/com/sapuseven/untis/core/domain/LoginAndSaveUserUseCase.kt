@@ -1,13 +1,11 @@
 package com.sapuseven.untis.core.domain
 
-import com.sapuseven.untis.core.api.exception.UntisApiException
-import com.sapuseven.untis.core.api.model.response.UntisErrorCode
-import com.sapuseven.untis.core.data.repository.LoginRepository
-import com.sapuseven.untis.core.data.repository.SchoolRepository
-import com.sapuseven.untis.core.data.repository.UserRepository
 import com.sapuseven.untis.core.domain.exception.LoginException
-import com.sapuseven.untis.core.model.School
-import com.sapuseven.untis.core.model.UserCredentials
+import com.sapuseven.untis.core.domain.repository.LoginRepository
+import com.sapuseven.untis.core.domain.repository.SchoolRepository
+import com.sapuseven.untis.core.domain.repository.UserRepository
+import com.sapuseven.untis.core.model.timetable.School
+import com.sapuseven.untis.core.model.user.UserCredentials
 import javax.inject.Inject
 
 class LoginAndSaveUserUseCase @Inject constructor(
@@ -76,14 +74,11 @@ class LoginAndSaveUserUseCase @Inject constructor(
 			password,
 			secondFactor
 		).getOrElse {
-			if (it is UntisApiException) {
-				// If it is an Untis error, there are 2 possible cases:
-				//  1. 2FA required: Throw it and show the second factor input field
-				//  2. Bad credentials: Assume the supplied password is already an app secret and pass it through
-				if (it.error?.code == UntisErrorCode.REQUIRE2_FACTOR_AUTHENTICATION_TOKEN)
-					throw LoginException(LoginException.Type.REQUIRE_2_FACTOR, it.message)
-				else password ?: ""
-			} else throw LoginException(LoginException.Type.UNKNOWN, it.message) // Throw all other errors
+			if (it is LoginException && it.type == LoginException.Type.REQUIRE_2_FACTOR) {
+				throw it
+			} else {
+				return password ?: ""
+			}
 		}
 	}
 }

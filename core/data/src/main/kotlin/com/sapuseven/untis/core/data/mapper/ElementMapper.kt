@@ -2,16 +2,16 @@ package com.sapuseven.untis.core.data.mapper
 
 import com.sapuseven.untis.core.api.model.untis.timetable.PeriodElement
 import com.sapuseven.untis.core.database.entity.ElementEntity
-import com.sapuseven.untis.core.model.Element
-import com.sapuseven.untis.core.model.ElementType
+import com.sapuseven.untis.core.model.timetable.Element as DomainElement
+import com.sapuseven.untis.core.model.timetable.ElementType as DomainElementType
 
 internal fun PeriodElement.toDomainElements(
-	allElements: Map<ElementType, List<ElementEntity>>
-): List<Element> {
+	allElements: Map<DomainElementType, List<ElementEntity>>
+): List<DomainElement> {
 	val elementsOfType = allElements[type.toDomain()].orEmpty()
 
 	val element = elementsOfType.firstOrNull { it.id == id }?.toDomain()
-		?: Element(
+		?: DomainElement(
 			id = id,
 			type = type.toDomain(),
 			shortName = "?",
@@ -29,8 +29,8 @@ internal fun PeriodElement.toDomainElements(
 	return listOfNotNull(element, replacedElement)
 }
 
-private fun ElementEntity.toDomain(): Element =
-	Element(
+internal fun ElementEntity.toDomain(): DomainElement =
+	DomainElement(
 		id = id,
 		type = type,
 		shortName = getShortName(),
@@ -42,10 +42,10 @@ private fun ElementEntity.toDomain(): Element =
 	)
 
 
-fun List<Element>.toShortString(): String =
+fun List<DomainElement>.toShortString(): String =
 	joinToString(", ") { it.shortName }
 
-fun List<Element>.toLongString(): String =
+fun List<DomainElement>.toLongString(): String =
 	joinToString(", ") { it.longName }
 
 /*fun List<Element>.getShortAnnotatedString(

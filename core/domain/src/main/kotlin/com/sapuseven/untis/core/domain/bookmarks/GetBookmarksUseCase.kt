@@ -1,11 +1,10 @@
 package com.sapuseven.untis.core.domain.bookmarks
 
-import com.sapuseven.untis.core.data.repository.MasterDataRepository
-import com.sapuseven.untis.core.data.repository.UserRepository
-import com.sapuseven.untis.core.database.entity.ElementEntity
 import com.sapuseven.untis.core.datastore.UserSettingsDataSource
-import com.sapuseven.untis.core.datastore.model.TimetableElement
-import com.sapuseven.untis.core.model.ElementType
+import com.sapuseven.untis.core.domain.repository.MasterDataRepository
+import com.sapuseven.untis.core.domain.repository.UserRepository
+import com.sapuseven.untis.core.model.timetable.Element
+import com.sapuseven.untis.core.model.timetable.ElementType
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
@@ -15,7 +14,7 @@ class GetBookmarksUseCase @Inject constructor(
 	private val masterDataRepository: MasterDataRepository,
 	private val userSettingsDataSource: UserSettingsDataSource,
 ) {
-	operator fun invoke(): Flow<List<ElementEntity>> {
+	operator fun invoke(): Flow<List<Element>> {
 		return userSettingsDataSource.getSettings(userRepository.getActiveUser().id)
 			.map { it.bookmarksList }
 			.map {

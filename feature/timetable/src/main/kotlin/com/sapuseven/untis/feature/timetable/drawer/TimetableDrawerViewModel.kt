@@ -6,11 +6,11 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sapuseven.untis.core.database.entity.ElementEntity
-import com.sapuseven.untis.core.domain.GetTimetableElementTypesUseCase
+import com.sapuseven.untis.core.domain.timetable.GetTimetableElementTypesUseCase
 import com.sapuseven.untis.core.domain.bookmarks.AddBookmarkUseCase
 import com.sapuseven.untis.core.domain.bookmarks.GetBookmarksUseCase
 import com.sapuseven.untis.core.domain.bookmarks.RemoveBookmarkUseCase
-import com.sapuseven.untis.core.model.ElementType
+import com.sapuseven.untis.core.model.timetable.ElementType
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
