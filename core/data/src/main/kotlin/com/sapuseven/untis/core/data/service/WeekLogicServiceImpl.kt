@@ -1,4 +1,4 @@
-package com.sapuseven.untis.core.data.timetable
+package com.sapuseven.untis.core.data.service
 
 import com.sapuseven.untis.core.domain.timetable.WeekLogicService
 import java.time.Clock
@@ -21,5 +21,5 @@ class WeekLogicServiceImpl @Inject constructor(
 		}
 	}
 
-	private fun now() = LocalDate.now()
+	private fun now() = LocalDate.now(clock)
 }

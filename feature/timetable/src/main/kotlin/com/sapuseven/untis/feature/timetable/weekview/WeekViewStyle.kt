@@ -1,4 +1,4 @@
-package com.sapuseven.untis.ui.weekview
+package com.sapuseven.untis.feature.timetable.weekview
 
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Typography

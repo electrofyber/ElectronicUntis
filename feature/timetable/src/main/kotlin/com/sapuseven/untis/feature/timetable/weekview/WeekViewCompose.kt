@@ -1,4 +1,4 @@
-package com.sapuseven.untis.ui.weekview
+package com.sapuseven.untis.feature.timetable.weekview
 
 import android.text.format.DateFormat
 import androidx.compose.animation.core.animateIntAsState
@@ -72,12 +72,12 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.fastAny
 import androidx.compose.ui.util.fastForEach
-import com.sapuseven.untis.R
-import com.sapuseven.untis.services.WeekLogicService
+import com.sapuseven.untis.core.domain.timetable.WeekLogicService
 import com.sapuseven.untis.core.ui.common.conditional
 import com.sapuseven.untis.core.ui.common.ifNotNull
 import com.sapuseven.untis.core.ui.dialogs.DatePickerDialog
 import com.sapuseven.untis.core.ui.functional.useDebounce
+import com.sapuseven.untis.feature.timetable.R
 import kotlinx.coroutines.launch
 import java.time.Duration
 import java.time.LocalDate
@@ -85,6 +85,8 @@ import java.time.LocalDateTime
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoUnit
+import kotlin.collections.filter
+import kotlin.collections.sortedBy
 import kotlin.math.abs
 import kotlin.math.roundToInt
 
@@ -489,7 +491,11 @@ fun <T> WeekViewContent(
 	dividerColor: Color = MaterialTheme.colorScheme.outline,
 	dividerWidth: Float = Stroke.HairlineWidth,
 	currentTime: LocalDateTime = LocalDateTime.now(),
-	eventContent: @Composable (event: Event<T>) -> Unit = { WeekViewEvent(event = it) }
+	eventContent: @Composable (event: Event<T>) -> Unit = {
+		WeekViewEvent(
+			event = it
+		)
+	}
 ) {
 	// OPTIMIZE: Find a way to arrange events before layout, but calculate minEventWidth to determine maxSimultaneous
 	// TODO: Display indicator if there are more events than can be displayed
@@ -687,7 +693,7 @@ fun <T> WeekViewCompose(
 				) {
 					Icon(
 						imageVector = Icons.Outlined.DateRange,
-						contentDescription = stringResource(R.string.all_open_datepicker)
+						contentDescription = stringResource(R.string.feature_timetable_weekview_open_datepicker)
 					)
 				}
 			}
@@ -729,7 +735,8 @@ fun <T> WeekViewCompose(
 
 				if (hourList.isNotEmpty()) {
 					var isRefreshing by remember { mutableStateOf(false) }
-					val pullRefreshState = rememberWeekViewPullToRefreshState()
+					val pullRefreshState =
+						rememberWeekViewPullToRefreshState()
 					val onRefresh: () -> Unit = {
 						isRefreshing = true
 						scope.launch {

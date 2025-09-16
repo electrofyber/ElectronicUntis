@@ -1,4 +1,4 @@
-package com.sapuseven.untis.ui.weekview
+package com.sapuseven.untis.feature.timetable.weekview
 
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.AnimationVector1D

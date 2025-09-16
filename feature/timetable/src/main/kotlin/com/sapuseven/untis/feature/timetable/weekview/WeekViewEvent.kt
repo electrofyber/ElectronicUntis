@@ -1,4 +1,4 @@
-package com.sapuseven.untis.ui.weekview
+package com.sapuseven.untis.feature.timetable.weekview
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -33,6 +33,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.core.graphics.ColorUtils
 import com.sapuseven.untis.core.ui.common.ifNotNull
+import com.sapuseven.untis.feature.timetable.weekview.drawVerticalSplitRect
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.ZoneId

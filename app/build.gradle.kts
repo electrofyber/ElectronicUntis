@@ -98,6 +98,8 @@ dependencies {
 	implementation(projects.core.api)
 	implementation(projects.core.data)
 	implementation(projects.core.database)
+	implementation(projects.core.datastore)
+	implementation(projects.core.domain)
 	implementation(projects.core.ui)
 	implementation(projects.materialColorUtils)
 

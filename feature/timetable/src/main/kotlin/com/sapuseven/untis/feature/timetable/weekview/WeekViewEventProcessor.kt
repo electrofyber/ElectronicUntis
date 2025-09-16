@@ -1,4 +1,4 @@
-package com.sapuseven.untis.ui.weekview
+package com.sapuseven.untis.feature.timetable.weekview
 
 import java.time.LocalDateTime
 import java.util.LinkedList

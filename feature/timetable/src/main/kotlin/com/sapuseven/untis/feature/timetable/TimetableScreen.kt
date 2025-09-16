@@ -1,9 +1,7 @@
 package com.sapuseven.untis.feature.timetable
 
 import android.util.Log
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
@@ -23,10 +21,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.LocalLifecycleOwner
@@ -36,9 +32,11 @@ import com.sapuseven.untis.core.ui.common.ProfileSelectorAction
 import com.sapuseven.untis.core.ui.functional.bottomInsets
 import com.sapuseven.untis.core.ui.functional.insetsPaddingValues
 import com.sapuseven.untis.feature.timetable.drawer.TimetableDrawer
-import com.sapuseven.untis.ui.weekview.WeekViewCompose
-import com.sapuseven.untis.ui.weekview.WeekViewStyle
+import com.sapuseven.untis.feature.timetable.weekview.WeekViewCompose
+import com.sapuseven.untis.feature.timetable.weekview.WeekViewStyle
 import kotlinx.coroutines.launch
+import kotlinx.datetime.LocalTime
+import kotlinx.datetime.toJavaLocalTime
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -140,37 +138,37 @@ internal fun TimetableScreen(
 						onDismiss = { viewModel.feedbackDialog = false }
 					)*/
 
-					WeekViewStyle(weekViewEventStyle) {
+					WeekViewStyle(uiState.eventStyle) {
 						WeekViewCompose(
-							events = events,
-							holidays = holidays,
-							loading = if (viewModel.loading) true else null,
+							events = uiState.events,
+							holidays = uiState.holidays,
+							loading = if (uiState.loading) true else null,
 							weekLogicService = viewModel.weekLogicService,
 							onPageChange = { pageOffset ->
-								viewModel.onPageChange(pageOffset)
+								//TODO viewModel.onPageChange(pageOffset)
 							},
 							onReload = { pageOffset ->
-								viewModel.onPageReload(pageOffset)
+								//TODO viewModel.onPageReload(pageOffset)
 							},
 							onItemClick = { itemsWithIndex ->
-								viewModel.onItemClick(itemsWithIndex)
+								//TODO viewModel.onItemClick(itemsWithIndex)
 							},
 							onZoom = { zoomLevel ->
-								viewModel.onZoom(zoomLevel)
+								//TODO viewModel.onZoom(zoomLevel)
 							},
 							currentTime = uiState.currentTime,
-							startTime = hourList.firstOrNull()?.startTime ?: LocalTime.MIDNIGHT,
-							endTime = hourList.lastOrNull()?.endTime ?: LocalTime.MIDNIGHT,
+							startTime = uiState.hourList.firstOrNull()?.startTime ?: LocalTime.fromSecondOfDay(0).toJavaLocalTime(),
+							endTime = uiState.hourList.lastOrNull()?.endTime ?: LocalTime.fromSecondOfDay(0).toJavaLocalTime(),
 							endTimeOffset = navBarHeight,
-							initialScale = weekViewScale,
-							enableZoomGesture = weekViewZoomEnabled,
+							//initialScale = weekViewScale,
+							//enableZoomGesture = weekViewZoomEnabled,
 							hourHeight = /*state.weekViewPreferences.hourHeight ?:*/ 72.dp,
-							hourList = hourList,
+							hourList = uiState.hourList,
 							//dividerWidth = viewModel.weekViewPreferences.dividerWidth,
-							colorScheme = weekViewColorScheme,
+							colorScheme = uiState.colorScheme,
 							modifier = Modifier
 								.fillMaxSize()
-								.disabled(disabled = needsPersonalTimetable)
+								//.disabled(disabled = needsPersonalTimetable)
 						) { startPadding ->
 							// Feedback button
 							IconButton(
@@ -179,17 +177,17 @@ internal fun TimetableScreen(
 									.padding(end = 8.dp)
 									.bottomInsets(),
 								onClick = {
-									viewModel.showFeedback()
+									//viewModel.showFeedback()
 								}
 							) {
-								Icon(
+								/*Icon(
 									painter = painterResource(R.drawable.all_feedback),
 									contentDescription = "Give feedback"
-								)
+								)*/
 							}
 
 							// Custom personal timetable hint
-							if (needsPersonalTimetable) {
+							/*if (needsPersonalTimetable) {
 								Column(
 									verticalArrangement = Arrangement.Center,
 									horizontalAlignment = Alignment.CenterHorizontally,
@@ -223,7 +221,7 @@ internal fun TimetableScreen(
 										.padding(start = startPadding + 8.dp, bottom = 8.dp)
 										.bottomInsets()
 								)
-							}
+							}*/
 						}
 					}
 				}

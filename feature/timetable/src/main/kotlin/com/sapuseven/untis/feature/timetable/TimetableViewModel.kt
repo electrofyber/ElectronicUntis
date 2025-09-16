@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import com.sapuseven.untis.core.domain.repository.UserRepository
+import com.sapuseven.untis.core.domain.timetable.WeekLogicService
 import com.sapuseven.untis.core.model.user.User
 import com.sapuseven.untis.feature.timetable.navigation.TimetableRoute
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -28,9 +29,9 @@ class TimetableViewModel @Inject constructor(
 	internal val masterDataRepository: MasterDataRepository,
 	internal val debugInfoRepository: DebugInfoRepository,
 	internal val clock: Clock,
-	internal val weekLogicService: WeekLogicService,
 	buildConfigFieldsProvider: BuildConfigFieldsProvider,*/
 	private val clock: Clock,
+	internal val weekLogicService: WeekLogicService,
 	userRepository: UserRepository,
 	savedStateHandle: SavedStateHandle,
 ) : ViewModel() {

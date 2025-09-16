@@ -3,10 +3,10 @@ package com.sapuseven.untis.activity
 import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.sapuseven.untis.core.data.repository.UserRepository
 import com.sapuseven.untis.core.datastore.UserSettingsDataSource
 import com.sapuseven.untis.core.datastore.model.DarkTheme
 import com.sapuseven.untis.core.datastore.model.UserSettings
+import com.sapuseven.untis.core.domain.repository.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine

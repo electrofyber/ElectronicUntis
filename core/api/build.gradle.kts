@@ -34,7 +34,7 @@ apiSpecList.forEach { file ->
 	tasks.register("openApiGenerate$taskName", GenerateTask::class) {
 		generatorName.set("kotlin")
 		inputSpec.set("${layout.projectDirectory}/spec/untis-intern/untis-$apiName.yaml")
-		outputDir.set("${layout.buildDirectory.get()}/generated")
+		outputDir.set("${layout.buildDirectory.get()}/generated/openapi/$apiName")
 		apiPackage.set("com.sapuseven.untis.core.api.$packageName")
 		modelPackage.set("com.sapuseven.untis.core.api.model.$packageName")
 		configOptions.set(
