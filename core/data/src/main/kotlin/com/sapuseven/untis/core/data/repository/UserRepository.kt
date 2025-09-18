@@ -60,7 +60,7 @@ class UserRepositoryImpl @Inject constructor(
 		}
 	}
 
-	override suspend fun getUserById(userId: Long) = userDao.getByIdAsync(userId)?.toDomain()
+	override suspend fun getUserById(userId: Long) = userDao.getById(userId)?.toDomain()
 
 	override suspend fun deleteUser(user: User) {
 		userDao.delete(user.id)

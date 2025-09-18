@@ -8,8 +8,10 @@ import com.sapuseven.untis.core.data.mapper.toData
 import com.sapuseven.untis.core.data.mapper.toDomain
 import com.sapuseven.untis.core.database.entity.UserDao
 import com.sapuseven.untis.core.domain.cache.FromCache
+import com.sapuseven.untis.core.domain.repository.MasterDataRepository
 import com.sapuseven.untis.core.domain.repository.TimetableRepository
 import com.sapuseven.untis.core.model.absences.Absence
+import com.sapuseven.untis.core.model.timetable.ElementKey
 import com.sapuseven.untis.core.model.timetable.Period
 import com.sapuseven.untis.core.model.timetable.PeriodDetails
 import com.sapuseven.untis.core.model.timetable.Timetable
@@ -28,10 +30,11 @@ import javax.inject.Inject
 import javax.inject.Named
 
 class UntisTimetableRepository @Inject constructor(
-	private val api: TimetableApi,
 	@Named("cacheDir") private val cacheDir: File,
+	private val api: TimetableApi,
 	private val timeProvider: TimeProvider,
 	private val userDao: UserDao,
+	private val masterDataRepository: MasterDataRepository,
 ) : TimetableRepository {
 	override fun getTimetable(
 		user: User,
@@ -61,7 +64,8 @@ class UntisTimetableRepository @Inject constructor(
 			if (!result.fromCache) {
 				userDao.upsertMasterData(user.id, result.value.masterData)
 			}
-			result.value.timetable.toDomain(emptyMap(/* TODO: Pass allElements */)).copy(
+			val allElements = masterDataRepository.getAllElements().associateBy { ElementKey(it.id, it.type) }
+			result.value.timetable.toDomain(allElements).copy(
 				timestamp = result.originTimeStamp?.let(Instant::fromEpochMilliseconds) ?: Clock.System.now()
 			)
 		}

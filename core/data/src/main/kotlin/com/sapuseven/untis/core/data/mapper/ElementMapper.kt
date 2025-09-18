@@ -2,16 +2,14 @@ package com.sapuseven.untis.core.data.mapper
 
 import com.sapuseven.untis.core.api.model.untis.timetable.PeriodElement
 import com.sapuseven.untis.core.database.entity.ElementEntity
-import com.sapuseven.untis.core.model.timetable.Element as DomainElement
-import com.sapuseven.untis.core.model.timetable.ElementType as DomainElementType
+import com.sapuseven.untis.core.model.timetable.Element
+import com.sapuseven.untis.core.model.timetable.ElementKey
 
 internal fun PeriodElement.toDomainElements(
-	allElements: Map<DomainElementType, List<ElementEntity>>
-): List<DomainElement> {
-	val elementsOfType = allElements[type.toDomain()].orEmpty()
-
-	val element = elementsOfType.firstOrNull { it.id == id }?.toDomain()
-		?: DomainElement(
+	allElements: Map<ElementKey, Element>
+): List<Element> {
+	val element = allElements[ElementKey(id, type.toDomain())]
+		?: Element(
 			id = id,
 			type = type.toDomain(),
 			shortName = "?",
@@ -23,14 +21,14 @@ internal fun PeriodElement.toDomainElements(
 		) // TODO: Log/handle this error (element not found in database), especially in debug builds
 
 	val replacedElement = if (id != orgId && orgId != 0L) {
-		elementsOfType.firstOrNull { it.id == orgId }?.toDomain()?.copy(replaced = true)
+		allElements[ElementKey(orgId, type.toDomain())]?.copy(replaced = true)
 	} else null
 
 	return listOfNotNull(element, replacedElement)
 }
 
-internal fun ElementEntity.toDomain(): DomainElement =
-	DomainElement(
+internal fun ElementEntity.toDomain(): Element =
+	Element(
 		id = id,
 		type = type,
 		shortName = getShortName(),
@@ -42,10 +40,10 @@ internal fun ElementEntity.toDomain(): DomainElement =
 	)
 
 
-fun List<DomainElement>.toShortString(): String =
+fun List<Element>.toShortString(): String =
 	joinToString(", ") { it.shortName }
 
-fun List<DomainElement>.toLongString(): String =
+fun List<Element>.toLongString(): String =
 	joinToString(", ") { it.longName }
 
 /*fun List<Element>.getShortAnnotatedString(

@@ -150,12 +150,8 @@ interface UserDao {
 	@Query("SELECT * FROM user")
 	fun getAll(): List<UserEntity>
 
-	// TODO: Make suspend
 	@Query("SELECT * FROM user WHERE id LIKE :userId")
-	fun getById(userId: Long): UserEntity?
-
-	@Query("SELECT * FROM user WHERE id LIKE :userId")
-	suspend fun getByIdAsync(userId: Long): UserEntity?
+	suspend fun getById(userId: Long): UserEntity?
 
 	@Transaction
 	@Query("SELECT * FROM user")
@@ -180,6 +176,18 @@ interface UserDao {
 
 	@Query("SELECT * FROM Room WHERE userId = :userId AND active = 1 ORDER BY name")
 	fun getActiveRoomsFlow(userId: Long): Flow<List<RoomEntity>>
+
+	@Query("SELECT * FROM Klasse WHERE userId LIKE :userId AND id LIKE :id")
+	suspend fun getClassById(userId: Long, id: Long): KlasseEntity?
+
+	@Query("SELECT * FROM Teacher WHERE userId LIKE :userId AND id LIKE :id")
+	suspend fun getTeacherById(userId: Long, id: Long): TeacherEntity?
+
+	@Query("SELECT * FROM Subject WHERE userId LIKE :userId AND id LIKE :id")
+	suspend fun getSubjectById(userId: Long, id: Long): SubjectEntity?
+
+	@Query("SELECT * FROM Room WHERE userId LIKE :userId AND id LIKE :id")
+	suspend fun getRoomById(userId: Long, id: Long): RoomEntity?
 
 	@Insert
 	suspend fun insert(user: UserEntity): Long

@@ -6,12 +6,14 @@ import com.sapuseven.untis.core.database.entity.UserDao
 import com.sapuseven.untis.core.domain.repository.MasterDataRepository
 import com.sapuseven.untis.core.domain.repository.UserRepository
 import com.sapuseven.untis.core.model.timetable.Element
+import com.sapuseven.untis.core.model.timetable.ElementKey
 import com.sapuseven.untis.core.model.timetable.ElementType
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.emptyFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
@@ -27,7 +29,9 @@ class DefaultMasterDataRepository : MasterDataRepository {
 
 	override val timetableElements: Flow<Map<ElementType, List<Element>>> = flowOf(emptyMap())
 
-	override fun getElement(id: Long, type: ElementType): Element? = null
+	override suspend fun getElement(key: ElementKey): Element? = null
+
+	override suspend fun getAllElements(): List<Element> = emptyList()
 }
 
 @Singleton
@@ -77,19 +81,19 @@ class UntisMasterDataRepository @Inject constructor(
 			)
 	}
 
-	override fun getElement(id: Long, type: ElementType): Element? {
-		// TODO well, now this can only be called from a location where we have this state.
-		//  This needs to be redesigned
-		return when (type) {
-			//ElementType.CLASS -> classes.value.firstOrNull { it.id == id }
-			//ElementType.TEACHER -> teachers.value.firstOrNull { it.id == id }
-			//ElementType.SUBJECT -> subjects.value.firstOrNull { it.id == id }
-			//ElementType.ROOM -> rooms.value.firstOrNull { it.id == id }
-			else -> null
-		}
+	override suspend fun getElement(key: ElementKey): Element? {
+		val userId = userRepository.getActiveUser().id
+		return when (key.type) {
+			ElementType.CLASS -> userDao.getClassById(userId, key.id)
+			ElementType.TEACHER -> userDao.getTeacherById(userId, key.id)
+			ElementType.SUBJECT -> userDao.getSubjectById(userId, key.id)
+			ElementType.ROOM -> userDao.getRoomById(userId, key.id)
+			ElementType.STUDENT -> null
+		}?.toDomain()
 	}
+
+	override suspend fun getAllElements(): List<Element> =
+		classes.first() + teachers.first() + subjects.first() + rooms.first()
 
 	private fun Flow<List<ElementEntity>>.mapElements() = map { it.map(ElementEntity::toDomain) }
 }
-
-//val LocalMasterDataRepository = compositionLocalOf<MasterDataRepository> { DefaultMasterDataRepository() }

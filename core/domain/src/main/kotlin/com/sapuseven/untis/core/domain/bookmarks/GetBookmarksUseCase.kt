@@ -4,6 +4,7 @@ import com.sapuseven.untis.core.datastore.UserSettingsDataSource
 import com.sapuseven.untis.core.domain.repository.MasterDataRepository
 import com.sapuseven.untis.core.domain.repository.UserRepository
 import com.sapuseven.untis.core.model.timetable.Element
+import com.sapuseven.untis.core.model.timetable.ElementKey
 import com.sapuseven.untis.core.model.timetable.ElementType
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
@@ -21,7 +22,7 @@ class GetBookmarksUseCase @Inject constructor(
 				it.mapNotNull { bookmark ->
 					// TODO: Maybe not store the ElementType as Int?
 					ElementType.entries.getOrNull(bookmark.elementType)?.let { type ->
-						masterDataRepository.getElement(bookmark.elementId, type)
+						masterDataRepository.getElement(ElementKey(bookmark.elementId, type))
 					}
 				}
 			}

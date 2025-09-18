@@ -243,7 +243,7 @@ class TimetableMapper @Inject constructor(
 private fun List<Element>.toShortAnnotatedString(showReplacements: Boolean): AnnotatedString {
 	return buildAnnotatedString {
 		forEach {
-			if (isNotEmpty()) append(ELEMENT_NAME_SEPARATOR)
+			if (this.length > 0) append(ELEMENT_NAME_SEPARATOR)
 			append(it.shortName)
 
 			if (showReplacements && it.replaced) {

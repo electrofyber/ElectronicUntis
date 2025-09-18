@@ -57,8 +57,8 @@ class TimetableViewModel @Inject constructor(
 ) : ViewModel() {
 	private val args = savedStateHandle.toRoute<TimetableRoute>()
 	private val user = userRepository.getActiveUser();
-	private val requestedElement = if (args.id != null && args.type != null)
-		masterDataRepository.getElement(args.id, args.type) else /*TODO*/ Element.personal(1, ElementType.STUDENT, "Test")
+	private val requestedElement = /*if (args.id != null && args.type != null)
+		masterDataRepository.getElement(ElementKey(args.id, args.type)) else TODO*/ Element.personal(1, ElementType.STUDENT, "Test")
 
 	private val _uiState = MutableStateFlow(
 		TimetableUiState(

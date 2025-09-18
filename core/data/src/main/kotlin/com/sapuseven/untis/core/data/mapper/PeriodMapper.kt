@@ -1,14 +1,15 @@
 package com.sapuseven.untis.core.data.mapper
 
-import com.sapuseven.untis.core.database.entity.ElementEntity
-import com.sapuseven.untis.core.model.timetable.ElementType
+import com.sapuseven.untis.core.api.model.untis.timetable.Period
+import com.sapuseven.untis.core.model.timetable.Element
+import com.sapuseven.untis.core.model.timetable.ElementKey
 import com.sapuseven.untis.core.model.timetable.InfoTextType
-import com.sapuseven.untis.core.model.timetable.Period
 import com.sapuseven.untis.core.model.timetable.PeriodInfoText
+import com.sapuseven.untis.core.model.timetable.Period as DomainPeriod
 
-internal fun com.sapuseven.untis.core.api.model.untis.timetable.Period.toDomain(
-	allElements: Map<ElementType, List<ElementEntity>>
-) = Period(
+internal fun Period.toDomain(
+	allElements: Map<ElementKey, Element>
+) = DomainPeriod(
 	id = id,
 	lessonId = lessonId,
 	startDateTime = startDateTime,

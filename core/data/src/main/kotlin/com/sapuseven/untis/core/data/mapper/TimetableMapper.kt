@@ -1,14 +1,15 @@
 package com.sapuseven.untis.core.data.mapper
 
-import com.sapuseven.untis.core.database.entity.ElementEntity
-import com.sapuseven.untis.core.model.timetable.ElementType
-import com.sapuseven.untis.core.model.timetable.Timetable
+import com.sapuseven.untis.core.api.model.untis.Timetable
+import com.sapuseven.untis.core.model.timetable.Element
+import com.sapuseven.untis.core.model.timetable.ElementKey
 import kotlinx.datetime.Clock
+import com.sapuseven.untis.core.model.timetable.Timetable as DomainTimetable
 
-internal fun com.sapuseven.untis.core.api.model.untis.Timetable.toDomain(
-	allElements: Map<ElementType, List<ElementEntity>>,
+internal fun Timetable.toDomain(
+	allElements: Map<ElementKey, Element>,
 	clock: Clock = Clock.System
-) = Timetable(
+) = DomainTimetable(
 	startDate = displayableStartDate,
 	endDate = displayableEndDate,
 	timestamp = clock.now(),
