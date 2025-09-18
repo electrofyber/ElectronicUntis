@@ -5,16 +5,16 @@ import com.sapuseven.untis.core.model.user.UserCredentials;
 
 interface LoginRepository {
 	suspend fun getAppSharedSecret(
-			apiUrl: String,
-			username: String? = null,
-			password: String? = null,
-			secondFactor: String? = null
+		apiUrl: String,
+		username: String? = null,
+		password: String? = null,
+		secondFactor: String? = null
 	): Result<String>
 
 	suspend fun persistUser(
-			existingUserId: Long? = null,
-			displayName: String? = null,
-			school:School,
-			credentials:UserCredentials?,
-			): Result<Long>
+		existingUserId: Long? = null,
+		displayName: String? = null,
+		school: School,
+		credentials: UserCredentials?,
+	): Result<Long>
 }

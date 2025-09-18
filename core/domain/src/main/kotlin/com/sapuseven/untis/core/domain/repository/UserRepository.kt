@@ -1,6 +1,5 @@
 package com.sapuseven.untis.core.domain.repository
 
-import com.sapuseven.untis.core.model.masterdata.MasterData
 import com.sapuseven.untis.core.model.user.User
 import kotlinx.coroutines.flow.Flow
 
@@ -68,9 +67,9 @@ interface UserRepository {
 
 	/**
 	 * Updates a user in the database.
-	 * Can be used to create a new user if the ID is 0.
-	 * @param user An instance of the user to add.
-	 * @param masterData The master data for the user.
+	 * Can be used to store a new user or to update an existing one.
+	 *
+	 * @param user An instance of the user to add. If the ID is 0, a new user will be created.
 	 */
-	suspend fun updateUser(user: User, masterData: MasterData): Long
+	suspend fun updateUser(user: User): Long
 }

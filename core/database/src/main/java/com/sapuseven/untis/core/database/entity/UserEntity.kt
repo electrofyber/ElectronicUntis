@@ -271,10 +271,10 @@ interface UserDao {
 		insertEventReasonGroups(masterData.eventReasonGroups.orEmpty().map { EventReasonGroupEntity.map(it, userId) })
 		insertExcuseStatuses(masterData.excuseStatuses.orEmpty().map { ExcuseStatusEntity.map(it, userId) })
 		insertHolidays(masterData.holidays.orEmpty().map { HolidayEntity.map(it, userId) })
-		// TODO insertKlassen(masterData.klassen.map { KlasseEntity.map(it, userId) })
-		// TODO insertRooms(masterData.rooms.map { RoomEntity.map(it, userId) })
-		// TODO insertSubjects(masterData.subjects.map { SubjectEntity.map(it, userId) })
-		// TODO insertTeachers(masterData.teachers.map { TeacherEntity.map(it, userId) })
+		insertKlassen(masterData.klassen.map { KlasseEntity.map(it, userId) })
+		insertRooms(masterData.rooms.map { RoomEntity.map(it, userId) })
+		insertSubjects(masterData.subjects.map { SubjectEntity.map(it, userId) })
+		insertTeachers(masterData.teachers.map { TeacherEntity.map(it, userId) })
 		insertTeachingMethods(masterData.teachingMethods.orEmpty().map { TeachingMethodEntity.map(it, userId) })
 		insertSchoolYears(masterData.schoolyears.orEmpty().map { SchoolYearEntity.map(it, userId) })
 		updateMasterDataTimestamp(userId, masterData.timeStamp)
@@ -289,10 +289,10 @@ interface UserDao {
 		upsertEventReasonGroups(masterData.eventReasonGroups.orEmpty().map { EventReasonGroupEntity.map(it, userId) })
 		upsertExcuseStatuses(masterData.excuseStatuses.orEmpty().map { ExcuseStatusEntity.map(it, userId) })
 		upsertHolidays(masterData.holidays.orEmpty().map { HolidayEntity.map(it, userId) })
-		// TODO upsertKlassen(masterData.klassen.map { KlasseEntity.map(it, userId) })
-		// TODO upsertRooms(masterData.rooms.map { RoomEntity.map(it, userId) })
-		// TODO upsertSubjects(masterData.subjects.map { SubjectEntity.map(it, userId) })
-		// TODO upsertTeachers(masterData.teachers.map { TeacherEntity.map(it, userId) })
+		upsertKlassen(masterData.klassen.map { KlasseEntity.map(it, userId) })
+		upsertRooms(masterData.rooms.map { RoomEntity.map(it, userId) })
+		upsertSubjects(masterData.subjects.map { SubjectEntity.map(it, userId) })
+		upsertTeachers(masterData.teachers.map { TeacherEntity.map(it, userId) })
 		upsertTeachingMethods(masterData.teachingMethods.orEmpty().map { TeachingMethodEntity.map(it, userId) })
 		upsertSchoolYears(masterData.schoolyears.orEmpty().map { SchoolYearEntity.map(it, userId) })
 		updateMasterDataTimestamp(userId, masterData.timeStamp)
@@ -347,7 +347,7 @@ interface UserDao {
 	suspend fun deleteSchoolYears(schoolYears: List<SchoolYearEntity>)
 
 	@Transaction
-	suspend fun deleteUserData(userWithData: UserWithData) {
+	suspend fun deleteMasterData(userWithData: UserWithData) {
 		deleteAbsenceReasons(userWithData.absenceReasons)
 		deleteDepartments(userWithData.departments)
 		deleteDuties(userWithData.duties)
@@ -364,5 +364,5 @@ interface UserDao {
 	}
 
 	@Transaction
-	suspend fun deleteUserData(userId: Long) = getByIdWithData(userId)?.let { deleteUserData(it) }
+	suspend fun deleteMasterData(userId: Long) = getByIdWithData(userId)?.let { deleteMasterData(it) }
 }

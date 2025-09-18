@@ -1,4 +1,4 @@
-package com.sapuseven.untis.core.domain
+package com.sapuseven.untis.core.domain.login
 
 import com.sapuseven.untis.core.domain.exception.LoginException
 import com.sapuseven.untis.core.domain.repository.LoginRepository
@@ -58,9 +58,9 @@ class LoginAndSaveUserUseCase @Inject constructor(
 	 * This method tries to get the app secret from the supplied password.
 	 *
 	 * If the call fails, the password is assumed to be the app secret already and is returned directly.
-	 * If a second factor is required, a [LoginException] with type [LoginException.Type.REQUIRE_2_FACTOR] is thrown.
+	 * If a second factor is required, a [com.sapuseven.untis.core.domain.exception.LoginException] with type [com.sapuseven.untis.core.domain.exception.LoginException.Type.REQUIRE_2_FACTOR] is thrown.
 	 *
-	 * @see LoginException.Type.REQUIRE_2_FACTOR
+	 * @see com.sapuseven.untis.core.domain.exception.LoginException.Type.REQUIRE_2_FACTOR
 	 */
 	private suspend fun loadAppSharedSecret(
 		school: School,

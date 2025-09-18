@@ -1,5 +1,8 @@
 package com.sapuseven.untis.core.model.masterdata
 
+import com.sapuseven.untis.core.model.timetable.Element
+
+
 /**
  * MasterData holds all the master data information such as students, teachers, rooms, subjects, and classes.
  *
@@ -9,5 +12,9 @@ package com.sapuseven.untis.core.model.masterdata
  */
 data class MasterData(
 	val timestamp: Long = 0,
+	val classes: List<Element>,
+	val rooms: List<Element>,
+	val subjects: List<Element>,
+	val teachers: List<Element>,
 	// TODO
 )

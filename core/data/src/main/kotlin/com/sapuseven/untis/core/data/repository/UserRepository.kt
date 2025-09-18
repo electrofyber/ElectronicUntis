@@ -8,7 +8,6 @@ import com.sapuseven.untis.core.database.entity.UserDao
 import com.sapuseven.untis.core.database.entity.UserEntity
 import com.sapuseven.untis.core.datastore.model.Settings
 import com.sapuseven.untis.core.domain.repository.UserRepository
-import com.sapuseven.untis.core.model.masterdata.MasterData
 import com.sapuseven.untis.core.model.user.User
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
@@ -73,18 +72,13 @@ class UserRepositoryImpl @Inject constructor(
 		}
 	}
 
-	override suspend fun updateUser(
-		user: User,
-		masterData: MasterData
-	): Long {
+	override suspend fun updateUser(user: User): Long {
 		val userId = user.id.takeIf { it > 0L }?.also {
 			userDao.update(user.toEntity())
 		} ?: run {
 			userDao.insert(user.toEntity())
 		}
 
-		userDao.deleteUserData(userId)
-		// TODO userDao.insertMasterData(userId, masterData)
 		return userId
 	}
 }

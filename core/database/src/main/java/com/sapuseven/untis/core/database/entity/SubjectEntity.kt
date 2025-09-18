@@ -4,6 +4,8 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Ignore
 import androidx.room.Index
+import com.sapuseven.untis.core.api.model.untis.masterdata.Subject
+import com.sapuseven.untis.core.database.utils.EntityMapper
 import com.sapuseven.untis.core.model.timetable.ElementType
 
 @Entity(
@@ -28,7 +30,7 @@ data class SubjectEntity(
 	override val active: Boolean = false,
 	override val allowed: Boolean = true
 ) : ElementEntity(), Comparable<String> {
-	/*companion object : EntityMapper<Subject, SubjectEntity> {
+	companion object : EntityMapper<Subject, SubjectEntity> {
 		override fun map(from: Subject, userId: Long) = SubjectEntity(
 			id = from.id,
 			userId = userId,
@@ -40,7 +42,7 @@ data class SubjectEntity(
 			active = from.active,
 			allowed = from.displayAllowed,
 		)
-	}*/
+	}
 
 	@Ignore
 	override val type = ElementType.SUBJECT

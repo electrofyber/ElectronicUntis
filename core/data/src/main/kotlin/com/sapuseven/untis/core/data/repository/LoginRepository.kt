@@ -3,8 +3,10 @@ package com.sapuseven.untis.core.data.repository
 import com.sapuseven.untis.core.api.client.UserDataApi
 import com.sapuseven.untis.core.api.exception.UntisApiException
 import com.sapuseven.untis.core.api.model.response.UntisErrorCode
+import com.sapuseven.untis.core.api.model.untis.MasterData
 import com.sapuseven.untis.core.api.model.untis.enumeration.Right
 import com.sapuseven.untis.core.data.mapper.toDomain
+import com.sapuseven.untis.core.database.entity.UserDao
 import com.sapuseven.untis.core.domain.exception.LoginException
 import com.sapuseven.untis.core.domain.repository.LoginRepository
 import com.sapuseven.untis.core.domain.repository.UserRepository
@@ -20,6 +22,7 @@ import kotlinx.datetime.LocalTime
 import javax.inject.Inject
 
 class UntisLoginRepository @Inject constructor(
+	private val userDao: UserDao,
 	private val userDataApi: UserDataApi,
 	private val userRepository: UserRepository,
 ) : LoginRepository {
@@ -54,8 +57,10 @@ class UntisLoginRepository @Inject constructor(
 		school: School,
 		credentials: UserCredentials?,
 	): Result<Long> = runCatching {
-		userDataApi.getUserData(school.apiUrl, credentials?.user, credentials?.key).run {
-			val user = User(
+		val dto = userDataApi.getUserData(school.apiUrl, credentials?.user, credentials?.key)
+
+		val user = dto.run {
+			User(
 				id = existingUserId ?: 0L,
 				name = userData.displayName,
 				displayName = displayName ?: userData.displayName,
@@ -71,9 +76,16 @@ class UntisLoginRepository @Inject constructor(
 				rights = userData.rights.map(Right::toDomain),
 				timeGrid = masterData.timeGrid?.toDomain() ?: defaultTimeGrid(1..5, 6..22)
 			)
-
-			userRepository.updateUser(user, masterData.toDomain())
 		}
+
+		val userId = userRepository.updateUser(user)
+		insertMasterData(userId, dto.masterData)
+		userId
+	}
+
+	private suspend fun insertMasterData(userId: Long, masterData: MasterData) {
+		userDao.deleteMasterData(userId)
+		userDao.insertMasterData(userId, masterData)
 	}
 
 	fun defaultTimeGrid(dayRange: IntRange, hourRange: IntRange): TimeGrid {
