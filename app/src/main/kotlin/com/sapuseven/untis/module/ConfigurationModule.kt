@@ -10,8 +10,9 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import kotlinx.datetime.Clock
+import kotlinx.datetime.TimeZone
 import java.io.File
-import java.time.Clock
 import javax.inject.Named
 
 @Module
@@ -24,7 +25,10 @@ object ConfigurationModule {
 	): File = appContext.cacheDir
 
 	@Provides
-	fun provideClock(): Clock = Clock.systemDefaultZone()
+	fun provideClock(): Clock = Clock.System
+
+	@Provides
+	fun provideTimeZone(): TimeZone = TimeZone.currentSystemDefault()
 
 	@Provides
 	fun provideTimeProvider(): TimeProvider = SystemTimeProvider

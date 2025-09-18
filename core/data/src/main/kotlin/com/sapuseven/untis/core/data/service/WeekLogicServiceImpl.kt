@@ -1,14 +1,18 @@
 package com.sapuseven.untis.core.data.service
 
 import com.sapuseven.untis.core.domain.timetable.WeekLogicService
-import java.time.Clock
+import kotlinx.datetime.Clock
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toJavaLocalDateTime
+import kotlinx.datetime.toLocalDateTime
 import java.time.DayOfWeek
 import java.time.LocalDate
 import javax.inject.Inject
 
 
 class WeekLogicServiceImpl @Inject constructor(
-	val clock: Clock
+	val clock: Clock,
+	val timeZone: TimeZone,
 ) : WeekLogicService {
 	override val weekLength: Int
 		get() = 5
@@ -21,5 +25,5 @@ class WeekLogicServiceImpl @Inject constructor(
 		}
 	}
 
-	private fun now() = LocalDate.now(clock)
+	private fun now() = clock.now().toLocalDateTime(timeZone).toJavaLocalDateTime().toLocalDate()
 }

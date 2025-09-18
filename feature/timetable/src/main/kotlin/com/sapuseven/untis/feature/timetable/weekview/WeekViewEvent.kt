@@ -33,10 +33,12 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.core.graphics.ColorUtils
 import com.sapuseven.untis.core.ui.common.ifNotNull
-import com.sapuseven.untis.feature.timetable.weekview.drawVerticalSplitRect
-import java.time.LocalDate
-import java.time.LocalDateTime
-import java.time.ZoneId
+import kotlinx.datetime.Clock
+import kotlinx.datetime.LocalDate
+import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toInstant
+import kotlinx.datetime.toLocalDateTime
 
 sealed class EventStyle(
 	private val colorForScheme: (ColorScheme) -> Color,
@@ -76,7 +78,7 @@ sealed class EventStyle(
 	fun textStyle() = textStyleForScheme(MaterialTheme.colorScheme) + (textStyleOverride ?: TextStyle())
 }
 
-data class Event<T>(
+data class WeekViewEvent<T>(
 	var title: CharSequence,
 	var top: CharSequence = "",
 	var bottom: CharSequence = "",
@@ -87,10 +89,10 @@ data class Event<T>(
 ) {
 	var numSimultaneous: Int = 1 // relative width is determined by 1/x
 	var offsetSteps: Int = 0 // x-offset in multiples of width
-	var simultaneousEvents = mutableSetOf<Event<T>>()
+	var simultaneousEvents = mutableSetOf<WeekViewEvent<T>>()
 }
 
-data class Holiday(
+data class WeekViewHoliday(
 	var title: CharSequence,
 	var colorScheme: EventStyle,
 	var start: LocalDate,
@@ -99,9 +101,9 @@ data class Holiday(
 
 @Composable
 fun <T> WeekViewEvent(
-	event: Event<T>,
+	event: WeekViewEvent<T>,
 	modifier: Modifier = Modifier,
-	currentTime: LocalDateTime = LocalDateTime.now(),
+	currentTime: LocalDateTime = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()),
 	innerPadding: Dp = 2.dp,
 	onClick: (() -> Unit)? = null,
 ) {
@@ -198,14 +200,15 @@ private fun CharSequence.asAnnotatedString(): AnnotatedString = let {
 	it as? AnnotatedString ?: AnnotatedString(it.toString())
 }
 
-private fun LocalDateTime.seconds() = atZone(ZoneId.systemDefault()).toEpochSecond()
+private fun LocalDateTime.seconds(zone: TimeZone = TimeZone.currentSystemDefault()) =
+	toInstant(zone).epochSeconds
 
 @Preview(showBackground = true)
 @Composable
 fun EventPreview() {
 	WeekViewStyle {
 		WeekViewEvent(
-			event = Event<Nothing>(
+			event = WeekViewEvent<Nothing>(
 				title = "Test",
 				eventStyle = EventStyle.ThemePrimary,
 				start = LocalDateTime.parse("2021-05-18T09:00:00"),
@@ -231,7 +234,7 @@ fun EventStyledPreview() {
 		)
 	) {
 		WeekViewEvent(
-			event = Event<Nothing>(
+			event = WeekViewEvent<Nothing>(
 				title = "Styled",
 				eventStyle = EventStyle.ThemePrimary,
 				start = LocalDateTime.parse("2021-05-18T09:00:00"),
@@ -249,7 +252,7 @@ fun EventStyledPreview() {
 fun HolidayEventPreview() {
 	WeekViewStyle {
 		WeekViewEvent(
-			event = Event<Nothing>(
+			event = WeekViewEvent<Nothing>(
 				title = "Test Holiday",
 				eventStyle = EventStyle.Transparent,
 				start = LocalDateTime.parse("2021-05-18T00:00:00"),

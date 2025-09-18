@@ -73,30 +73,36 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.fastAny
 import androidx.compose.ui.util.fastForEach
 import com.sapuseven.untis.core.domain.timetable.WeekLogicService
+import com.sapuseven.untis.core.model.timetable.WeekViewHour
 import com.sapuseven.untis.core.ui.common.conditional
 import com.sapuseven.untis.core.ui.common.ifNotNull
 import com.sapuseven.untis.core.ui.dialogs.DatePickerDialog
 import com.sapuseven.untis.core.ui.functional.useDebounce
 import com.sapuseven.untis.feature.timetable.R
 import kotlinx.coroutines.launch
+import kotlinx.datetime.Clock
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.atTime
+import kotlinx.datetime.toJavaLocalDate
+import kotlinx.datetime.toJavaLocalDateTime
+import kotlinx.datetime.toJavaLocalTime
+import kotlinx.datetime.toKotlinLocalDate
+import kotlinx.datetime.toLocalDateTime
 import java.time.Duration
 import java.time.LocalDate
-import java.time.LocalDateTime
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoUnit
-import kotlin.collections.filter
-import kotlin.collections.sortedBy
 import kotlin.math.abs
 import kotlin.math.roundToInt
 
 private class EventDataModifier(
-	val event: Event<*>,
+	val event: WeekViewEvent<*>,
 ) : ParentDataModifier {
 	override fun Density.modifyParentData(parentData: Any?) = event
 }
 
-private fun Modifier.eventData(event: Event<*>) = this.then(EventDataModifier(event))
+private fun Modifier.eventData(event: WeekViewEvent<*>) = this.then(EventDataModifier(event))
 
 private val dayNameFormat = DateTimeFormatter.ofPattern("EEE")
 private val dayDateFormat = DateTimeFormatter.ofPattern("d. MMM")
@@ -194,7 +200,7 @@ fun WeekViewSidebarLabel(
 			.fillMaxSize()
 	) {
 		Text(
-			text = timeFormat.format(hour.startTime),
+			text = timeFormat.format(hour.startTime.toJavaLocalTime()),
 			style = eventStyle.lessonInfoStyle,
 			maxLines = 1,
 			color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -211,7 +217,7 @@ fun WeekViewSidebarLabel(
 				.align(Alignment.Center)
 		)
 		Text(
-			text = timeFormat.format(hour.endTime),
+			text = timeFormat.format(hour.endTime.toJavaLocalTime()),
 			style = eventStyle.lessonInfoStyle,
 			maxLines = 1,
 			color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -228,8 +234,8 @@ fun BasicSidebarLabelPreview() {
 	WeekViewStyle {
 		WeekViewSidebarLabel(
 			hour = WeekViewHour(
-				LocalTime.of(9, 45),
-				LocalTime.of(10, 30),
+				kotlinx.datetime.LocalTime(9, 45),
+				kotlinx.datetime.LocalTime(10, 30),
 				"1"
 			),
 			Modifier.sizeIn(maxHeight = 64.dp, maxWidth = 72.dp)
@@ -243,8 +249,8 @@ fun CompactSidebarLabelPreview() {
 	WeekViewStyle {
 		WeekViewSidebarLabel(
 			hour = WeekViewHour(
-				LocalTime.of(9, 45),
-				LocalTime.of(10, 30),
+				kotlinx.datetime.LocalTime(9, 45),
+				kotlinx.datetime.LocalTime(10, 30),
 				"1"
 			),
 			Modifier.sizeIn(maxHeight = 48.dp, maxWidth = 68.dp)
@@ -272,10 +278,10 @@ fun WeekViewSidebar(
 	) {
 		hourList.forEach { hour ->
 			val topOffset = hourHeight *
-				(Duration.between(startTime, hour.startTime).toMinutes() / 60f)
+				(Duration.between(startTime, hour.startTime.toJavaLocalTime()).toMinutes() / 60f)
 
 			val height = hourHeight *
-				(Duration.between(hour.startTime, hour.endTime).toMinutes() / 60f)
+				(Duration.between(hour.startTime.toJavaLocalTime(), hour.endTime.toJavaLocalTime()).toMinutes() / 60f)
 
 			Box(
 				modifier = Modifier
@@ -299,8 +305,8 @@ fun WeekViewSidebarPreview() {
 			hourHeight = 72.dp,
 			hourList = (1..4).map {
 				WeekViewHour(
-					LocalTime.of(it + 8, 45),
-					LocalTime.of(it + 9, 30),
+					kotlinx.datetime.LocalTime(it + 8, 45),
+					kotlinx.datetime.LocalTime(it + 9, 30),
 					it.toString()
 				)
 			}
@@ -320,7 +326,7 @@ fun DrawScope.weekViewContentGrid(
 
 	hours.forEach {
 		val yPos =
-			ChronoUnit.MINUTES.between(startTime, it) / 60f * hourHeight.toPx()
+			ChronoUnit.MINUTES.between(startTime, it.toJavaLocalTime()) / 60f * hourHeight.toPx()
 
 		if (yPos == 0f || yPos == size.height) return@forEach
 
@@ -355,14 +361,14 @@ fun DrawScope.weekViewBackground(
 	hourHeight: Dp,
 	pastBackgroundColor: Color,
 	futureBackgroundColor: Color,
-	currentTime: LocalDateTime = LocalDateTime.now(),
+	currentTime: kotlinx.datetime.LocalDateTime = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()),
 ) {
 	val dayWidth = size.width / numDays
 
 	repeat(numDays) {
 		val fraction = ChronoUnit.MINUTES.between(
 			startTime,
-			currentTime.toLocalTime()
+			currentTime.toJavaLocalDateTime().toLocalTime()
 		) / 60f * hourHeight.toPx()
 			.coerceIn(0f, size.height) / size.height
 
@@ -372,8 +378,8 @@ fun DrawScope.weekViewBackground(
 			topLeft = Offset(it * dayWidth, 0f),
 			size = Size(dayWidth, size.height),
 			division = when {
-				startDate.plusDays(it.toLong()).isAfter(currentTime.toLocalDate()) -> 0f
-				startDate.plusDays(it.toLong()).isEqual(currentTime.toLocalDate()) -> fraction
+				startDate.plusDays(it.toLong()).isAfter(currentTime.toJavaLocalDateTime().toLocalDate()) -> 0f
+				startDate.plusDays(it.toLong()).isEqual(currentTime.toJavaLocalDateTime().toLocalDate()) -> fraction
 				else -> 1f
 			}
 		)
@@ -413,15 +419,15 @@ fun DrawScope.weekViewIndicator(
 	hourHeight: Dp,
 	indicatorColor: Color,
 	indicatorWidth: Float = 2.dp.toPx(),
-	currentTime: LocalDateTime = LocalDateTime.now(),
+	currentTime: kotlinx.datetime.LocalDateTime = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()),
 ) {
 	val dayWidth = size.width / numDays
 
 	val yPos = ChronoUnit.MINUTES.between( // TODO: Can this be negative?
 		startTime,
-		currentTime.toLocalTime()
+		currentTime.toJavaLocalDateTime().toLocalTime()
 	) / 60f * hourHeight.toPx()
-	val startDayIndex = ChronoUnit.DAYS.between(startDate, currentTime.toLocalDate())
+	val startDayIndex = ChronoUnit.DAYS.between(startDate, currentTime.toJavaLocalDateTime().toLocalDate())
 
 	if (startDayIndex in 0..<numDays && yPos in 0f..size.height)
 		drawLine(
@@ -476,7 +482,7 @@ suspend fun PointerInputScope.detectZoomGesture(
 
 @Composable
 fun <T> WeekViewContent(
-	events: List<Event<T>>,
+	events: List<WeekViewEvent<T>>,
 	modifier: Modifier = Modifier,
 	numDays: Int = 5,
 	startDate: LocalDate,
@@ -490,8 +496,8 @@ fun <T> WeekViewContent(
 	futureBackgroundColor: Color,
 	dividerColor: Color = MaterialTheme.colorScheme.outline,
 	dividerWidth: Float = Stroke.HairlineWidth,
-	currentTime: LocalDateTime = LocalDateTime.now(),
-	eventContent: @Composable (event: Event<T>) -> Unit = {
+	currentTime: kotlinx.datetime.LocalDateTime = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()),
+	eventContent: @Composable (event: WeekViewEvent<T>) -> Unit = {
 		WeekViewEvent(
 			event = it
 		)
@@ -506,7 +512,7 @@ fun <T> WeekViewContent(
 
 	Layout(
 		content = {
-			events.sortedBy(Event<*>::start).forEach { event ->
+			events.sortedBy(WeekViewEvent<*>::start).forEach { event ->
 				Box(modifier = Modifier.eventData(event)) {
 					eventContent(event)
 				}
@@ -554,8 +560,8 @@ fun <T> WeekViewContent(
 		val width = constraints.maxWidth + dividerWidth.toInt()
 		val dayWidth = width.toFloat() / numDays
 		val placeablesWithEvents = measureables.map { measurable ->
-			val event = measurable.parentData as Event<*>
-			val eventDurationMinutes = ChronoUnit.MINUTES.between(event.start, event.end)
+			val event = measurable.parentData as WeekViewEvent<*>
+			val eventDurationMinutes = ChronoUnit.MINUTES.between(event.start.toJavaLocalDateTime(), event.end.toJavaLocalDateTime())
 			val eventHeight = ((eventDurationMinutes / 60f) * hourHeight.toPx()).roundToInt()
 			val placeable = measurable.measure(
 				constraints.copy(
@@ -570,9 +576,9 @@ fun <T> WeekViewContent(
 
 		layout(width, height) {
 			placeablesWithEvents.forEach { (placeable, event) ->
-				val eventOffsetMinutes = ChronoUnit.MINUTES.between(startTime, event.start.toLocalTime())
+				val eventOffsetMinutes = ChronoUnit.MINUTES.between(startTime, event.start.toJavaLocalDateTime().toLocalTime())
 				val eventY = ((eventOffsetMinutes / 60f) * hourHeight.toPx()).roundToInt()
-				val eventOffsetDays = ChronoUnit.DAYS.between(startDate, event.start.toLocalDate())
+				val eventOffsetDays = ChronoUnit.DAYS.between(startDate, event.start.toJavaLocalDateTime().toLocalDate())
 				val eventOffset = event.offsetSteps * (dayWidth / event.numSimultaneous)
 				val eventX = eventOffsetDays * dayWidth + eventOffset
 				placeable.place(eventX.toInt(), eventY)
@@ -588,17 +594,17 @@ fun <T> WeekViewContent(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun <T> WeekViewCompose(
-	events: Map<LocalDate, List<Event<T>>>,
-	holidays: List<Holiday>,
+	events: Map<Int, List<WeekViewEvent<T>>>,
+	holidays: List<WeekViewHoliday>,
 	loading: Boolean? = false,
 	weekLogicService: WeekLogicService,
 	onPageChange: suspend (pageIndex: Int) -> Unit,
 	onReload: suspend (pageIndex: Int) -> Unit,
-	onItemClick: (Pair<List<Event<T>>, Int>) -> Unit,
+	onItemClick: (Pair<List<WeekViewEvent<T>>, Int>) -> Unit,
 	modifier: Modifier = Modifier,
 	onZoom: suspend (zoomLevel: Float) -> Unit = {},
-	currentTime: LocalDateTime = LocalDateTime.now(),
-	eventContent: @Composable (event: Event<T>) -> Unit = { event ->
+	currentTime: kotlinx.datetime.LocalDateTime = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()),
+	eventContent: @Composable (event: WeekViewEvent<T>) -> Unit = { event ->
 		WeekViewEvent(
 			event = event,
 			currentTime = currentTime,
@@ -614,8 +620,8 @@ fun <T> WeekViewCompose(
 	hourList: List<WeekViewHour> = emptyList(),
 	colorScheme: WeekViewColorScheme = WeekViewColorScheme.default(),
 	dividerWidth: Float = Stroke.HairlineWidth,
-	startTime: LocalTime = hourList.firstOrNull()?.startTime ?: LocalTime.MIDNIGHT.plusHours(6),
-	endTime: LocalTime = hourList.lastOrNull()?.endTime ?: LocalTime.MIDNIGHT.plusHours(18),
+	startTime: kotlinx.datetime.LocalTime = hourList.firstOrNull()?.startTime ?: kotlinx.datetime.LocalTime(6, 0),
+	endTime: kotlinx.datetime.LocalTime = hourList.lastOrNull()?.endTime ?: kotlinx.datetime.LocalTime(18, 0),
 	endTimeOffset: Dp = 0.dp,
 	overlayContent: @Composable ((startPadding: Dp) -> Unit)? = null
 ) {
@@ -645,8 +651,8 @@ fun <T> WeekViewCompose(
 			events.values
 				.asSequence()
 				.flatten()
-				.filter { it.end.toLocalTime().isBefore(startTime) }
-				.minByOrNull { it.start.toLocalTime() }?.start?.toLocalTime()
+				.filter { it.end.toJavaLocalDateTime().toLocalTime().isBefore(startTime.toJavaLocalTime()) }
+				.minByOrNull { it.start.toJavaLocalDateTime().toLocalTime() }?.start?.toJavaLocalDateTime()?.toLocalTime()
 		}
 	}
 
@@ -655,27 +661,27 @@ fun <T> WeekViewCompose(
 			events.values
 				.asSequence()
 				.flatten()
-				.filter { it.start.toLocalTime().isAfter(endTime) }
-				.maxByOrNull { it.end.toLocalTime() }?.end?.toLocalTime()
+				.filter { it.start.toJavaLocalDateTime().toLocalTime().isAfter(endTime.toJavaLocalTime()) }
+				.maxByOrNull { it.end.toJavaLocalDateTime().toLocalTime() }?.end?.toJavaLocalDateTime()?.toLocalTime()
 		}
 	}
 
 	val startTimeOffsetMinutes by animateIntAsState(
-		Duration.between(earliestEventTime ?: startTime, startTime).toMinutes().coerceAtLeast(0).toInt(),
+		Duration.between(earliestEventTime ?: startTime.toJavaLocalTime(), startTime.toJavaLocalTime()).toMinutes().coerceAtLeast(0).toInt(),
 		label = "startTimeOffsetMinutes"
 	)
 
 	val endTimeOffsetMinutes by animateIntAsState(
-		Duration.between(endTime, latestEventTime ?: endTime).toMinutes().coerceAtLeast(0).toInt(),
+		Duration.between(endTime.toJavaLocalTime(), latestEventTime ?: endTime.toJavaLocalTime()).toMinutes().coerceAtLeast(0).toInt(),
 		label = "endTimeOffsetMinutes"
 	)
 
 	val startTimeWithOffset = remember(startTime, startTimeOffsetMinutes) {
-		startTime.minusMinutes(startTimeOffsetMinutes.toLong())
+		startTime.toJavaLocalTime().minusMinutes(startTimeOffsetMinutes.toLong())
 	}
 
 	val endTimeWithOffset = remember(endTime, endTimeOffsetMinutes) {
-		endTime.plusMinutes(endTimeOffsetMinutes.toLong())
+		endTime.toJavaLocalTime().plusMinutes(endTimeOffsetMinutes.toLong())
 	}
 
 	Row(modifier = modifier) {
@@ -727,7 +733,7 @@ fun <T> WeekViewCompose(
 			Column {
 				WeekViewHeader(
 					startDate = visibleStartDate,
-					currentDate = currentTime.toLocalDate(),
+					currentDate = currentTime.toJavaLocalDateTime().toLocalDate(),
 					numDays = numDays,
 					modifier = Modifier
 						.onGloballyPositioned { headerHeight = it.size.height }
@@ -748,15 +754,15 @@ fun <T> WeekViewCompose(
 
 					val holidayEvents = remember {
 						holidays.filter { holiday ->
-							visibleStartDate.isBefore(holiday.end) && visibleStartDate.plusDays(numDays.toLong())
-								.isAfter(holiday.start)
+							visibleStartDate.isBefore(holiday.end.toJavaLocalDate()) && visibleStartDate.plusDays(numDays.toLong())
+								.isAfter(holiday.start.toJavaLocalDate())
 						}.flatMap {
-							(it.start..it.end).map { date ->
-								Event<T>(
+							(it.start.toJavaLocalDate()..it.end.toJavaLocalDate()).map { date ->
+								WeekViewEvent<T>(
 									title = it.title,
 									eventStyle = it.colorScheme,
-									start = date.atTime(startTime),
-									end = date.atTime(endTime)
+									start = date.toKotlinLocalDate().atTime(startTime),
+									end = date.toKotlinLocalDate().atTime(endTime)
 								)
 							}
 						}
@@ -780,7 +786,7 @@ fun <T> WeekViewCompose(
 
 						WeekViewContent(
 							// Potential improvement: Map the event list by individual days to reduce the number of events passed to be rendered
-							events = events.getOrDefault(visibleStartDate, emptyList()) + holidayEvents,
+							events = events.getOrDefault(pageOffset, emptyList()) + holidayEvents,
 							eventContent = eventContent,
 							currentTime = currentTime,
 							startDate = visibleStartDate,
@@ -878,9 +884,3 @@ fun WeekViewPreview() {
 		loadItems = { _, _, _ -> }
 	)
 }*/
-
-data class WeekViewHour(
-	val startTime: LocalTime,
-	val endTime: LocalTime,
-	val label: String
-)

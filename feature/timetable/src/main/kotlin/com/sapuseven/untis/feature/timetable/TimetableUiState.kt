@@ -2,15 +2,14 @@ package com.sapuseven.untis.feature.timetable
 
 import com.sapuseven.untis.core.model.timetable.Element
 import com.sapuseven.untis.core.model.timetable.Period
+import com.sapuseven.untis.core.model.timetable.WeekViewHour
 import com.sapuseven.untis.core.model.user.User
-import com.sapuseven.untis.feature.timetable.weekview.Event
-import com.sapuseven.untis.feature.timetable.weekview.Holiday
 import com.sapuseven.untis.feature.timetable.weekview.WeekViewColorScheme
+import com.sapuseven.untis.feature.timetable.weekview.WeekViewEvent
 import com.sapuseven.untis.feature.timetable.weekview.WeekViewEventStyle
-import com.sapuseven.untis.feature.timetable.weekview.WeekViewHour
-import java.time.Duration
-import java.time.LocalDate
-import java.time.LocalDateTime
+import com.sapuseven.untis.feature.timetable.weekview.WeekViewHoliday
+import kotlinx.datetime.DateTimePeriod
+import kotlinx.datetime.Instant
 
 data class TimetableUiState(
 	val user: User,
@@ -22,8 +21,8 @@ data class TimetableUiState(
 	val bookmarks: List<Element> = emptyList(),
 
 	// Last update timestamp
-	val currentTime: LocalDateTime,
-	val lastRefresh: Duration? = null,
+	val currentTime: Instant,
+	val lastRefresh: DateTimePeriod? = null,
 
 	// Timetable
 	val currentElement: Element? = null,
@@ -32,8 +31,8 @@ data class TimetableUiState(
 	val eventStyle: WeekViewEventStyle = WeekViewEventStyle.default(),
 	val colorScheme: WeekViewColorScheme = WeekViewColorScheme.default(),
 	val hourList: List<WeekViewHour> = emptyList(),
-	val events: Map<LocalDate, List<Event<Period>>> = emptyMap(),
-	val holidays: List<Holiday> = emptyList(),
+	val events: Map<Int, List<WeekViewEvent<Period>>> = emptyMap(),
+	val holidays: List<WeekViewHoliday> = emptyList(),
 	val loading: Boolean = false,
 ) {
 	/*fun withLoadedUser(user: User): LoginDataInputUiState = copy(

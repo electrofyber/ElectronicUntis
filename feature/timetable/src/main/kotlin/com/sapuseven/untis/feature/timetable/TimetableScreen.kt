@@ -36,7 +36,8 @@ import com.sapuseven.untis.feature.timetable.weekview.WeekViewCompose
 import com.sapuseven.untis.feature.timetable.weekview.WeekViewStyle
 import kotlinx.coroutines.launch
 import kotlinx.datetime.LocalTime
-import kotlinx.datetime.toJavaLocalTime
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toLocalDateTime
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -53,8 +54,7 @@ internal fun TimetableScreen(
 	val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 	val drawerState = rememberDrawerState(DrawerValue.Closed)
 
-	/*val ready by viewModel.ready.collectAsStateWithLifecycle()
-
+	/*
 	val user = viewModel.currentUser
 	val users by viewModel.allUsersState.collectAsStateWithLifecycle()
 
@@ -145,7 +145,7 @@ internal fun TimetableScreen(
 							loading = if (uiState.loading) true else null,
 							weekLogicService = viewModel.weekLogicService,
 							onPageChange = { pageOffset ->
-								//TODO viewModel.onPageChange(pageOffset)
+								viewModel.onPageChanged(pageOffset)
 							},
 							onReload = { pageOffset ->
 								//TODO viewModel.onPageReload(pageOffset)
@@ -156,9 +156,9 @@ internal fun TimetableScreen(
 							onZoom = { zoomLevel ->
 								//TODO viewModel.onZoom(zoomLevel)
 							},
-							currentTime = uiState.currentTime,
-							startTime = uiState.hourList.firstOrNull()?.startTime ?: LocalTime.fromSecondOfDay(0).toJavaLocalTime(),
-							endTime = uiState.hourList.lastOrNull()?.endTime ?: LocalTime.fromSecondOfDay(0).toJavaLocalTime(),
+							currentTime = uiState.currentTime.toLocalDateTime(TimeZone.currentSystemDefault()),
+							startTime = uiState.hourList.firstOrNull()?.startTime ?: LocalTime.fromSecondOfDay(0),
+							endTime = uiState.hourList.lastOrNull()?.endTime ?: LocalTime.fromSecondOfDay(0),
 							endTimeOffset = navBarHeight,
 							//initialScale = weekViewScale,
 							//enableZoomGesture = weekViewZoomEnabled,

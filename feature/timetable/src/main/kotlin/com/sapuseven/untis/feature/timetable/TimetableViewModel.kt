@@ -1,27 +1,38 @@
 package com.sapuseven.untis.feature.timetable
 
+import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
-import com.sapuseven.compose.protostore.ui.preferences.convertRangeToPair
 import com.sapuseven.untis.core.datastore.UserSettingsDataSource
+import com.sapuseven.untis.core.domain.repository.MasterDataRepository
 import com.sapuseven.untis.core.domain.repository.UserRepository
+import com.sapuseven.untis.core.domain.timetable.GetHourListUseCase
+import com.sapuseven.untis.core.domain.timetable.GetTimetableUseCase
 import com.sapuseven.untis.core.domain.timetable.WeekLogicService
+import com.sapuseven.untis.core.model.timetable.Element
+import com.sapuseven.untis.core.model.timetable.ElementType
 import com.sapuseven.untis.core.model.user.User
+import com.sapuseven.untis.feature.timetable.mapper.TimetableMapper
 import com.sapuseven.untis.feature.timetable.navigation.TimetableRoute
-import com.sapuseven.untis.feature.timetable.weekview.WeekViewHour
+import com.sapuseven.untis.feature.timetable.weekview.startDateForPageIndex
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.FlowCollector
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import kotlinx.datetime.toJavaLocalTime
-import java.time.Clock
-import java.time.LocalDateTime
+import kotlinx.datetime.Clock
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.periodUntil
+import kotlinx.datetime.toKotlinLocalDate
 import javax.inject.Inject
 
 @HiltViewModel
@@ -35,30 +46,41 @@ class TimetableViewModel @Inject constructor(
 	internal val clock: Clock,
 	buildConfigFieldsProvider: BuildConfigFieldsProvider,*/
 	private val clock: Clock,
+	private val userRepository: UserRepository,
+	private val masterDataRepository: MasterDataRepository,
+	private val timetableMapper: TimetableMapper,
 	internal val weekLogicService: WeekLogicService,
-	private val userSettingsDataSource: UserSettingsDataSource,
-	userRepository: UserRepository,
 	savedStateHandle: SavedStateHandle,
+	userSettingsDataSource: UserSettingsDataSource,
+	getHourList: GetHourListUseCase,
+	private val getTimetable: GetTimetableUseCase,
 ) : ViewModel() {
 	private val args = savedStateHandle.toRoute<TimetableRoute>()
 	private val user = userRepository.getActiveUser();
+	private val requestedElement = if (args.id != null && args.type != null)
+		masterDataRepository.getElement(args.id, args.type) else /*TODO*/ Element.personal(1, ElementType.STUDENT, "Test")
 
 	private val _uiState = MutableStateFlow(
 		TimetableUiState(
 			user = user,
 			title = user.displayName,
-			currentTime = LocalDateTime.now(clock),
+			currentTime = clock.now(),
 		)
 	)
 	val uiState: StateFlow<TimetableUiState> = _uiState
+
+	private val loadingExceptionHandler: suspend FlowCollector<*>.(Throwable) -> Unit = { throwable ->
+		val message = "Error"//if (throwable is UntisApiException) "API error" else "other error"
+		Log.e("TimetableViewModel", "Failed to load timetable due to $message", throwable)
+		// TODO: Show in UI
+	}
 
 	init {
 		viewModelScope.launch {
 			while (true) {
 				_uiState.update {
 					it.copy(
-						currentTime = LocalDateTime.now(clock),
-						lastRefresh = null //TODO
+						currentTime = clock.now(),
 					)
 				}
 				delay(10_000)
@@ -69,29 +91,50 @@ class TimetableViewModel @Inject constructor(
 			.onEach { users -> _uiState.update { it.copy(userList = users) } }
 			.launchIn(viewModelScope)
 
-		userSettingsDataSource.getSettings()
-			.onEach { settings ->
-				_uiState.update {
-					it.copy(
-						hourList = buildHourList(
-							user = user,
-							range = settings.timetableRange.convertRangeToPair(),
-							rangeIndexReset = settings.timetableRangeIndexReset
-						)
-					)
-				}
-			}
+		getHourList()
+			.onEach { hourList -> _uiState.update { it.copy(hourList = hourList) } }
 			.launchIn(viewModelScope)
 	}
 
-	fun switchUser(it: User) {
-		// TODO
+	fun switchUser(user: User) = viewModelScope.launch {
+		userRepository.switchUser(user.id)
 	}
 
 	fun editUsers() {
 		// TODO
 	}
 
+	fun onPageChanged(pageOffset: Int) = viewModelScope.launch {
+		if (requestedElement == null) return@launch
+
+		_uiState.update { it.copy(loading = true) }
+
+		((pageOffset - 1)..(pageOffset + 1))
+			.map { targetPage ->
+				async {
+					val startDate = startDateForPageIndex(targetPage.toLong())
+					getTimetable(user, requestedElement, startDate.toKotlinLocalDate(), fromCache = true)
+						.catch(loadingExceptionHandler)
+						.collect { timetable ->
+							val events = timetable.periods.map {
+								timetableMapper.mapPeriodToWeekViewEvent(it, requestedElement.type)
+							}
+
+							_uiState.update { old ->
+								old.copy(
+									lastRefresh =
+										if (targetPage == pageOffset)
+											timetable.timestamp.periodUntil(clock.now(), TimeZone.currentSystemDefault())
+										else old.lastRefresh,
+									events = old.events + (targetPage to events)
+								)
+							}
+						}
+				}
+			}.awaitAll()
+
+		_uiState.update { it.copy(loading = false) }
+	}
 
 	/*private val allElements = masterDataRepository.timetableElements
 		.stateIn(
@@ -304,32 +347,9 @@ class TimetableViewModel @Inject constructor(
 
 		// Convert the map to an immutable version if needed
 		return groupedEvents.mapValues { it.value.toList() }
-	}*/
-
-	// TODO: Extract to usecase
-	private fun buildHourList(
-		user: User, range: Pair<Int, Int>?, rangeIndexReset: Boolean
-	): List<WeekViewHour> {
-		val hourList = mutableListOf<WeekViewHour>()
-
-		user.timeGrid.days.maxByOrNull { it.units.size }?.units?.forEachIndexed { index, hour ->
-			// Check if outside configured range
-			if (range?.let { index < it.first - 1 || index >= it.second } == true) return@forEachIndexed
-
-			// If label is empty, fill it according to preferences
-			val label = if (rangeIndexReset) {
-				(index + 2 - (range?.first ?: 1)).toString()
-			} else {
-				hour.label.ifEmpty { (index + 1).toString() }
-			}
-
-			hourList.add(WeekViewHour(hour.startTime.toJavaLocalTime(), hour.endTime.toJavaLocalTime(), label))
-		}
-
-		return hourList
 	}
 
-	/*val onAnonymousSettingsClick = {
+	val onAnonymousSettingsClick = {
 		navigator.navigate(AppRoutes.Settings.Timetable(highlightTitle = R.string.preference_timetable_personal_timetable))
 	}
 
@@ -350,27 +370,5 @@ class TimetableViewModel @Inject constructor(
 					NavOptionsBuilder.popUpTo(0)
 				}
 			}
-	}
-
-	private suspend fun Flow<CachedSourceResult<List<Period>>>.collectEvents(
-		startDate: LocalDate,
-		updateLastRefresh: Boolean = true
-	) = collect { result ->
-		// Give allElements some time to be loaded if it is empty
-		withTimeoutOrNull(1_000) {
-			if (allElements.value.isEmpty()) {
-				allElements.first { it.isNotEmpty() }
-			}
-		}
-
-		val events = timetableMapper.mapTimetablePeriodsToWeekViewEvents(
-			result.value,
-			requestedElement?.getType() ?: ElementType.STUDENT,
-			allElements = allElements.value
-		)
-		val refreshTimestamp = result.originTimeStamp?.let { Instant.ofEpochMilli(it) } ?: Instant.now()
-		emitEvents(mapOf(startDate to events))
-		if (updateLastRefresh)
-			_lastRefresh.emit(refreshTimestamp)
 	}*/
 }
