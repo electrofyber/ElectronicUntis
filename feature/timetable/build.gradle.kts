@@ -9,4 +9,5 @@ android {
 
 dependencies {
 	implementation(projects.core.domain)
+	lintChecks(projects.core.lint)
 }

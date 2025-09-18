@@ -37,6 +37,8 @@ kotlinx-datetime = "0.6.1"
 kotlinx-serialization = "1.8.1"
 ksp = "2.1.20-1.0.32"
 ktor = "3.1.3"
+lint-api = "31.13.0"
+lint-checks = "31.13.0"
 mannodermaus-android-junit5 = "1.13.0.0"
 material = "1.12.0"
 material-motion-compose-core-version = "2.0.1"
@@ -124,6 +126,8 @@ ktor-client-cio = { module = "io.ktor:ktor-client-cio", version.ref = "ktor"}
 ktor-client-content-negotiation = { module = "io.ktor:ktor-client-content-negotiation", version.ref = "ktor"}
 ktor-client-core = { module = "io.ktor:ktor-client-core", version.ref = "ktor" }
 ktor-serialization = { module = "io.ktor:ktor-serialization-kotlinx-json", version.ref = "ktor" }
+lint-checks = { module = "com.android.tools.lint:lint-checks", version.ref = "lint-checks" }
+lint-api = { module = "com.android.tools.lint:lint-api", version.ref = "lint-api" }
 material = { module = "com.google.android.material:material", version.ref = "material" }
 material-theme-adapter = { module = "com.google.android.material:compose-theme-adapter", version.ref = "compose-theme-adapter" }
 mikepenz-aboutlibraries-compose = { module = "com.mikepenz:aboutlibraries-compose-m3", version.ref = "mikepenz-aboutlibraries" }

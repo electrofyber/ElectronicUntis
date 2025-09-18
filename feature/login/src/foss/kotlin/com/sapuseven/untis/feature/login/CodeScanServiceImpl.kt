@@ -20,7 +20,7 @@ class CodeScanServiceImpl @Inject constructor(
 		this.scanCodeLauncher = launcher
 	}
 
-	override fun scanCode(onSuccess: (String?) -> Unit) {
+	override fun scanCode(onSuccess: (String) -> Unit) {
 		Log.d(CodeScanService::class.java.simpleName, "Using fallback scanner")
 		val options = ScanOptions().apply {
 			setDesiredBarcodeFormats(ScanOptions.QR_CODE)
