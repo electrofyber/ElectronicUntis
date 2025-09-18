@@ -2,6 +2,7 @@ package com.sapuseven.untis.feature.timetable
 
 import android.util.Log
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
@@ -29,6 +30,7 @@ import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.sapuseven.untis.core.model.timetable.ElementType
 import com.sapuseven.untis.core.ui.common.ProfileSelectorAction
+import com.sapuseven.untis.core.ui.functional.None
 import com.sapuseven.untis.core.ui.functional.bottomInsets
 import com.sapuseven.untis.core.ui.functional.insetsPaddingValues
 import com.sapuseven.untis.feature.timetable.drawer.TimetableDrawer
@@ -119,7 +121,8 @@ internal fun TimetableScreen(
 						)
 					}
 				)
-			}
+			},
+			contentWindowInsets = WindowInsets.None
 		) { innerPadding ->
 			/*AnimatedVisibility(ready,
 				enter = fadeIn(tween()),
@@ -127,8 +130,8 @@ internal fun TimetableScreen(
 			) {*/
 				Box(
 					modifier = Modifier
-						.padding(innerPadding)
 						.fillMaxSize()
+						.padding(innerPadding)
 				) {
 					val insets = insetsPaddingValues()
 					val navBarHeight = remember { insets.calculateBottomPadding() + 48.dp }
