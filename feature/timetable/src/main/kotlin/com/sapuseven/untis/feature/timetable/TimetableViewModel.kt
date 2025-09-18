@@ -105,11 +105,10 @@ class TimetableViewModel @Inject constructor(
 	}
 
 	fun onPageChanged(pageOffset: Int) = viewModelScope.launch {
-		if (requestedElement == null) return@launch
-
 		_uiState.update { it.copy(loading = true) }
 
 		((pageOffset - 1)..(pageOffset + 1))
+			.filter { targetPage -> !_uiState.value.events.containsKey(targetPage) }
 			.map { targetPage ->
 				async {
 					val startDate = startDateForPageIndex(targetPage.toLong())
