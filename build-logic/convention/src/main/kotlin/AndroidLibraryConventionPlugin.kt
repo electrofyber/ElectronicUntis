@@ -1,6 +1,7 @@
 
 import com.android.build.gradle.LibraryExtension
 import com.sapuseven.untis.configureKotlinAndroid
+import com.sapuseven.untis.libs
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.apply
@@ -32,8 +33,9 @@ class AndroidLibraryConventionPlugin : Plugin<Project> {
 				disableUnnecessaryAndroidTests(target)
 			}*/
 			dependencies {
-				//"androidTestImplementation"(libs.findLibrary("kotlin.test").get())
-				//"testImplementation"(libs.findLibrary("kotlin.test").get())
+				"testImplementation"(libs.findLibrary("kotlin.test").get())
+				"testImplementation"(libs.findLibrary("junit.jupiter.params").get())
+				"androidTestImplementation"(libs.findLibrary("kotlin.test").get())
 
 				//"implementation"(libs.findLibrary("androidx.tracing.ktx").get())
 			}

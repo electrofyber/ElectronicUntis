@@ -1,5 +1,6 @@
 
 import com.sapuseven.untis.configureKotlinJvm
+import com.sapuseven.untis.libs
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.apply
@@ -13,7 +14,7 @@ class JvmLibraryConventionPlugin : Plugin<Project> {
 
 			configureKotlinJvm()
 			dependencies {
-				//"testImplementation"(libs.findLibrary("kotlin.test").get())
+				"testImplementation"(libs.findLibrary("kotlin.test").get())
 			}
 		}
 	}

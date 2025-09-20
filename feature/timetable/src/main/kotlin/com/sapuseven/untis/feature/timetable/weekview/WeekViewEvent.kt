@@ -208,14 +208,16 @@ private fun LocalDateTime.seconds(zone: TimeZone = TimeZone.currentSystemDefault
 fun EventPreview() {
 	WeekViewStyle {
 		WeekViewEvent(
-			event = WeekViewEvent<Nothing>(
+			event = WeekViewEvent<String>(
 				title = "Test",
 				eventStyle = EventStyle.ThemePrimary,
 				start = LocalDateTime.parse("2021-05-18T09:00:00"),
 				end = LocalDateTime.parse("2021-05-18T11:00:00"),
 				top = "This is a",
-				bottom = "event"
+				bottom = "event",
+				data = "test",
 			),
+			currentTime = LocalDateTime.parse("2021-05-18T09:30:00"),
 			modifier = Modifier.sizeIn(maxHeight = 64.dp, maxWidth = 72.dp)
 		)
 	}
@@ -234,14 +236,16 @@ fun EventStyledPreview() {
 		)
 	) {
 		WeekViewEvent(
-			event = WeekViewEvent<Nothing>(
+			event = WeekViewEvent<String>(
 				title = "Styled",
-				eventStyle = EventStyle.ThemePrimary,
+				eventStyle = EventStyle.ThemeTertiary,
 				start = LocalDateTime.parse("2021-05-18T09:00:00"),
 				end = LocalDateTime.parse("2021-05-18T11:00:00"),
 				top = "This is a",
-				bottom = "event"
+				bottom = "event",
+				data = "test",
 			),
+			currentTime = LocalDateTime.parse("2021-05-18T10:30:00"),
 			modifier = Modifier.sizeIn(maxHeight = 64.dp, maxWidth = 72.dp)
 		)
 	}

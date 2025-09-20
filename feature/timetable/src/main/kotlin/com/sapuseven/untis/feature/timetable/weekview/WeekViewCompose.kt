@@ -757,12 +757,12 @@ fun <T> WeekViewCompose(
 							visibleStartDate.isBefore(holiday.end.toJavaLocalDate()) && visibleStartDate.plusDays(numDays.toLong())
 								.isAfter(holiday.start.toJavaLocalDate())
 						}.flatMap {
-							(it.start.toJavaLocalDate()..it.end.toJavaLocalDate()).map { date ->
+							(it.start..it.end).map { date ->
 								WeekViewEvent<T>(
 									title = it.title,
 									eventStyle = it.colorScheme,
-									start = date.toKotlinLocalDate().atTime(startTime),
-									end = date.toKotlinLocalDate().atTime(endTime)
+									start = date.atTime(startTime),
+									end = date.atTime(endTime)
 								)
 							}
 						}
@@ -844,7 +844,7 @@ fun <T> WeekViewCompose(
 			datePickerDialogLastSelection = it
 
 			scope.launch {
-				val targetPage = (startPage + pageIndexForDate(date = it)).toInt()
+				val targetPage = (startPage + pageIndexForDate(date = it.toKotlinLocalDate())).toInt()
 				pagerState.animateScrollToPage(targetPage)
 			}
 		}

@@ -30,11 +30,6 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
-import kotlinx.datetime.DateTimePeriod
-import kotlinx.datetime.Instant
-import kotlinx.datetime.TimeZone
-import kotlinx.datetime.periodUntil
-import kotlinx.datetime.toKotlinLocalDate
 import javax.inject.Inject
 
 @HiltViewModel
@@ -130,13 +125,9 @@ class TimetableViewModel @Inject constructor(
 		_uiState.update { it.copy(loading = false) }
 	}
 
-	fun lastRefreshPeriod(lastRefresh: Instant?): DateTimePeriod? {
-		return lastRefresh?.periodUntil(clock.now(), TimeZone.currentSystemDefault())
-	}
-
 	private suspend fun loadPage(page: Int, fromCache: Boolean) {
-		val startDate = startDateForPageIndex(page.toLong())
-		getTimetable(user, requestedElement, startDate.toKotlinLocalDate(), fromCache = fromCache)
+		val startDate = startDateForPageIndex(page)
+		getTimetable(user, requestedElement, startDate, fromCache = fromCache)
 			.catch(loadingExceptionHandler)
 			.collect { timetable ->
 				val events = timetable.periods.map {
