@@ -8,7 +8,6 @@ import com.sapuseven.untis.feature.timetable.weekview.WeekViewColorScheme
 import com.sapuseven.untis.feature.timetable.weekview.WeekViewEvent
 import com.sapuseven.untis.feature.timetable.weekview.WeekViewEventStyle
 import com.sapuseven.untis.feature.timetable.weekview.WeekViewHoliday
-import kotlinx.datetime.DateTimePeriod
 import kotlinx.datetime.Instant
 
 data class TimetableUiState(
@@ -21,8 +20,9 @@ data class TimetableUiState(
 	val bookmarks: List<Element> = emptyList(),
 
 	// Last update timestamp
+	val currentPage: Int = 0,
 	val currentTime: Instant,
-	val lastRefresh: DateTimePeriod? = null,
+	val lastRefresh: Map<Int, Instant> = emptyMap(),
 
 	// Timetable
 	val currentElement: Element? = null,

@@ -30,6 +30,8 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
+import kotlinx.datetime.DateTimePeriod
+import kotlinx.datetime.Instant
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.periodUntil
 import kotlinx.datetime.toKotlinLocalDate
@@ -104,35 +106,50 @@ class TimetableViewModel @Inject constructor(
 		// TODO
 	}
 
-	fun onPageChanged(pageOffset: Int) = viewModelScope.launch {
-		_uiState.update { it.copy(loading = true) }
+	fun onPageChanged(page: Int) = viewModelScope.launch {
+		_uiState.update { it.copy(currentPage = page) }
 
-		((pageOffset - 1)..(pageOffset + 1))
-			.filter { targetPage -> !_uiState.value.events.containsKey(targetPage) }
+		((page - 1)..(page + 1))
+			.filter { it !in _uiState.value.events }
 			.map { targetPage ->
 				async {
-					val startDate = startDateForPageIndex(targetPage.toLong())
-					getTimetable(user, requestedElement, startDate.toKotlinLocalDate(), fromCache = true)
-						.catch(loadingExceptionHandler)
-						.collect { timetable ->
-							val events = timetable.periods.map {
-								timetableMapper.mapPeriodToWeekViewEvent(it, requestedElement.type)
-							}
-
-							_uiState.update { old ->
-								old.copy(
-									lastRefresh =
-										if (targetPage == pageOffset)
-											timetable.timestamp.periodUntil(clock.now(), TimeZone.currentSystemDefault())
-										else old.lastRefresh,
-									events = old.events + (targetPage to events)
-								)
-							}
-						}
+					_uiState.update { it.copy(loading = true) }
+					loadPage(targetPage, true)
 				}
-			}.awaitAll()
+			}
+			.awaitAll()
 
 		_uiState.update { it.copy(loading = false) }
+	}
+
+	fun onPageReload(page: Int) = viewModelScope.launch {
+		_uiState.update { it.copy(loading = true) }
+
+		async { loadPage(page, false) }.await()
+
+		_uiState.update { it.copy(loading = false) }
+	}
+
+	fun lastRefreshPeriod(lastRefresh: Instant?): DateTimePeriod? {
+		return lastRefresh?.periodUntil(clock.now(), TimeZone.currentSystemDefault())
+	}
+
+	private suspend fun loadPage(page: Int, fromCache: Boolean) {
+		val startDate = startDateForPageIndex(page.toLong())
+		getTimetable(user, requestedElement, startDate.toKotlinLocalDate(), fromCache = fromCache)
+			.catch(loadingExceptionHandler)
+			.collect { timetable ->
+				val events = timetable.periods.map {
+					timetableMapper.mapPeriodToWeekViewEvent(it, requestedElement.type)
+				}
+
+				_uiState.update { old ->
+					old.copy(
+						lastRefresh = old.lastRefresh + (page to timetable.timestamp),
+						events = old.events + (page to events)
+					)
+				}
+			}
 	}
 
 	/*private val allElements = masterDataRepository.timetableElements

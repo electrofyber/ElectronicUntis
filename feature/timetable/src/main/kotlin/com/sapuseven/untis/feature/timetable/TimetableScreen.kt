@@ -128,106 +128,108 @@ internal fun TimetableScreen(
 				enter = fadeIn(tween()),
 				exit = fadeOut(tween())
 			) {*/
-				Box(
-					modifier = Modifier
-						.fillMaxSize()
-						.padding(innerPadding)
-				) {
-					val insets = insetsPaddingValues()
-					val navBarHeight = remember { insets.calculateBottomPadding() + 48.dp }
+			Box(
+				modifier = Modifier
+					.fillMaxSize()
+					.padding(innerPadding)
+			) {
+				val insets = insetsPaddingValues()
+				val navBarHeight = remember { insets.calculateBottomPadding() + 48.dp }
 
-					/*FeedbackDialog(
-						visible = viewModel.feedbackDialog,
-						onDismiss = { viewModel.feedbackDialog = false }
-					)*/
+				/*FeedbackDialog(
+					visible = viewModel.feedbackDialog,
+					onDismiss = { viewModel.feedbackDialog = false }
+				)*/
 
-					WeekViewStyle(uiState.eventStyle) {
-						WeekViewCompose(
-							events = uiState.events,
-							holidays = uiState.holidays,
-							loading = if (uiState.loading) true else null,
-							weekLogicService = viewModel.weekLogicService,
-							onPageChange = { pageOffset ->
-								viewModel.onPageChanged(pageOffset)
-							},
-							onReload = { pageOffset ->
-								//TODO viewModel.onPageReload(pageOffset)
-							},
-							onItemClick = { itemsWithIndex ->
-								//TODO viewModel.onItemClick(itemsWithIndex)
-							},
-							onZoom = { zoomLevel ->
-								//TODO viewModel.onZoom(zoomLevel)
-							},
-							currentTime = uiState.currentTime.toLocalDateTime(TimeZone.currentSystemDefault()),
-							startTime = uiState.hourList.firstOrNull()?.startTime ?: LocalTime.fromSecondOfDay(0),
-							endTime = uiState.hourList.lastOrNull()?.endTime ?: LocalTime.fromSecondOfDay(0),
-							endTimeOffset = navBarHeight,
-							//initialScale = weekViewScale,
-							//enableZoomGesture = weekViewZoomEnabled,
-							hourHeight = /*state.weekViewPreferences.hourHeight ?:*/ 72.dp,
-							hourList = uiState.hourList,
-							//dividerWidth = viewModel.weekViewPreferences.dividerWidth,
-							colorScheme = uiState.colorScheme,
+				WeekViewStyle(uiState.eventStyle) {
+					WeekViewCompose(
+						events = uiState.events,
+						holidays = uiState.holidays,
+						loading = if (uiState.loading) true else null,
+						weekLogicService = viewModel.weekLogicService,
+						onPageChange = { pageOffset ->
+							viewModel.onPageChanged(pageOffset)
+						},
+						onReload = { pageOffset ->
+							viewModel.onPageReload(pageOffset)
+						},
+						onItemClick = { itemsWithIndex ->
+							//TODO viewModel.onItemClick(itemsWithIndex)
+						},
+						onZoom = { zoomLevel ->
+							//TODO viewModel.onZoom(zoomLevel)
+						},
+						currentTime = uiState.currentTime.toLocalDateTime(TimeZone.currentSystemDefault()),
+						startTime = uiState.hourList.firstOrNull()?.startTime ?: LocalTime.fromSecondOfDay(0),
+						endTime = uiState.hourList.lastOrNull()?.endTime ?: LocalTime.fromSecondOfDay(0),
+						endTimeOffset = navBarHeight,
+						//initialScale = weekViewScale,
+						//enableZoomGesture = weekViewZoomEnabled,
+						hourHeight = /*state.weekViewPreferences.hourHeight ?:*/ 72.dp,
+						hourList = uiState.hourList,
+						//dividerWidth = viewModel.weekViewPreferences.dividerWidth,
+						colorScheme = uiState.colorScheme,
+						modifier = Modifier
+							.fillMaxSize()
+						//.disabled(disabled = needsPersonalTimetable)
+					) { startPadding ->
+						// Feedback button
+						IconButton(
 							modifier = Modifier
-								.fillMaxSize()
-								//.disabled(disabled = needsPersonalTimetable)
-						) { startPadding ->
-							// Feedback button
-							IconButton(
-								modifier = Modifier
-									.align(Alignment.BottomEnd)
-									.padding(end = 8.dp)
-									.bottomInsets(),
-								onClick = {
-									//viewModel.showFeedback()
-								}
-							) {
-								/*Icon(
-									painter = painterResource(R.drawable.all_feedback),
-									contentDescription = "Give feedback"
-								)*/
+								.align(Alignment.BottomEnd)
+								.padding(end = 8.dp)
+								.bottomInsets(),
+							onClick = {
+								//viewModel.showFeedback()
 							}
-
-							// Custom personal timetable hint
-							/*if (needsPersonalTimetable) {
-								Column(
-									verticalArrangement = Arrangement.Center,
-									horizontalAlignment = Alignment.CenterHorizontally,
-									modifier = Modifier
-										.fillMaxSize()
-								) {
-									Text(
-										text = stringResource(id = R.string.main_anonymous_login_info_text),
-										textAlign = TextAlign.Center,
-										modifier = Modifier
-											.padding(horizontal = 32.dp)
-									)
-
-									Button(
-										onClick = viewModel.onAnonymousSettingsClick,
-										modifier = Modifier
-											.padding(top = 16.dp)
-									) {
-										Text(text = stringResource(id = R.string.main_go_to_settings))
-									}
-								}
-							} else {
-								// Last refresh text
-								Text(
-									text = stringResource(
-										id = R.string.main_last_refreshed,
-										formatTimeDiffMillis(uiState.lastRefresh?.toMillis())
-									),
-									modifier = Modifier
-										.align(Alignment.BottomStart)
-										.padding(start = startPadding + 8.dp, bottom = 8.dp)
-										.bottomInsets()
-								)
-							}*/
+						) {
+							/*Icon(
+								painter = painterResource(R.drawable.all_feedback),
+								contentDescription = "Give feedback"
+							)*/
 						}
+
+						// Custom personal timetable hint
+						/*if (needsPersonalTimetable) {
+							Column(
+								verticalArrangement = Arrangement.Center,
+								horizontalAlignment = Alignment.CenterHorizontally,
+								modifier = Modifier
+									.fillMaxSize()
+							) {
+								Text(
+									text = stringResource(id = R.string.main_anonymous_login_info_text),
+									textAlign = TextAlign.Center,
+									modifier = Modifier
+										.padding(horizontal = 32.dp)
+								)
+
+								Button(
+									onClick = viewModel.onAnonymousSettingsClick,
+									modifier = Modifier
+										.padding(top = 16.dp)
+								) {
+									Text(text = stringResource(id = R.string.main_go_to_settings))
+								}
+							}
+						} else {*/
+						// Last refresh text
+						Text(
+							text = stringResource(
+								id = R.string.feature_timetable_last_refreshed,
+								formatTimeDiff(uiState.lastRefresh[uiState.currentPage]?.let {
+									uiState.currentTime.epochSeconds - it.epochSeconds
+								})
+							),
+							modifier = Modifier
+								.align(Alignment.BottomStart)
+								.padding(start = startPadding + 8.dp, bottom = 8.dp)
+								.bottomInsets()
+						)
+						//}
 					}
 				}
+			}
 			//}
 		}
 	}
@@ -270,25 +272,25 @@ internal fun TimetableScreen(
 }
 
 @Composable
-private fun formatTimeDiffMillis(diff: Long?): String {
-	val MINUTE_MILLIS: Int = 60 * 1000
-	val HOUR_MILLIS: Int = 60 * MINUTE_MILLIS
-	val DAY_MILLIS: Int = 24 * HOUR_MILLIS
+private fun formatTimeDiff(s: Long?): String {
+	val MINUTE = 60
+	val HOUR = 60 * MINUTE
+	val DAY = 24 * HOUR
 
-	if (diff == null) return stringResource(R.string.feature_timetable_last_refreshed_never)
+	if (s == null) return stringResource(R.string.feature_timetable_last_refreshed_never)
 
 	return when {
-		diff < MINUTE_MILLIS -> stringResource(R.string.feature_timetable_time_diff_just_now)
-		diff < HOUR_MILLIS -> pluralStringResource(
-			R.plurals.feature_timetable_time_diff_minutes, ((diff / MINUTE_MILLIS).toInt()), diff / MINUTE_MILLIS
+		s < MINUTE -> stringResource(R.string.feature_timetable_time_diff_just_now)
+		s < HOUR -> pluralStringResource(
+			R.plurals.feature_timetable_time_diff_minutes, (s / MINUTE).toInt(), s / MINUTE
 		)
 
-		diff < DAY_MILLIS -> pluralStringResource(
-			R.plurals.feature_timetable_time_diff_hours, ((diff / HOUR_MILLIS).toInt()), diff / HOUR_MILLIS
+		s < DAY -> pluralStringResource(
+			R.plurals.feature_timetable_time_diff_hours, (s / HOUR).toInt(), s / HOUR
 		)
 
 		else -> pluralStringResource(
-			R.plurals.feature_timetable_time_diff_days, ((diff / DAY_MILLIS).toInt()), diff / DAY_MILLIS
+			R.plurals.feature_timetable_time_diff_days, (s / DAY).toInt(), s / DAY
 		)
 	}
 }
