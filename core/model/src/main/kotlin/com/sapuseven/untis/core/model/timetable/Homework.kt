@@ -1,7 +1,9 @@
 package com.sapuseven.untis.core.model.timetable
 
 import kotlinx.datetime.LocalDate
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class Homework(
 	val id: Long,
 	val lessonId: Long,

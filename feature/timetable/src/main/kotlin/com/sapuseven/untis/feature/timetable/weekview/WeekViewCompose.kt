@@ -73,6 +73,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.fastAny
 import androidx.compose.ui.util.fastForEach
 import com.sapuseven.untis.core.domain.timetable.WeekLogicService
+import com.sapuseven.untis.core.model.timetable.Period
 import com.sapuseven.untis.core.model.timetable.WeekViewHour
 import com.sapuseven.untis.core.ui.common.conditional
 import com.sapuseven.untis.core.ui.common.ifNotNull
@@ -600,7 +601,7 @@ fun <T> WeekViewCompose(
 	weekLogicService: WeekLogicService,
 	onPageChange: suspend (pageIndex: Int) -> Unit,
 	onReload: suspend (pageIndex: Int) -> Unit,
-	onItemClick: (Pair<List<WeekViewEvent<T>>, Int>) -> Unit,
+	onItemClick: (periods: List<T>, startIndex: Int) -> Unit,
 	modifier: Modifier = Modifier,
 	onZoom: suspend (zoomLevel: Float) -> Unit = {},
 	currentTime: kotlinx.datetime.LocalDateTime = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()),
@@ -610,7 +611,7 @@ fun <T> WeekViewCompose(
 			currentTime = currentTime,
 			onClick = {
 				onItemClick(
-					event.simultaneousEvents.toList() to event.simultaneousEvents.indexOf(event)
+					event.simultaneousEvents.toList().mapNotNull { it.data }, event.simultaneousEvents.indexOf(event)
 				)
 			})
 	},

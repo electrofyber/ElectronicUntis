@@ -7,23 +7,25 @@ import com.sapuseven.untis.core.model.timetable.Timetable
 import com.sapuseven.untis.core.model.user.User
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
-import kotlinx.datetime.DatePeriod
-import kotlinx.datetime.LocalDate
+import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.plus
 import javax.inject.Inject
 
 class GetTimetableUseCase @Inject constructor(
 	private val timetableRepository: TimetableRepository,
 	private val mergeTimetablePeriods: MergeTimetablePeriods,
+	private val weekLogicService: WeekLogicService,
 ) {
 	operator fun invoke(
 		user: User,
 		element: Element,
-		startDate: LocalDate,
-		endDate: LocalDate = startDate.plus(DatePeriod(days = 5 /*TODO*/)),
-		fromCache: Boolean
-	): Flow<Timetable> =
-		timetableRepository.getTimetable(
+		page: Int,
+		fromCache: FromCache
+	): Flow<Timetable> {
+		val startDate = weekLogicService.startDateForPageIndex(page)
+		val endDate = startDate.plus(weekLogicService.weekLength, DateTimeUnit.DAY)
+
+		return timetableRepository.getTimetable(
 			user,
 			TimetableRepository.TimetableParams(
 				elementId = element.id,
@@ -31,9 +33,10 @@ class GetTimetableUseCase @Inject constructor(
 				startDate = startDate,
 				endDate = endDate
 			),
-			if (fromCache) FromCache.CACHED_THEN_LOAD else FromCache.NEVER
+			fromCache
 		).map {
 			// TODO: Filter according to hideCancelled
 			it.copy(periods = mergeTimetablePeriods(it.periods, user.timeGrid.days))
 		}
+	}
 }

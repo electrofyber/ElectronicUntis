@@ -1,5 +1,8 @@
 package com.sapuseven.untis.core.model.timetable
 
+import kotlinx.serialization.Serializable
+
+@Serializable
 data class PeriodInfoText(
 	val type: InfoTextType,
 	val text: String,

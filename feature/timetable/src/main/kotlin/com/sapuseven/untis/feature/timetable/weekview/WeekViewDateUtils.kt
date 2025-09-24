@@ -24,6 +24,7 @@ import kotlinx.datetime.todayIn
  * @return The page index relative to the page corresponding to today
  * @see startDateForPageIndex
  */
+@Deprecated("Use weekLogicService instead")
 internal fun pageIndexForDate(
 	date: LocalDate,
 	clock: Clock = Clock.System,
@@ -56,6 +57,7 @@ internal fun pageIndexForDate(
  * @return The date of the first visible day on the page specified by [pageIndex]
  * @see pageIndexForDate
  */
+@Deprecated("Use weekLogicService instead")
 internal fun startDateForPageIndex(
 	pageIndex: Int,
 	clock: Clock = Clock.System,

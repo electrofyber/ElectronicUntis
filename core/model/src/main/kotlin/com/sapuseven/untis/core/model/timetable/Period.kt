@@ -1,6 +1,7 @@
 package com.sapuseven.untis.core.model.timetable
 
 import kotlinx.datetime.LocalDateTime
+import kotlinx.serialization.Serializable
 
 /**
  * Represents a period in a [Timetable].
@@ -28,6 +29,7 @@ import kotlinx.datetime.LocalDateTime
  * @see Timetable
  * @see Element
  */
+@Serializable
 data class Period(
 	val id: Long,
 	val lessonId: Long,

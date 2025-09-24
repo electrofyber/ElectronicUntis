@@ -17,7 +17,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.sapuseven.untis.feature.login.navigation.LoginRoute
-import com.sapuseven.untis.feature.timetable.navigation.TimetableRoute
+import com.sapuseven.untis.feature.timetable.navigation.TimetableBaseRoute
 import com.sapuseven.untis.ui.MainApp
 import com.sapuseven.untis.ui.theme.AppTheme
 import com.sapuseven.untis.util.isSystemInDarkTheme
@@ -94,7 +94,7 @@ class MainActivity : ComponentActivity() {
 
 			if (!uiState.shouldKeepSplashScreen()) {
 				val startDestination = when (uiState) {
-					is MainActivityUiState.Success -> TimetableRoute() // TODO: Check for intent data and pass requested element if present
+					is MainActivityUiState.Success -> TimetableBaseRoute
 					else -> LoginRoute
 				}
 

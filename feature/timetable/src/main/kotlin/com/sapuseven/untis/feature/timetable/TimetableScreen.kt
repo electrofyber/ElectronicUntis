@@ -29,6 +29,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.sapuseven.untis.core.model.timetable.ElementType
+import com.sapuseven.untis.core.model.timetable.Period
 import com.sapuseven.untis.core.ui.common.ProfileSelectorAction
 import com.sapuseven.untis.core.ui.functional.None
 import com.sapuseven.untis.core.ui.functional.bottomInsets
@@ -44,8 +45,9 @@ import kotlinx.datetime.toLocalDateTime
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun TimetableScreen(
-	onElementClicked: (id: Long?, type: ElementType?) -> Unit,
 	onUserEdit: (userId: Long?) -> Unit,
+	onElementClick: (id: Long?, type: ElementType?) -> Unit,
+	onPeriodDetails: (id: Long, type: ElementType, timetablePage: Int, periodIds: List<Long>, initialPeriod: Int) -> Unit,
 	viewModel: TimetableViewModel = hiltViewModel()
 	//factory: TimetableViewModel.Factory = hiltEntryPointViewModelFactory() // explained below
 	/*viewModel: TimetableViewModel = hiltViewModel<TimetableViewModel, TimetableViewModel.Factory>(
@@ -153,8 +155,16 @@ internal fun TimetableScreen(
 						onReload = { pageOffset ->
 							viewModel.onPageReload(pageOffset)
 						},
-						onItemClick = { itemsWithIndex ->
-							//TODO viewModel.onItemClick(itemsWithIndex)
+						onItemClick = { periods, initialPeriod ->
+							uiState.currentElement?.let { element ->
+								onPeriodDetails(
+									element.id,
+									element.type,
+									uiState.currentPage,
+									periods.map(Period::lessonId),
+									initialPeriod
+								)
+							}
 						},
 						onZoom = { zoomLevel ->
 							//TODO viewModel.onZoom(zoomLevel)
