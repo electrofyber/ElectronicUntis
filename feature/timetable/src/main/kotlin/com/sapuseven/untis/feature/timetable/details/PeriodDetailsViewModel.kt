@@ -58,7 +58,7 @@ class PeriodDetailsViewModel @AssistedInject constructor(
 				user = userRepository.getActiveUser(),
 				element = element,
 				page = page,
-				fromCache = FromCache.ONLY
+				fromCache = FromCache.IF_HAVE
 			).first()
 
 			val periods = periodIds.map { periodId ->
