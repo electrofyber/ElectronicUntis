@@ -5,6 +5,8 @@
 	<string name="core_ui_button_delete">Delete</string>
 	<string name="core_ui_button_copy">Copy</string>
 
+	<string name="core_ui_action_close">Close</string>
+
 	<string name="core_ui_profiles_show">Show profile list</string>
 	<string name="core_ui_profile_add">Add a profile</string>
 	<!--string name="core_ui_profile_edit">Edit profiles</string-->

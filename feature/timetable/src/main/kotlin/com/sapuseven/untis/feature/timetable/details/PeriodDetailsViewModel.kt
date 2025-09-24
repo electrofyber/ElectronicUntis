@@ -44,7 +44,8 @@ class PeriodDetailsViewModel @AssistedInject constructor(
 
 	private val _uiState = MutableStateFlow(
 		PeriodDetailsUiState(
-			periods = periodIds.map { null }
+			periods = periodIds.map { null },
+			initialPeriod = initialPeriod,
 		)
 	)
 	val uiState: StateFlow<PeriodDetailsUiState> = _uiState
@@ -171,5 +172,6 @@ data class LessonTopicUiState(
 )*/
 
 data class PeriodDetailsUiState(
-	val periods: List<Period?>
+	val periods: List<Period?>,
+	val initialPeriod: Int,
 )

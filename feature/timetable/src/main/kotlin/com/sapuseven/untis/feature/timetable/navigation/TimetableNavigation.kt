@@ -47,6 +47,7 @@ fun NavController.navigateToTimetable(
 	navOptions: NavOptionsBuilder.() -> Unit = {}
 ) {
 	navigate(route = TimetableRoute(elementId, elementType)) {
+		popUpTo<TimetableRoute>() // When navigating to a timetable, only keep the last visited timetable
 		navOptions()
 	}
 }
