@@ -30,7 +30,7 @@ import kotlinx.datetime.format
 import kotlinx.serialization.json.Json
 
 @Database(
-	version = 13,
+	version = 14,
 	entities = [
 		UserEntity::class,
 		AbsenceReasonEntity::class,

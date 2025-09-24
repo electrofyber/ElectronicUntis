@@ -3,6 +3,7 @@ package com.sapuseven.untis.core.database.module
 import android.content.Context
 import androidx.room.Room
 import com.sapuseven.untis.core.database.MIGRATIONS_USER_LEGACY
+import com.sapuseven.untis.core.database.MIGRATION_USER_13_14
 import com.sapuseven.untis.core.database.MIGRATION_USER_7_8
 import com.sapuseven.untis.core.database.RoomFinderDatabase
 import com.sapuseven.untis.core.database.UserDatabase
@@ -27,6 +28,7 @@ object UserDatabaseModule {
 		.addMigrations(
 			*MIGRATIONS_USER_LEGACY.toTypedArray(),
 			MIGRATION_USER_7_8,
+			MIGRATION_USER_13_14,
 		)
 		.build()
 
