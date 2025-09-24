@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="feature_timetable_dialog_error_message">Aanvraag ID: %1$d
+\nFoutcode: %2$d
+\nFoutbericht: %3$s</string>
+    <string name="feature_timetable_elementpicker_hint_search_teachers">Zoeken naar leraren…</string>
+    <string name="feature_timetable_error_details">Foutmelding: %1$s</string>
+    <string name="feature_timetable_infocenter_absences_filter_sort">Sorteer volgorde</string>
+    <string name="feature_timetable_yes">Ja</string>
+    <string name="feature_timetable_hint_tap_to_edit">(Tikken om te bewerken)</string>
+    <string name="feature_timetable_lesson_exam">%1$s (examen!)</string>
+    <string name="feature_timetable_success">succes</string>
+    <string name="feature_timetable_dialog_crash_title">Crashlog gevonden</string>
+    <string name="feature_timetable_errors_github_attach_file_message">Voeg de gecomprimeerde logbestanden bij dit probleem.
+\nZe zijn opgeslagen op`%1$s`</string>
+    <string name="feature_timetable_errormessagedictionary_invalid_time_settings">Ongeldige datum- en/of tijdinstellingen!</string>
+    <string name="feature_timetable_elementpicker_hint_search_rooms">Zoek naar lokalen…</string>
+    <string name="feature_timetable_activity_title_errors">Foutmeldingen</string>
+    <string name="feature_timetable_dialog_datepicker_button_today">Vandaag</string>
+    <string name="feature_timetable_classes">Klassen</string>
+    <string name="feature_timetable_no">Nee</string>
+    <string name="feature_timetable_lessontopic">Lesonderwerp</string>
+    <string name="feature_timetable_infocenter_officehours_empty">Geen kantooruren</string>
+    <string name="feature_timetable_lessontopic_none">(Geen onderwerp)</string>
+    <string name="feature_timetable_edit">Bewerk</string>
+    <string name="feature_timetable_infocenter_absence_excused">Gexcuseerd</string>
+    <string name="feature_timetable_dialog_error_title">Foutinformatie</string>
+    <string name="feature_timetable_errors_button_report">Alles melden</string>
+    <string name="feature_timetable_elementpicker_hint_search">Zoeken…</string>
+    <string name="feature_timetable_errormessagedictionary_server_webuntis_not_installed">De opgegeven server heeft WebUntis niet geïnstalleerd!</string>
+    <string name="feature_timetable_error">Fout</string>
+    <string name="feature_timetable_infocenter_absences_filter">Filter afwezigheden</string>
+    <string name="feature_timetable_lesson_info">Info</string>
+    <string name="feature_timetable_errors_report">Help de app te verbeteren door de foutmeldingen hieronder te melden:</string>
+    <string name="feature_timetable_errormessagedictionary_invalid_credentials">Verkeerde gebruikersnaam of sleutel!</string>
+    <string name="feature_timetable_elementpicker_timetable_select">Selecteer een tijdschema</string>
+    <string name="feature_timetable_close">Sluiten</string>
+    <string name="feature_timetable_reset">Reset</string>
+    <string name="feature_timetable_infocenter_absences_filter_newest_first">Nieuwste eerst</string>
+    <string name="feature_timetable_lessontopic_edit">Lesonderwerp bewerken</string>
+    <string name="feature_timetable_infocenter_timeformat">%2$s, %1$s - %4$s, %3$s</string>
+    <string name="feature_timetable_lesson_details">Lesdetails</string>
+    <string name="feature_timetable_failed">mislukt</string>
+    <string name="feature_timetable_infocenter_messages_attachments">Bijlagen</string>
+    <string name="feature_timetable_errors_crash_message">Sorry daarvoor.</string>
+    <string name="feature_timetable_personal_timetable">Persoonlijk rooster</string>
+    <string name="feature_timetable_personal">Persoonlijk</string>
+    <string name="feature_timetable_errormessagedictionary_too_many_results">Te veel resultaten</string>
+    <string name="feature_timetable_dialog_absences_checked">Afwezigheden gecontroleerd.</string>
+    <string name="feature_timetable_infocenter_events_exam_name_long">%1$s - %2$s</string>
+    <string name="feature_timetable_errormessagedictionary_generic">Onbekende fout</string>
+    <string name="feature_timetable_errormessagedictionary_no_public_access">Anonieme toegang is uitgeschakeld.</string>
+    <string name="feature_timetable_anonymous">Anoniem</string>
+    <string name="feature_timetable_lesson_cancelled">%1$s (geannuleerd)</string>
+    <string name="feature_timetable_errors_crash_title">Het lijkt erop dat BetterUntis is gecrasht.</string>
+    <string name="feature_timetable_infocenter_messages_empty">Geen berichten</string>
+    <string name="feature_timetable_lesson_irregular">%1$s (onregelmatig)</string>
+    <string name="feature_timetable_back">Terug</string>
+    <string name="feature_timetable_dialog_absences_not_checked">Afwezigheden niet gecontroleerd.</string>
+    <string name="feature_timetable_delete">Verwijder</string>
+    <string name="feature_timetable_infocenter_absences_empty">Geen afwezigheden</string>
+    <string name="feature_timetable_add">Toevoegen</string>
+    <string name="feature_timetable_activity_title_settings">Instellingen</string>
+    <string name="feature_timetable_infocenter_timeformat_sameday">%2$s - %4$s, %1$s</string>
+    <string name="feature_timetable_errormessagedictionary_invalid_school">De opgegeven school bestaat niet!</string>
+    <string name="feature_timetable_rooms">Lokalen</string>
+    <string name="feature_timetable_activity_title_info_center">Info Center</string>
+    <string name="feature_timetable_errors_button_dismiss">Alles afwijzen</string>
+    <string name="feature_timetable_exam">Examen</string>
+    <string name="feature_timetable_errormessagedictionary_user_locked">Gebruiker vergrendeld!</string>
+    <string name="feature_timetable_subjects">Onderwerpen</string>
+    <string name="feature_timetable_infocenter_absences_filter_oldest_first">Oudste eerst</string>
+    <string name="feature_timetable_elementpicker_hint_search_classes">Zoek naar klassen…</string>
+    <string name="feature_timetable_absences">Afwezigheden</string>
+    <string name="feature_timetable_homework">Huiswerk</string>
+    <string name="feature_timetable_errormessagedictionary_invalid_server_url">Ongeldige server URL!</string>
+</resources>
