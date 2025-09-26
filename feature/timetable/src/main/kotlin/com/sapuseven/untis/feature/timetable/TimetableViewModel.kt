@@ -29,11 +29,13 @@ import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
+import kotlin.time.Duration.Companion.seconds
 
 @HiltViewModel(assistedFactory = TimetableViewModel.Factory::class)
 class TimetableViewModel @AssistedInject constructor(
@@ -52,7 +54,15 @@ class TimetableViewModel @AssistedInject constructor(
 		fun create(elementId: Long?, elementType: ElementType?): TimetableViewModel
 	}
 
-	private val pageManager = userRepository.observeActiveUser()
+	private val activeUser = userRepository.observeActiveUser()
+		.filterNotNull()
+		.stateIn(
+			viewModelScope,
+			SharingStarted.WhileSubscribed(5_000),
+			null
+		)
+
+	private val pageManager = activeUser
 		.filterNotNull()
 		.map { user ->
 			TimetablePageManager(
@@ -62,7 +72,10 @@ class TimetableViewModel @AssistedInject constructor(
 			)
 		}
 		.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), null)
-	private val pagerState = pageManager.filterNotNull().flatMapLatest { it.pagerState }
+	private val pagerState = pageManager
+		.filterNotNull()
+		.flatMapLatest { it.pagerState }
+		.onStart { emit(TimetablePageManager.PagerState()) }
 
 	private val _uiState = MutableStateFlow(
 		TimetableUiState(
@@ -72,7 +85,7 @@ class TimetableViewModel @AssistedInject constructor(
 	val uiState: StateFlow<TimetableUiState> = combine(
 		_uiState,
 		pagerState,
-		userRepository.observeActiveUser(),
+		activeUser,
 		userRepository.observeAllUsers(),
 		getHourList().stateIn(viewModelScope, SharingStarted.Eagerly, emptyList())
 	) { baseState, pageManager, user, users, hours ->
@@ -81,6 +94,7 @@ class TimetableViewModel @AssistedInject constructor(
 			userList = users,
 			hourList = hours,
 			pagerState = pageManager,
+			title = baseState.currentElement?.longName ?: "",
 			//error = pagerState.error
 		)
 	}.stateIn(
@@ -90,7 +104,11 @@ class TimetableViewModel @AssistedInject constructor(
 	)
 
 	init {
-		setupCurrentElement(elementId, elementType, masterDataRepository)
+		viewModelScope.launch {
+			activeUser.filterNotNull().collect { user ->
+				setupCurrentElement(elementId, elementType, masterDataRepository, user)
+			}
+		}
 		setupTimeUpdates(clock)
 		setupInitialLoading()
 	}
@@ -98,17 +116,18 @@ class TimetableViewModel @AssistedInject constructor(
 	private fun setupCurrentElement(
 		elementId: Long?,
 		elementType: ElementType?,
-		masterDataRepository: MasterDataRepository
+		masterDataRepository: MasterDataRepository,
+		user: User
 	) {
 		viewModelScope.launch {
-			val element = if (elementId != null && elementType != null) {
+			val elementFromArgs = if (elementId != null && elementType != null) {
 				masterDataRepository.getElement(ElementKey(elementId, elementType))
 			} else {
 				null
 			}
 
 			_uiState.update {
-				it.copy(currentElement = element ?: Element.personal(1, ElementType.STUDENT, "Test"))
+				it.copy(currentElement = elementFromArgs ?: user.element)
 			}
 		}
 	}
@@ -117,7 +136,7 @@ class TimetableViewModel @AssistedInject constructor(
 		viewModelScope.launch {
 			while (true) {
 				_uiState.update { it.copy(currentTime = clock.now()) }
-				delay(10_000)
+				delay(10.seconds)
 			}
 		}
 	}
