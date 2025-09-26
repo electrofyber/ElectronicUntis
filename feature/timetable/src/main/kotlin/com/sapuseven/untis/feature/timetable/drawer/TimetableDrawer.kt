@@ -29,6 +29,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -43,6 +44,7 @@ import kotlinx.coroutines.launch
 fun TimetableDrawer(
 	viewModel: TimetableDrawerViewModel = hiltViewModel(),
 	drawerState: DrawerState = rememberDrawerState(initialValue = DrawerValue.Closed),
+	personalElement: Element? = null,
 	displayedElement: Element? = null,
 	onElementPicked: (Element?) -> Unit,
 	content: @Composable () -> Unit
@@ -121,7 +123,7 @@ fun TimetableDrawer(
 						)
 					},
 					label = { Text(stringResource(id = R.string.feature_timetable_personal_timetable)) },
-					selected = displayedElement == null,
+					selected = displayedElement != null && displayedElement == personalElement,
 					onClick = {
 						scope.launch {
 							drawerState.close()
@@ -193,11 +195,11 @@ fun TimetableDrawer(
 				DrawerItems(
 					disableTypeSelection = displayedElement == null || isBookmarkSelected,
 					displayedElement = displayedElement,
-					/*onTimetableClick = { item ->
+					onElementTypeClick = {
 						scope.launch { drawerState.close() }
-						showElementPicker = item.elementType
+						showElementPicker = it
 					},
-					onNavigationClick = { item ->
+					/*onNavigationClick = { item ->
 						scope.launch { drawerState.close() }
 						onItemPicked(item)
 					}*/
@@ -272,23 +274,23 @@ fun TimetableDrawer(
 fun DrawerItems(
 	disableTypeSelection: Boolean = false,
 	displayedElement: Element? = null,
-	//onTimetableClick: (item: NavItemTimetable) -> Unit,
+	onElementTypeClick: (ElementType) -> Unit,
 	//onNavigationClick: (item: NavItemNavigation) -> Unit,
 ) {
-	/*val navItemsElementTypes = listOf(
+	val navItemsElementTypes = listOf(
 		NavItemTimetable(
 			icon = painterResource(id = com.sapuseven.untis.core.ui.R.drawable.core_ui_classes),
-			label = stringResource(id = com.sapuseven.untis.R.string.all_classes),
+			label = stringResource(id = R.string.feature_timetable_classes),
 			elementType = ElementType.CLASS
 		),
 		NavItemTimetable(
 			icon = painterResource(id = com.sapuseven.untis.core.ui.R.drawable.core_ui_teachers),
-			label = stringResource(id = com.sapuseven.untis.R.string.all_teachers),
+			label = stringResource(id = R.string.feature_timetable_teachers),
 			elementType = ElementType.TEACHER
 		),
 		NavItemTimetable(
 			icon = painterResource(id = com.sapuseven.untis.core.ui.R.drawable.core_ui_rooms),
-			label = stringResource(id = com.sapuseven.untis.R.string.all_rooms),
+			label = stringResource(id = R.string.feature_timetable_rooms),
 			elementType = ElementType.ROOM
 		),
 	)
@@ -316,7 +318,7 @@ fun DrawerItems(
 			icon = { Icon(item.icon, contentDescription = null) },
 			label = { Text(item.label) },
 			selected = !disableTypeSelection && item.elementType == displayedElement?.type,
-			onClick = { onTimetableClick(item) },
+			onClick = { onElementTypeClick(item.elementType) },
 			modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding)
 		)
 	}
@@ -331,7 +333,7 @@ fun DrawerItems(
 			onClick = { onNavigationClick(item) },
 			modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding)
 		)
-	}*/*/
+	}*/
 }
 
 @Composable
@@ -351,3 +353,19 @@ fun DrawerText(text: String) {
 	)
 }
 
+open class NavItem(
+	open val icon: Painter,
+	open val label: String
+)
+
+data class NavItemTimetable(
+	override val icon: Painter,
+	override val label: String,
+	val elementType: ElementType
+) : NavItem(icon, label)
+
+data class NavItemNavigation(
+	override val icon: Painter,
+	override val label: String,
+	val route: Any
+) : NavItem(icon, label)

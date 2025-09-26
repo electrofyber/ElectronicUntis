@@ -84,7 +84,7 @@ internal fun TimetableScreen(
 		drawerState = drawerState,
 		displayedElement = uiState.currentElement,
 		onElementPicked = {
-			//viewModel.showElement(it)
+			onElementClick(it?.id, it?.type)
 		}
 	) {
 		Scaffold(
@@ -161,7 +161,7 @@ internal fun TimetableScreen(
 									element.id,
 									element.type,
 									uiState.currentPage,
-									periods.map(Period::lessonId),
+									periods.map(Period::id),
 									initialPeriod
 								)
 							}
