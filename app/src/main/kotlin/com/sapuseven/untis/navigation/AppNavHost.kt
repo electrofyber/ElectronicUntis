@@ -16,7 +16,7 @@ import com.sapuseven.untis.feature.timetable.navigation.timetableScreen
 fun AppNavHost(
 	modifier: Modifier = Modifier,
 	navController: NavHostController = rememberNavController(),
-	startDestination: Any // = AppRoutes.Splash,
+	startDestination: Any
 ) {
 	NavHost(
 		modifier = modifier,

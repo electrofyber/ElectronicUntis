@@ -145,9 +145,9 @@ internal fun TimetableScreen(
 
 				WeekViewStyle(uiState.eventStyle) {
 					WeekViewCompose(
-						events = uiState.events,
+						events = uiState.pagerState.events,
 						holidays = uiState.holidays,
-						loading = if (uiState.loading) true else null,
+						loading = if (uiState.pagerState.isLoading) true else null,
 						weekLogicService = viewModel.weekLogicService,
 						onPageChange = { pageOffset ->
 							viewModel.onPageChanged(pageOffset)
@@ -227,7 +227,7 @@ internal fun TimetableScreen(
 						Text(
 							text = stringResource(
 								id = R.string.feature_timetable_last_refreshed,
-								formatTimeDiff(uiState.lastRefresh[uiState.currentPage]?.let {
+								formatTimeDiff(uiState.pagerState.lastRefresh[uiState.currentPage]?.let {
 									uiState.currentTime.epochSeconds - it.epochSeconds
 								})
 							),

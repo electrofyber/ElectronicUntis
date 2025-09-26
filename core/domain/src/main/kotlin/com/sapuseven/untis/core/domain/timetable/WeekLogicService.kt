@@ -1,7 +1,9 @@
 package com.sapuseven.untis.core.domain.timetable
 
+import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.DayOfWeek
 import kotlinx.datetime.LocalDate
+import kotlinx.datetime.plus
 
 interface WeekLogicService {
 	val weekLength: Int
@@ -40,4 +42,22 @@ interface WeekLogicService {
 		pageIndex: Int,
 		defaultToNext: Boolean = true
 	): LocalDate
+
+	/**
+	 * Combines `startDateForPageIndex` and `weekLength` to provide a pair of start and end date for the week of a given page.
+	 *
+	 * @param pageIndex The page index relative to today's page
+	 * @param defaultToNext Whether to return the next or the previous week if today isn't visible
+	 * (e.g. on weekends when only week days are displayed)
+	 *
+	 * @return A pair of startDate and endDate of the requested page
+	 * @see startDateForPageIndex
+	 * @see weekLength
+	 */
+	fun dateRangeForPageIndex(
+		pageIndex: Int,
+		defaultToNext: Boolean = true
+	): Pair<LocalDate, LocalDate> = startDateForPageIndex(pageIndex, defaultToNext).let { startDate ->
+		startDate to startDate.plus(weekLength, DateTimeUnit.DAY)
+	}
 }

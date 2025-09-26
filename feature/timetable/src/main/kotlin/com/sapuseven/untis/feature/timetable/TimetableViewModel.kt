@@ -1,9 +1,7 @@
 package com.sapuseven.untis.feature.timetable
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.sapuseven.untis.core.domain.cache.FromCache
 import com.sapuseven.untis.core.domain.repository.MasterDataRepository
 import com.sapuseven.untis.core.domain.repository.UserRepository
 import com.sapuseven.untis.core.domain.timetable.GetHourListUseCase
@@ -12,27 +10,22 @@ import com.sapuseven.untis.core.domain.timetable.WeekLogicService
 import com.sapuseven.untis.core.model.timetable.Element
 import com.sapuseven.untis.core.model.timetable.ElementKey
 import com.sapuseven.untis.core.model.timetable.ElementType
-import com.sapuseven.untis.core.model.timetable.Period
 import com.sapuseven.untis.core.model.timetable.WeekViewHour
 import com.sapuseven.untis.core.model.user.User
 import com.sapuseven.untis.feature.timetable.mapper.TimetableMapper
 import com.sapuseven.untis.feature.timetable.weekview.WeekViewColorScheme
-import com.sapuseven.untis.feature.timetable.weekview.WeekViewEvent
 import com.sapuseven.untis.feature.timetable.weekview.WeekViewEventStyle
 import com.sapuseven.untis.feature.timetable.weekview.WeekViewHoliday
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.async
-import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.FlowCollector
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
@@ -55,24 +48,48 @@ class TimetableViewModel @AssistedInject constructor(
 		fun create(elementId: Long?, elementType: ElementType?): TimetableViewModel
 	}
 
-	private val user = userRepository.getActiveUser();
+	private val user = userRepository.getActiveUser()
+	private val pageManager = TimetablePageManager(
+		getTimetable,
+		timetableMapper,
+		user,
+	)
 
 	private val _uiState = MutableStateFlow(
 		TimetableUiState(
-			user = user,
-			title = user.displayName,
 			currentTime = clock.now(),
 		)
 	)
-	val uiState: StateFlow<TimetableUiState> = _uiState
-
-	private val loadingExceptionHandler: suspend FlowCollector<*>.(Throwable) -> Unit = { throwable ->
-		val message = "Error"//if (throwable is UntisApiException) "API error" else "other error"
-		Log.e("TimetableViewModel", "Failed to load timetable due to $message", throwable)
-		// TODO: Show in UI
-	}
+	val uiState: StateFlow<TimetableUiState> = combine(
+		_uiState,
+		pageManager.pagerState,
+		userRepository.observeActiveUser(),
+		userRepository.observeAllUsers(),
+		getHourList().stateIn(viewModelScope, SharingStarted.Eagerly, emptyList())
+	) { baseState, pagerState, user, users, hours ->
+		baseState.copy(
+			user = user,
+			userList = users,
+			hourList = hours,
+			pagerState = pagerState,
+			//error = pagerState.error
+		)
+	}.stateIn(
+		viewModelScope,
+		SharingStarted.WhileSubscribed(5_000),
+		_uiState.value
+	)
 
 	init {
+		setupCurrentElement(elementId, elementType, masterDataRepository)
+		setupTimeUpdates(clock)
+	}
+
+	private fun setupCurrentElement(
+		elementId: Long?,
+		elementType: ElementType?,
+		masterDataRepository: MasterDataRepository
+	) {
 		viewModelScope.launch {
 			val element = if (elementId != null && elementType != null) {
 				masterDataRepository.getElement(ElementKey(elementId, elementType))
@@ -80,27 +97,19 @@ class TimetableViewModel @AssistedInject constructor(
 				null
 			}
 
-			_uiState.update { it.copy(currentElement = element ?: Element.personal(1, ElementType.STUDENT, "Test")) }
+			_uiState.update {
+				it.copy(currentElement = element ?: Element.personal(1, ElementType.STUDENT, "Test"))
+			}
 		}
+	}
 
+	private fun setupTimeUpdates(clock: Clock) {
 		viewModelScope.launch {
 			while (true) {
-				_uiState.update {
-					it.copy(
-						currentTime = clock.now(),
-					)
-				}
+				_uiState.update { it.copy(currentTime = clock.now()) }
 				delay(10_000)
 			}
 		}
-
-		userRepository.observeAllUsers()
-			.onEach { users -> _uiState.update { it.copy(userList = users) } }
-			.launchIn(viewModelScope)
-
-		getHourList()
-			.onEach { hourList -> _uiState.update { it.copy(hourList = hourList) } }
-			.launchIn(viewModelScope)
 	}
 
 	fun switchUser(user: User) = viewModelScope.launch {
@@ -111,58 +120,22 @@ class TimetableViewModel @AssistedInject constructor(
 		// TODO
 	}
 
-	fun onLessonDetails(periods: List<Period>) {
-		//_lessonDetails.value = periods
-	}
-
-	fun getPeriodsByIds(ids: List<Long>): List<Period> = emptyList()
-	//uiState.value.timetable.lessons.filter { it.id in ids }
-
 	fun onPageChanged(page: Int) = viewModelScope.launch {
 		_uiState.update { it.copy(currentPage = page) }
-
-		((page - 1)..(page + 1))
-			.filter { it !in _uiState.value.events }
-			.map { targetPage ->
-				async {
-					_uiState.update { it.copy(loading = true) }
-					loadPage(targetPage, true)
-				}
-			}
-			.awaitAll()
-
-		_uiState.update { it.copy(loading = false) }
+		_uiState.value.currentElement?.let {
+			pageManager.preloadPages(page, it)
+		}
 	}
 
 	fun onPageReload(page: Int) = viewModelScope.launch {
-		_uiState.update { it.copy(loading = true) }
-
-		async { loadPage(page, false) }.await()
-
-		_uiState.update { it.copy(loading = false) }
-	}
-
-	private suspend fun loadPage(page: Int, fromCache: Boolean) {
-		val element = _uiState.value.currentElement ?: return
-		getTimetable(user, element, page, fromCache = if (fromCache) FromCache.CACHED_THEN_LOAD else FromCache.NEVER)
-			.catch(loadingExceptionHandler)
-			.collect { timetable ->
-				val events = timetable.periods.map {
-					timetableMapper.mapPeriodToWeekViewEvent(it, element.type)
-				}
-
-				_uiState.update { old ->
-					old.copy(
-						lastRefresh = old.lastRefresh + (page to timetable.timestamp),
-						events = old.events + (page to events)
-					)
-				}
-			}
+		_uiState.value.currentElement?.let {
+			pageManager.loadPage(page, it, true)
+		}
 	}
 }
 
 data class TimetableUiState(
-	val user: User,
+	val user: User? = null,
 	val userList: List<User> = emptyList(),
 	val debug: Boolean = false, // TODO: Maybe should be some global state?
 	val title: String = "BetterUntis",
@@ -170,10 +143,10 @@ data class TimetableUiState(
 	// Navigation (Drawer)
 	val bookmarks: List<Element> = emptyList(),
 
-	// Last update timestamp
+	// Pager
 	val currentPage: Int = 0,
 	val currentTime: Instant,
-	val lastRefresh: Map<Int, Instant> = emptyMap(),
+	val pagerState: TimetablePageManager.PagerState = TimetablePageManager.PagerState(),
 
 	// Timetable
 	val currentElement: Element? = null,
@@ -182,9 +155,7 @@ data class TimetableUiState(
 	val eventStyle: WeekViewEventStyle = WeekViewEventStyle.default(),
 	val colorScheme: WeekViewColorScheme = WeekViewColorScheme.default(),
 	val hourList: List<WeekViewHour> = emptyList(),
-	val events: Map<Int, List<WeekViewEvent<Period>>> = emptyMap(),
 	val holidays: List<WeekViewHoliday> = emptyList(),
-	val loading: Boolean = false,
 )
 
 /*private val allElements = masterDataRepository.timetableElements

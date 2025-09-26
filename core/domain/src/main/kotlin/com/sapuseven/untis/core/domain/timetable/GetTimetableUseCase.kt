@@ -7,8 +7,6 @@ import com.sapuseven.untis.core.model.timetable.Timetable
 import com.sapuseven.untis.core.model.user.User
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
-import kotlinx.datetime.DateTimeUnit
-import kotlinx.datetime.plus
 import javax.inject.Inject
 
 class GetTimetableUseCase @Inject constructor(
@@ -22,8 +20,7 @@ class GetTimetableUseCase @Inject constructor(
 		page: Int,
 		fromCache: FromCache
 	): Flow<Timetable> {
-		val startDate = weekLogicService.startDateForPageIndex(page)
-		val endDate = startDate.plus(weekLogicService.weekLength, DateTimeUnit.DAY)
+		val (startDate, endDate) = weekLogicService.dateRangeForPageIndex(page)
 
 		return timetableRepository.getTimetable(
 			user,
