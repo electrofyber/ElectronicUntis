@@ -21,9 +21,6 @@ class TimetablePageManager(
 	private val timetableMapper: TimetableMapper,
 	private val user: User,
 ) {
-	private var activeLoadCount = 0
-	private val loadLock = Any()
-
 	val pagerState = MutableStateFlow(
 		PagerState(
 			events = emptyMap(),
@@ -34,15 +31,6 @@ class TimetablePageManager(
 	)
 
 	private suspend fun loadPage(page: Int, element: Element, fromCache: FromCache) {
-		Log.d("TimetablePageManager", "Requested load for page $page (fromCache=$fromCache)")
-
-		synchronized(loadLock) {
-			activeLoadCount++
-			if (activeLoadCount == 1) {
-				pagerState.update { it.copy(isLoading = true, error = null) }
-			}
-		}
-
 		getTimetable(user, element, page, fromCache)
 			.catch { e ->
 				val message = "Error"//if (throwable is UntisApiException) "API error" else "other error"
@@ -59,10 +47,8 @@ class TimetablePageManager(
 					it.copy(
 						lastRefresh = it.lastRefresh + (page to timetable.timestamp),
 						events = it.events + (page to events),
-						isLoading = false
 					)
 				}
-				Log.d("TimetablePageManager", "Loaded page $page for element ${element.id}")
 			}
 	}
 

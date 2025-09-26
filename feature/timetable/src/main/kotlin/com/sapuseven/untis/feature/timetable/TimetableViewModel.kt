@@ -25,6 +25,10 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -33,12 +37,12 @@ import kotlinx.datetime.Instant
 
 @HiltViewModel(assistedFactory = TimetableViewModel.Factory::class)
 class TimetableViewModel @AssistedInject constructor(
-	private val clock: Clock,
 	private val userRepository: UserRepository,
-	private val masterDataRepository: MasterDataRepository,
 	private val timetableMapper: TimetableMapper,
 	private val getTimetable: GetTimetableUseCase,
 	internal val weekLogicService: WeekLogicService,
+	clock: Clock,
+	masterDataRepository: MasterDataRepository,
 	getHourList: GetHourListUseCase,
 	@Assisted val elementId: Long?,
 	@Assisted val elementType: ElementType?,
@@ -48,12 +52,17 @@ class TimetableViewModel @AssistedInject constructor(
 		fun create(elementId: Long?, elementType: ElementType?): TimetableViewModel
 	}
 
-	private val user = userRepository.getActiveUser()
-	private val pageManager = TimetablePageManager(
-		getTimetable,
-		timetableMapper,
-		user,
-	)
+	private val pageManager = userRepository.observeActiveUser()
+		.filterNotNull()
+		.map { user ->
+			TimetablePageManager(
+				getTimetable,
+				timetableMapper,
+				user
+			)
+		}
+		.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), null)
+	private val pagerState = pageManager.filterNotNull().flatMapLatest { it.pagerState }
 
 	private val _uiState = MutableStateFlow(
 		TimetableUiState(
@@ -62,16 +71,16 @@ class TimetableViewModel @AssistedInject constructor(
 	)
 	val uiState: StateFlow<TimetableUiState> = combine(
 		_uiState,
-		pageManager.pagerState,
+		pagerState,
 		userRepository.observeActiveUser(),
 		userRepository.observeAllUsers(),
 		getHourList().stateIn(viewModelScope, SharingStarted.Eagerly, emptyList())
-	) { baseState, pagerState, user, users, hours ->
+	) { baseState, pageManager, user, users, hours ->
 		baseState.copy(
 			user = user,
 			userList = users,
 			hourList = hours,
-			pagerState = pagerState,
+			pagerState = pageManager,
 			//error = pagerState.error
 		)
 	}.stateIn(
@@ -83,6 +92,7 @@ class TimetableViewModel @AssistedInject constructor(
 	init {
 		setupCurrentElement(elementId, elementType, masterDataRepository)
 		setupTimeUpdates(clock)
+		setupInitialLoading()
 	}
 
 	private fun setupCurrentElement(
@@ -112,6 +122,17 @@ class TimetableViewModel @AssistedInject constructor(
 		}
 	}
 
+	private fun setupInitialLoading() {
+		combine(
+			pageManager.filterNotNull(),
+			_uiState.map { it.currentElement }
+		) { manager, element ->
+			element?.let {
+				manager.preloadPages(_uiState.value.currentPage, element)
+			}
+		}.launchIn(viewModelScope)
+	}
+
 	fun switchUser(user: User) = viewModelScope.launch {
 		userRepository.switchUser(user.id)
 	}
@@ -121,15 +142,19 @@ class TimetableViewModel @AssistedInject constructor(
 	}
 
 	fun onPageChanged(page: Int) = viewModelScope.launch {
-		_uiState.update { it.copy(currentPage = page) }
-		_uiState.value.currentElement?.let {
-			pageManager.preloadPages(page, it)
+		pageManager.value?.let { manager ->
+			_uiState.update { it.copy(currentPage = page) }
+			_uiState.value.currentElement?.let { element ->
+				manager.preloadPages(page, element)
+			}
 		}
 	}
 
 	fun onPageReload(page: Int) = viewModelScope.launch {
-		_uiState.value.currentElement?.let {
-			pageManager.loadPage(page, it, true)
+		pageManager.value?.let { manager ->
+			_uiState.value.currentElement?.let { element ->
+				manager.loadPage(page, element, true)
+			}
 		}
 	}
 }
