@@ -31,6 +31,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.ProvideTextStyle
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
@@ -58,7 +59,6 @@ import com.sapuseven.untis.core.model.timetable.Element
 import com.sapuseven.untis.core.model.timetable.ElementType
 import com.sapuseven.untis.core.ui.R
 import com.sapuseven.untis.core.ui.common.AbbreviatedText
-import com.sapuseven.untis.core.ui.common.AppScaffold
 import com.sapuseven.untis.core.ui.common.NavigationBarInset
 import com.sapuseven.untis.core.ui.common.disabled
 import com.sapuseven.untis.core.ui.functional.insetsPaddingValues
@@ -91,7 +91,7 @@ fun ElementPickerDialogFullscreen(
 		onDismiss(false)
 	}
 
-	AppScaffold(
+	Scaffold(
 		topBar = {
 			TopAppBar(
 				title = {

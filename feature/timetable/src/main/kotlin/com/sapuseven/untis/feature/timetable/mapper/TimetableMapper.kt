@@ -25,6 +25,7 @@ class TimetableMapper @Inject constructor(
 		contextType: ElementType? = null,
 		includeReplacements: Boolean = true,
 	): WeekViewEvent<Period> = WeekViewEvent(
+		id = period.id,
 		title = period.subjects.toShortString(),
 		top = (
 			if (contextType == ElementType.TEACHER)

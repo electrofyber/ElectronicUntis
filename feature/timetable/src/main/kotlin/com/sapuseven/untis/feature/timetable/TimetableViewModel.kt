@@ -1,7 +1,11 @@
 package com.sapuseven.untis.feature.timetable
 
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.sapuseven.untis.core.datastore.UserSettingsDataSource
 import com.sapuseven.untis.core.domain.repository.MasterDataRepository
 import com.sapuseven.untis.core.domain.repository.UserRepository
 import com.sapuseven.untis.core.domain.timetable.GetHourListUseCase
@@ -21,6 +25,7 @@ import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -39,6 +44,7 @@ import kotlin.time.Duration.Companion.seconds
 
 @HiltViewModel(assistedFactory = TimetableViewModel.Factory::class)
 class TimetableViewModel @AssistedInject constructor(
+	private val userSettingsDataSource: UserSettingsDataSource,
 	private val userRepository: UserRepository,
 	private val timetableMapper: TimetableMapper,
 	private val getTimetable: GetTimetableUseCase,
@@ -61,6 +67,12 @@ class TimetableViewModel @AssistedInject constructor(
 			SharingStarted.WhileSubscribed(5_000),
 			null
 		)
+
+	private val userSettings = userSettingsDataSource.getSettings()
+		.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), null)
+
+	private val hourList = getHourList()
+		.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), emptyList())
 
 	private val pageManager = activeUser
 		.filterNotNull()
@@ -87,14 +99,29 @@ class TimetableViewModel @AssistedInject constructor(
 		pagerState,
 		activeUser,
 		userRepository.observeAllUsers(),
-		getHourList().stateIn(viewModelScope, SharingStarted.Eagerly, emptyList())
-	) { baseState, pageManager, user, users, hours ->
-		baseState.copy(
+		userSettings,
+		hourList
+	) { baseState, pagerState, user, users, userSettings, hours ->
+		(baseState).copy(
 			user = user,
 			userList = users,
 			hourList = hours,
-			pagerState = pageManager,
+			pagerState = pagerState,
 			title = baseState.currentElement?.longName ?: "",
+			eventStyle = userSettings?.let {
+				WeekViewEventStyle(
+					padding = it.timetableItemPadding,
+					cornerRadius = it.timetableItemCornerRadius,
+					lessonNameStyle = TextStyle(
+						fontSize = it.timetableLessonNameFontSize.sp,
+						fontWeight = if (it.timetableBoldLessonName) FontWeight.Bold else FontWeight.Normal
+					),
+					lessonInfoStyle = TextStyle(
+						fontSize = it.timetableLessonInfoFontSize.sp
+					),
+					lessonInfoCentered = it.timetableCenteredLessonInfo,
+				)
+			} ?: WeekViewEventStyle.default()
 			//error = pagerState.error
 		)
 	}.stateIn(
@@ -178,6 +205,28 @@ class TimetableViewModel @AssistedInject constructor(
 				manager.loadPage(page, element, true)
 			}
 		}
+	}
+}
+
+inline fun <T1, T2, T3, T4, T5, T6, R> combine(
+	flow: Flow<T1>,
+	flow2: Flow<T2>,
+	flow3: Flow<T3>,
+	flow4: Flow<T4>,
+	flow5: Flow<T5>,
+	flow6: Flow<T6>,
+	crossinline transform: suspend (T1, T2, T3, T4, T5, T6) -> R
+): Flow<R> {
+	return kotlinx.coroutines.flow.combine(flow, flow2, flow3, flow4, flow5, flow6) { args: Array<*> ->
+		@Suppress("UNCHECKED_CAST")
+		transform(
+			args[0] as T1,
+			args[1] as T2,
+			args[2] as T3,
+			args[3] as T4,
+			args[4] as T5,
+			args[5] as T6,
+		)
 	}
 }
 

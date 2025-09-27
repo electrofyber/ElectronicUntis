@@ -15,8 +15,10 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
@@ -33,7 +35,10 @@ fun SettingsCategoryScreen(
 	),
 	content: @Composable (SettingsViewModel) -> Unit
 ) {
+	val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
+
 	Scaffold(
+		modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
 		topBar = {
 			CenterAlignedTopAppBar(
 				title = {
@@ -49,16 +54,17 @@ fun SettingsCategoryScreen(
 							contentDescription = stringResource(id = com.sapuseven.untis.core.ui.R.string.all_back)
 						)
 					}
-				}
+				},
+				scrollBehavior = scrollBehavior
 			)
 		}
 	) { innerPadding ->
 		Column(
 			modifier = Modifier
-				.verticalScroll(rememberScrollState())
-                .padding(innerPadding)
+				.padding(innerPadding)
 				.bottomInsets()
-                .fillMaxSize()
+				.fillMaxSize()
+				.verticalScroll(rememberScrollState())
 		) {
 			content(viewModel)
 		}

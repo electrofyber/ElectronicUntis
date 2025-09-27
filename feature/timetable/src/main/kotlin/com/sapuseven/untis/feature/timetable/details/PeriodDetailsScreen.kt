@@ -1,5 +1,8 @@
 package com.sapuseven.untis.feature.timetable.details
 
+import androidx.compose.animation.AnimatedVisibilityScope
+import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
@@ -59,16 +62,19 @@ import kotlinx.datetime.toJavaLocalDateTime
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalSharedTransitionApi::class)
 @Composable
 internal fun PeriodDetailsScreen(
+	viewModel: PeriodDetailsViewModel = hiltViewModel(),
+	sharedTransitionScope: SharedTransitionScope,
+	animatedVisibilityScope: AnimatedVisibilityScope,
+	initialPeriodId: Long,
 	onBackClick: () -> Unit,
 	onElementClick: (id: Long?, type: ElementType?) -> Unit,
-	viewModel: PeriodDetailsViewModel = hiltViewModel(),
 	//periodItems: List<PeriodItem>,
 	//onDismiss: (requestedElement: ElementEntity?) -> Unit,
 	//absenceCheckViewModel: AbsenceCheckViewModel = hiltViewModel()
-) {
+) = with(sharedTransitionScope) {
 	val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 	val pagerState = rememberPagerState(uiState.initialPeriod) { uiState.periods.size }
 
@@ -100,7 +106,12 @@ internal fun PeriodDetailsScreen(
 				}*/
 			)
 		},
-		contentWindowInsets = WindowInsets.None
+		contentWindowInsets = WindowInsets.None,
+		modifier = Modifier
+			.sharedBounds(
+				sharedContentState = rememberSharedContentState(key = "period-${uiState.periods[pagerState.currentPage]?.id ?: initialPeriodId}"),
+				animatedVisibilityScope = animatedVisibilityScope
+			)
 	) { paddingValues ->
 		Surface(
 			modifier = Modifier

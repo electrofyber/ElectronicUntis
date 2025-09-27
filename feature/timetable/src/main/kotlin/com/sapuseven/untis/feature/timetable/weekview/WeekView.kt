@@ -1,7 +1,13 @@
+@file:OptIn(ExperimentalSharedTransitionApi::class)
+
 package com.sapuseven.untis.feature.timetable.weekview
 
 import android.text.format.DateFormat
+import androidx.compose.animation.AnimatedVisibilityScope
+import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.animation.core.animateIntAsState
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.awaitEachGesture
 import androidx.compose.foundation.gestures.awaitFirstDown
@@ -27,7 +33,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.DateRange
-import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -73,7 +78,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.fastAny
 import androidx.compose.ui.util.fastForEach
 import com.sapuseven.untis.core.domain.timetable.WeekLogicService
-import com.sapuseven.untis.core.model.timetable.Period
 import com.sapuseven.untis.core.model.timetable.WeekViewHour
 import com.sapuseven.untis.core.ui.common.conditional
 import com.sapuseven.untis.core.ui.common.ifNotNull
@@ -495,9 +499,10 @@ fun <T> WeekViewContent(
 	indicatorColor: Color,
 	pastBackgroundColor: Color,
 	futureBackgroundColor: Color,
-	dividerColor: Color = MaterialTheme.colorScheme.outline,
+	dividerColor: Color = MaterialTheme.colorScheme.surfaceContainer,
 	dividerWidth: Float = Stroke.HairlineWidth,
 	currentTime: kotlinx.datetime.LocalDateTime = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()),
+	sharedTransitionScope: SharedTransitionScope,
 	eventContent: @Composable (event: WeekViewEvent<T>) -> Unit = {
 		WeekViewEvent(
 			event = it
@@ -562,7 +567,8 @@ fun <T> WeekViewContent(
 		val dayWidth = width.toFloat() / numDays
 		val placeablesWithEvents = measureables.map { measurable ->
 			val event = measurable.parentData as WeekViewEvent<*>
-			val eventDurationMinutes = ChronoUnit.MINUTES.between(event.start.toJavaLocalDateTime(), event.end.toJavaLocalDateTime())
+			val eventDurationMinutes =
+				ChronoUnit.MINUTES.between(event.start.toJavaLocalDateTime(), event.end.toJavaLocalDateTime())
 			val eventHeight = ((eventDurationMinutes / 60f) * hourHeight.toPx()).roundToInt()
 			val placeable = measurable.measure(
 				constraints.copy(
@@ -577,9 +583,11 @@ fun <T> WeekViewContent(
 
 		layout(width, height) {
 			placeablesWithEvents.forEach { (placeable, event) ->
-				val eventOffsetMinutes = ChronoUnit.MINUTES.between(startTime, event.start.toJavaLocalDateTime().toLocalTime())
+				val eventOffsetMinutes =
+					ChronoUnit.MINUTES.between(startTime, event.start.toJavaLocalDateTime().toLocalTime())
 				val eventY = ((eventOffsetMinutes / 60f) * hourHeight.toPx()).roundToInt()
-				val eventOffsetDays = ChronoUnit.DAYS.between(startDate, event.start.toJavaLocalDateTime().toLocalDate())
+				val eventOffsetDays =
+					ChronoUnit.DAYS.between(startDate, event.start.toJavaLocalDateTime().toLocalDate())
 				val eventOffset = event.offsetSteps * (dayWidth / event.numSimultaneous)
 				val eventX = eventOffsetDays * dayWidth + eventOffset
 				placeable.place(eventX.toInt(), eventY)
@@ -592,9 +600,9 @@ fun <T> WeekViewContent(
  * @param onItemClick Callback on event click. First value contains a list of all simultaneous events
  * (including the clicked one) and second value the index of the actually clicked event.
  */
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalSharedTransitionApi::class)
 @Composable
-fun <T> WeekViewCompose(
+fun <T> WeekView(
 	events: Map<Int, List<WeekViewEvent<T>>>,
 	holidays: List<WeekViewHoliday>,
 	loading: Boolean? = false,
@@ -605,7 +613,9 @@ fun <T> WeekViewCompose(
 	modifier: Modifier = Modifier,
 	onZoom: suspend (zoomLevel: Float) -> Unit = {},
 	currentTime: kotlinx.datetime.LocalDateTime = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()),
-	eventContent: @Composable (event: WeekViewEvent<T>) -> Unit = { event ->
+	sharedTransitionScope: SharedTransitionScope,
+	animatedVisibilityScope: AnimatedVisibilityScope,
+	eventContent: @Composable SharedTransitionScope.(event: WeekViewEvent<T>) -> Unit = { event ->
 		WeekViewEvent(
 			event = event,
 			currentTime = currentTime,
@@ -613,7 +623,12 @@ fun <T> WeekViewCompose(
 				onItemClick(
 					event.simultaneousEvents.toList().mapNotNull { it.data }, event.simultaneousEvents.indexOf(event)
 				)
-			})
+			},
+			modifier = Modifier.sharedBounds(
+				rememberSharedContentState(key = "period-${event.id}"),
+				animatedVisibilityScope = animatedVisibilityScope
+			)
+		)
 	},
 	enableZoomGesture: Boolean = true,
 	initialScale: Float = 1f,
@@ -653,7 +668,8 @@ fun <T> WeekViewCompose(
 				.asSequence()
 				.flatten()
 				.filter { it.end.toJavaLocalDateTime().toLocalTime().isBefore(startTime.toJavaLocalTime()) }
-				.minByOrNull { it.start.toJavaLocalDateTime().toLocalTime() }?.start?.toJavaLocalDateTime()?.toLocalTime()
+				.minByOrNull { it.start.toJavaLocalDateTime().toLocalTime() }?.start?.toJavaLocalDateTime()
+				?.toLocalTime()
 		}
 	}
 
@@ -668,12 +684,14 @@ fun <T> WeekViewCompose(
 	}
 
 	val startTimeOffsetMinutes by animateIntAsState(
-		Duration.between(earliestEventTime ?: startTime.toJavaLocalTime(), startTime.toJavaLocalTime()).toMinutes().coerceAtLeast(0).toInt(),
+		Duration.between(earliestEventTime ?: startTime.toJavaLocalTime(), startTime.toJavaLocalTime()).toMinutes()
+			.coerceAtLeast(0).toInt(),
 		label = "startTimeOffsetMinutes"
 	)
 
 	val endTimeOffsetMinutes by animateIntAsState(
-		Duration.between(endTime.toJavaLocalTime(), latestEventTime ?: endTime.toJavaLocalTime()).toMinutes().coerceAtLeast(0).toInt(),
+		Duration.between(endTime.toJavaLocalTime(), latestEventTime ?: endTime.toJavaLocalTime()).toMinutes()
+			.coerceAtLeast(0).toInt(),
 		label = "endTimeOffsetMinutes"
 	)
 
@@ -685,147 +703,154 @@ fun <T> WeekViewCompose(
 		endTime.toJavaLocalTime().plusMinutes(endTimeOffsetMinutes.toLong())
 	}
 
-	Row(modifier = modifier) {
-		Column {
-			Box(
-				contentAlignment = Alignment.Center,
-				modifier = Modifier
-					.width(with(LocalDensity.current) { sidebarWidth.toDp() })
-					.height(with(LocalDensity.current) { headerHeight.toDp() })
-			) {
-				IconButton(
-					onClick = {
-						datePickerDialog = true
-					}
+	with(sharedTransitionScope) {
+		Row(modifier = modifier.background(MaterialTheme.colorScheme.surfaceContainer)) {
+			Column {
+				Box(
+					contentAlignment = Alignment.Center,
+					modifier = Modifier
+						.width(with(LocalDensity.current) { sidebarWidth.toDp() })
+						.height(with(LocalDensity.current) { headerHeight.toDp() })
 				) {
-					Icon(
-						imageVector = Icons.Outlined.DateRange,
-						contentDescription = stringResource(R.string.feature_timetable_weekview_open_datepicker)
-					)
+					IconButton(
+						onClick = {
+							datePickerDialog = true
+						}
+					) {
+						Icon(
+							imageVector = Icons.Outlined.DateRange,
+							contentDescription = stringResource(R.string.feature_timetable_weekview_open_datepicker)
+						)
+					}
+				}
+
+				WeekViewSidebar(
+					startTime = startTimeWithOffset,
+					endTime = endTimeWithOffset,
+					hourHeight = hourHeight * scale,
+					hourList = hourList,
+					modifier = Modifier
+						.onGloballyPositioned {
+							if (it.size.width > 0)
+								sidebarWidth = it.size.width
+						}
+						.verticalScroll(verticalScrollState)
+						.padding(bottom = endTimeOffset)
+				)
+			}
+
+			LaunchedEffect(pagerState) {
+				snapshotFlow { pagerState.currentPage - startPage }.collect { page ->
+					currentOnPageChange(page)
 				}
 			}
 
-			WeekViewSidebar(
-				startTime = startTimeWithOffset,
-				endTime = endTimeWithOffset,
-				hourHeight = hourHeight * scale,
-				hourList = hourList,
-				modifier = Modifier
-					.onGloballyPositioned {
-						if (it.size.width > 0)
-							sidebarWidth = it.size.width
-					}
-					.verticalScroll(verticalScrollState)
-					.padding(bottom = endTimeOffset)
-			)
-		}
+			HorizontalPager(state = pagerState) { index ->
+				val pageOffset = index - startPage
+				val visibleStartDate =
+					weekLogicService.currentWeekStartDate().plusWeeks(pageOffset.toLong()) // 1 = Monday, 7 = Sunday
 
-		LaunchedEffect(pagerState) {
-			snapshotFlow { pagerState.currentPage - startPage }.collect { page ->
-				currentOnPageChange(page)
-			}
-		}
+				Column {
+					WeekViewHeader(
+						startDate = visibleStartDate,
+						currentDate = currentTime.toJavaLocalDateTime().toLocalDate(),
+						numDays = numDays,
+						modifier = Modifier
+							.onGloballyPositioned { headerHeight = it.size.height }
+					)
 
-		HorizontalPager(state = pagerState) { index ->
-			val pageOffset = index - startPage
-			val visibleStartDate =
-				weekLogicService.currentWeekStartDate().plusWeeks(pageOffset.toLong()) // 1 = Monday, 7 = Sunday
-
-			Column {
-				WeekViewHeader(
-					startDate = visibleStartDate,
-					currentDate = currentTime.toJavaLocalDateTime().toLocalDate(),
-					numDays = numDays,
-					modifier = Modifier
-						.onGloballyPositioned { headerHeight = it.size.height }
-				)
-
-				if (hourList.isNotEmpty()) {
-					var isRefreshing by remember { mutableStateOf(false) }
-					val pullRefreshState =
-						rememberWeekViewPullToRefreshState()
-					val onRefresh: () -> Unit = {
-						isRefreshing = true
-						scope.launch {
-							onReload(pageOffset)
-							pullRefreshState.snapTo(0f)
-							isRefreshing = false
-						}
-					}
-
-					val holidayEvents = remember {
-						holidays.filter { holiday ->
-							visibleStartDate.isBefore(holiday.end.toJavaLocalDate()) && visibleStartDate.plusDays(numDays.toLong())
-								.isAfter(holiday.start.toJavaLocalDate())
-						}.flatMap {
-							(it.start..it.end).map { date ->
-								WeekViewEvent<T>(
-									title = it.title,
-									eventStyle = it.colorScheme,
-									start = date.atTime(startTime),
-									end = date.atTime(endTime)
-								)
+					if (hourList.isNotEmpty()) {
+						var isRefreshing by remember { mutableStateOf(false) }
+						val pullRefreshState =
+							rememberWeekViewPullToRefreshState()
+						val onRefresh: () -> Unit = {
+							isRefreshing = true
+							scope.launch {
+								onReload(pageOffset)
+								pullRefreshState.snapTo(0f)
+								isRefreshing = false
 							}
 						}
-					}
 
-					Column(
-						modifier = Modifier
-							.pullToRefresh(
+						val holidayEvents = remember {
+							holidays.filter { holiday ->
+								visibleStartDate.isBefore(holiday.end.toJavaLocalDate()) && visibleStartDate.plusDays(
+									numDays.toLong()
+								)
+									.isAfter(holiday.start.toJavaLocalDate())
+							}.flatMap {
+								(it.start..it.end).map { date ->
+									WeekViewEvent<T>(
+										id = 0, // TODO Good idea?
+										title = it.title,
+										eventStyle = it.colorScheme,
+										start = date.atTime(startTime),
+										end = date.atTime(endTime)
+									)
+								}
+							}
+						}
+
+						Column(
+							modifier = Modifier
+								.background(MaterialTheme.colorScheme.surfaceContainerLowest)
+								.pullToRefresh(
+									state = pullRefreshState,
+									enabled = verticalScrollState.value == 0, // Prevent refreshing when flinging to top
+									isRefreshing = isRefreshing,
+									onRefresh = onRefresh
+								)
+						) {
+							WeekViewPullRefreshIndicator(
+								refreshing = loading ?: isRefreshing,
 								state = pullRefreshState,
-								enabled = verticalScrollState.value == 0, // Prevent refreshing when flinging to top
-								isRefreshing = isRefreshing,
-								onRefresh = onRefresh
+								modifier = Modifier
+									.fillMaxWidth()
 							)
-					) {
-						WeekViewPullRefreshIndicator(
-							refreshing = loading ?: isRefreshing,
-							state = pullRefreshState,
-							modifier = Modifier
-								.fillMaxWidth()
-						)
 
-						WeekViewContent(
-							// Potential improvement: Map the event list by individual days to reduce the number of events passed to be rendered
-							events = events.getOrDefault(pageOffset, emptyList()) + holidayEvents,
-							eventContent = eventContent,
-							currentTime = currentTime,
-							startDate = visibleStartDate,
-							numDays = numDays,
-							startTime = startTimeWithOffset,
-							endTime = endTimeWithOffset,
-							endTimeOffset = endTimeOffset,
-							hourHeight = hourHeight * scale,
-							hourList = hourList,
-							dividerWidth = dividerWidth,
-							indicatorColor = colorScheme.indicatorColor,
-							pastBackgroundColor = colorScheme.pastBackgroundColor,
-							futureBackgroundColor = colorScheme.futureBackgroundColor,
-							modifier = Modifier
-								.fillMaxHeight()
-								.onGloballyPositioned { contentHeight = it.size.height }
-								.conditional(enableZoomGesture) {
-									pointerInput(Unit) {
-										detectZoomGesture { centroid, zoom ->
-											val oldScale = scale
-											// Constrain min/max zoom
-											scale = (scale * zoom).coerceIn(0.75f..2f)
+							WeekViewContent(
+								// Potential improvement: Map the event list by individual days to reduce the number of events passed to be rendered
+								events = events.getOrDefault(pageOffset, emptyList()) + holidayEvents,
+								eventContent = { sharedTransitionScope.eventContent(it) },
+								currentTime = currentTime,
+								startDate = visibleStartDate,
+								numDays = numDays,
+								startTime = startTimeWithOffset,
+								endTime = endTimeWithOffset,
+								endTimeOffset = endTimeOffset,
+								hourHeight = hourHeight * scale,
+								hourList = hourList,
+								dividerWidth = dividerWidth,
+								indicatorColor = colorScheme.indicatorColor,
+								pastBackgroundColor = colorScheme.pastBackgroundColor,
+								futureBackgroundColor = colorScheme.futureBackgroundColor,
+								sharedTransitionScope = sharedTransitionScope,
+								modifier = Modifier
+									.fillMaxHeight()
+									.onGloballyPositioned { contentHeight = it.size.height }
+									.conditional(enableZoomGesture) {
+										pointerInput(Unit) {
+											detectZoomGesture { centroid, zoom ->
+												val oldScale = scale
+												// Constrain min/max zoom
+												scale = (scale * zoom).coerceIn(0.75f..2f)
 
-											// Don't move scroll position if no effective zoom occurred
-											val actualZoom = scale / oldScale
-											val scrollY = verticalScrollState.value * actualZoom
+												// Don't move scroll position if no effective zoom occurred
+												val actualZoom = scale / oldScale
+												val scrollY = verticalScrollState.value * actualZoom
 
-											// Center zooming around gesture origin
-											val scrollOffset = (zoom - 1) * (scrollY - centroid.y)
+												// Center zooming around gesture origin
+												val scrollOffset = (zoom - 1) * (scrollY - centroid.y)
 
-											scope.launch {
-												verticalScrollState.scrollTo(scrollY.roundToInt() - scrollOffset.roundToInt())
+												scope.launch {
+													verticalScrollState.scrollTo(scrollY.roundToInt() - scrollOffset.roundToInt())
+												}
 											}
 										}
 									}
-								}
-								.verticalScroll(verticalScrollState)
-						)
+									.verticalScroll(verticalScrollState)
+							)
+						}
 					}
 				}
 			}
@@ -857,17 +882,7 @@ data class WeekViewColorScheme(
 	val indicatorColor: Color
 ) {
 	companion object {
-		//@Composable
-		//fun default(): WeekViewColorScheme = default(MaterialTheme.colorScheme)
 		fun default(): WeekViewColorScheme {
-			return WeekViewColorScheme(
-				pastBackgroundColor = Color(0x40808080),
-				futureBackgroundColor = Color.Transparent,
-				indicatorColor = Color.White
-			)
-		}
-
-		fun default(colorScheme: ColorScheme): WeekViewColorScheme {
 			return WeekViewColorScheme(
 				pastBackgroundColor = Color(0x40808080),
 				futureBackgroundColor = Color.Transparent,

@@ -79,6 +79,7 @@ sealed class EventStyle(
 }
 
 data class WeekViewEvent<T>(
+	var id: Long,
 	var title: CharSequence,
 	var top: CharSequence = "",
 	var bottom: CharSequence = "",
@@ -120,9 +121,10 @@ fun <T> WeekViewEvent(
 	val holidayTextStyle = MaterialTheme.typography.bodyLarge + eventStyle.lessonNameStyle
 
 	Box(
-		modifier = modifier
+		modifier = Modifier
 			.fillMaxSize()
 			.padding(outerPadding)
+			.then(modifier)
 			.clip(RoundedCornerShape(eventStyle.cornerRadius.dp))
 			.drawBehind {
 				if (!isFullDayEvent) {
@@ -208,7 +210,8 @@ private fun LocalDateTime.seconds(zone: TimeZone = TimeZone.currentSystemDefault
 fun EventPreview() {
 	WeekViewStyle {
 		WeekViewEvent(
-			event = WeekViewEvent<String>(
+			event = WeekViewEvent(
+				id = 1,
 				title = "Test",
 				eventStyle = EventStyle.ThemePrimary,
 				start = LocalDateTime.parse("2021-05-18T09:00:00"),
@@ -236,7 +239,8 @@ fun EventStyledPreview() {
 		)
 	) {
 		WeekViewEvent(
-			event = WeekViewEvent<String>(
+			event = WeekViewEvent(
+				id = 1,
 				title = "Styled",
 				eventStyle = EventStyle.ThemeTertiary,
 				start = LocalDateTime.parse("2021-05-18T09:00:00"),
@@ -257,6 +261,7 @@ fun HolidayEventPreview() {
 	WeekViewStyle {
 		WeekViewEvent(
 			event = WeekViewEvent<Nothing>(
+				id = 1,
 				title = "Test Holiday",
 				eventStyle = EventStyle.Transparent,
 				start = LocalDateTime.parse("2021-05-18T00:00:00"),

@@ -54,6 +54,7 @@ sentry = "8.14.0"
 sentry-gradle = "5.7.0"
 transition-ktx = "1.6.0"
 universal-cache = "1.1.8"
+animation = "1.9.2"
 
 
 [libraries]
@@ -152,6 +153,7 @@ plugin-kotlin = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin",
 plugin-ksp = { group = "com.google.devtools.ksp", name = "com.google.devtools.ksp.gradle.plugin", version.ref = "ksp" }
 plugin-room = { group = "androidx.room", name = "room-gradle-plugin", version.ref = "androidx-room" }
 plugin-sentry = { group = "io.sentry", name = "sentry-android-gradle-plugin", version.ref = "sentry-gradle" }
+androidx-animation = { group = "androidx.compose.animation", name = "animation", version.ref = "animation" }
 
 [plugins]
 agp-application = { id = "com.android.application", version.ref = "android-gradle-plugin" }

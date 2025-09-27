@@ -1,10 +1,6 @@
 package com.sapuseven.untis.feature.settings.navigation
 
 import androidx.annotation.StringRes
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
-import androidx.compose.animation.slideInHorizontally
-import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
@@ -25,8 +21,6 @@ import com.sapuseven.untis.feature.settings.fragments.SettingsCategoryNotificati
 import com.sapuseven.untis.feature.settings.fragments.SettingsCategoryStyling
 import com.sapuseven.untis.feature.settings.fragments.SettingsCategoryTimetable
 import kotlinx.serialization.Serializable
-import soup.compose.material.motion.animation.materialSharedAxisXIn
-import soup.compose.material.motion.animation.materialSharedAxisXOut
 
 @Serializable
 data object SettingsRoute {
@@ -64,12 +58,7 @@ fun NavGraphBuilder.settingsScreen(
 	navController: NavHostController,
 ) {
 	navigation<SettingsRoute>(startDestination = SettingsRoute.Categories) {
-		composable<SettingsRoute.Categories>(
-			enterTransition = { slideInHorizontally { it / 2 } + fadeIn() },
-			exitTransition = { materialSharedAxisXOut(true, 30) },
-			popEnterTransition = { materialSharedAxisXIn(false, 30) },
-			popExitTransition = { slideOutHorizontally { it / 2 } + fadeOut() },
-		) { entry ->
+		composable<SettingsRoute.Categories> { entry ->
 			SettingsScreen(
 				onBackPressed = { navController.popBackStack() },
 				onNavigate = { navController.navigate(it) },
@@ -93,6 +82,7 @@ fun NavGraphBuilder.settingsScreen(
 				SettingsCategoryStyling(viewModel)
 			}
 		}
+
 		composable<SettingsRoute.Timetable> { entry ->
 			val args = entry.toRoute<SettingsRoute.Timetable>()
 
@@ -103,6 +93,7 @@ fun NavGraphBuilder.settingsScreen(
 				SettingsCategoryTimetable(viewModel, highlightTitle = args.highlightTitle)
 			}
 		}
+
 		composable<SettingsRoute.Notifications> {
 			SettingsCategoryScreen(
 				navController = navController,

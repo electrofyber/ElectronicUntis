@@ -9,5 +9,7 @@ android {
 
 dependencies {
 	implementation(projects.core.domain)
+	implementation(libs.androidx.compose.animation)
+	implementation(libs.androidx.animation)
 	lintChecks(projects.core.lint)
 }

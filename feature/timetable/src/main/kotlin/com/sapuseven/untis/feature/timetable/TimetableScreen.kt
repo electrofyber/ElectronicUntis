@@ -1,6 +1,9 @@
 package com.sapuseven.untis.feature.timetable
 
 import android.util.Log
+import androidx.compose.animation.AnimatedVisibilityScope
+import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
@@ -12,8 +15,10 @@ import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
@@ -39,18 +44,20 @@ import com.sapuseven.untis.core.ui.functional.bottomInsets
 import com.sapuseven.untis.core.ui.functional.insetsPaddingValues
 import com.sapuseven.untis.feature.timetable.drawer.NavItemNavigation
 import com.sapuseven.untis.feature.timetable.drawer.TimetableDrawer
-import com.sapuseven.untis.feature.timetable.weekview.WeekViewCompose
+import com.sapuseven.untis.feature.timetable.weekview.WeekView
 import com.sapuseven.untis.feature.timetable.weekview.WeekViewStyle
 import kotlinx.coroutines.launch
 import kotlinx.datetime.LocalTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalSharedTransitionApi::class)
 @Composable
 internal fun TimetableScreen(
 	viewModel: TimetableViewModel = hiltViewModel(),
 	featureRoutes: @Composable FeatureRoute.() -> List<FeatureRouteItem>,
+	sharedTransitionScope: SharedTransitionScope,
+	animatedVisibilityScope: AnimatedVisibilityScope,
 	onNavigate: (Any) -> Unit,
 	onUserEdit: (userId: Long?) -> Unit,
 	onElementClick: (id: Long?, type: ElementType?) -> Unit,
@@ -102,6 +109,8 @@ internal fun TimetableScreen(
 		Scaffold(
 			topBar = {
 				CenterAlignedTopAppBar(
+					colors = TopAppBarDefaults.topAppBarColors()
+						.copy(containerColor = MaterialTheme.colorScheme.surfaceContainer),
 					title = {
 						Text(uiState.title)
 					},
@@ -156,7 +165,7 @@ internal fun TimetableScreen(
 				)*/
 
 				WeekViewStyle(uiState.eventStyle) {
-					WeekViewCompose(
+					WeekView(
 						events = uiState.pagerState.events,
 						holidays = uiState.holidays,
 						loading = if (uiState.pagerState.isLoading) true else null,
@@ -189,8 +198,10 @@ internal fun TimetableScreen(
 						//enableZoomGesture = weekViewZoomEnabled,
 						hourHeight = /*state.weekViewPreferences.hourHeight ?:*/ 72.dp,
 						hourList = uiState.hourList,
-						//dividerWidth = viewModel.weekViewPreferences.dividerWidth,
+						dividerWidth = 4f,
 						colorScheme = uiState.colorScheme,
+						sharedTransitionScope = sharedTransitionScope,
+						animatedVisibilityScope = animatedVisibilityScope,
 						modifier = Modifier
 							.fillMaxSize()
 						//.disabled(disabled = needsPersonalTimetable)

@@ -1,5 +1,11 @@
+@file:OptIn(ExperimentalSharedTransitionApi::class)
+
 package com.sapuseven.untis.feature.timetable.navigation
 
+import androidx.compose.animation.EnterTransition
+import androidx.compose.animation.ExitTransition
+import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -71,6 +77,7 @@ fun NavGraphBuilder.timetableScreen(
 	onElementClick: (id: Long?, type: ElementType?) -> Unit,
 	onUserEdit: (Long?) -> Unit,
 	onPeriodDetails: (id: Long, type: ElementType, timetablePage: Int, periodIds: List<Long>, initialPeriod: Int) -> Unit,
+	sharedTransitionScope: SharedTransitionScope,
 	featureRoutes: @Composable FeatureRoute.() -> List<FeatureRouteItem>,
 	periodDetailsDestination: NavGraphBuilder.() -> Unit,
 ) {
@@ -101,7 +108,9 @@ fun NavGraphBuilder.timetableScreen(
 				onNavigate = navController::navigate,
 				onUserEdit = onUserEdit,
 				onElementClick = onElementClick,
-				onPeriodDetails = onPeriodDetails
+				onPeriodDetails = onPeriodDetails,
+				sharedTransitionScope = sharedTransitionScope,
+				animatedVisibilityScope = this
 			)
 		}
 		periodDetailsDestination()
@@ -110,10 +119,15 @@ fun NavGraphBuilder.timetableScreen(
 
 fun NavGraphBuilder.periodDetailsScreen(
 	onBackClick: () -> Unit,
-	onElementClick: (id: Long?, type: ElementType?) -> Unit
+	onElementClick: (id: Long?, type: ElementType?) -> Unit,
+	sharedTransitionScope: SharedTransitionScope,
 ) {
 	composable<PeriodDetailsRoute>(
 		typeMap = mapOf(typeOf<ElementType>() to NavType.EnumType(ElementType::class.java)),
+		enterTransition = { EnterTransition.None },
+		exitTransition  = { ExitTransition.None },
+		popEnterTransition = { EnterTransition.None },
+		popExitTransition  = { ExitTransition.None }
 	) { entry ->
 		val route = entry.toRoute<PeriodDetailsRoute>()
 		val viewModel = hiltViewModel<PeriodDetailsViewModel, PeriodDetailsViewModel.Factory>(
@@ -130,6 +144,9 @@ fun NavGraphBuilder.periodDetailsScreen(
 
 		PeriodDetailsScreen(
 			viewModel = viewModel,
+			sharedTransitionScope = sharedTransitionScope,
+			animatedVisibilityScope = this,
+			initialPeriodId = route.periodIds[route.initialPeriod],
 			onBackClick = onBackClick,
 			onElementClick = onElementClick
 		)
