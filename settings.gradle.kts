@@ -33,16 +33,20 @@ rootProject.name = "betteruntis"
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 
 include(":app")
-include(":feature:glance")
-include(":feature:login")
-include(":feature:timetable")
 include(":core:api")
 include(":core:data")
 include(":core:database")
 include(":core:datastore")
 include(":core:domain")
+include(":core:lint")
 include(":core:model")
 include(":core:ui")
+include(":feature:glance")
+include(":feature:infocenter")
+include(":feature:login")
+include(":feature:roomfinder")
+include(":feature:settings")
+include(":feature:timetable")
 
 include(":material-color-utils")
 
@@ -53,4 +57,3 @@ check(JavaVersion.current().isCompatibleWith(JavaVersion.VERSION_17)) {
     https://developer.android.com/build/jdks#jdk-config-in-studio
     """.trimIndent()
 }
-include(":core:lint")
