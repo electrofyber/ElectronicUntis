@@ -92,7 +92,10 @@ aboutLibraries {
 
 dependencies {
 	//implementation(projects.feature.glance)
+	implementation(projects.feature.infocenter)
 	implementation(projects.feature.login)
+	implementation(projects.feature.roomfinder)
+	implementation(projects.feature.settings)
 	implementation(projects.feature.timetable)
 
 	implementation(projects.core.api)

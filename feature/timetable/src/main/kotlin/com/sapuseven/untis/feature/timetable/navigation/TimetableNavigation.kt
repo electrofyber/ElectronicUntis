@@ -3,14 +3,18 @@ package com.sapuseven.untis.feature.timetable.navigation
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.runtime.Composable
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
+import androidx.navigation.NavHostController
 import androidx.navigation.NavOptionsBuilder
 import androidx.navigation.NavType
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import androidx.navigation.toRoute
+import com.sapuseven.untis.core.domain.navigation.FeatureRoute
+import com.sapuseven.untis.core.domain.navigation.FeatureRouteItem
 import com.sapuseven.untis.core.model.timetable.ElementType
 import com.sapuseven.untis.feature.timetable.TimetableScreen
 import com.sapuseven.untis.feature.timetable.TimetableViewModel
@@ -63,9 +67,11 @@ fun NavController.navigateToPeriodDetails(
 }
 
 fun NavGraphBuilder.timetableScreen(
+	navController: NavHostController,
 	onElementClick: (id: Long?, type: ElementType?) -> Unit,
 	onUserEdit: (Long?) -> Unit,
 	onPeriodDetails: (id: Long, type: ElementType, timetablePage: Int, periodIds: List<Long>, initialPeriod: Int) -> Unit,
+	featureRoutes: @Composable FeatureRoute.() -> List<FeatureRouteItem>,
 	periodDetailsDestination: NavGraphBuilder.() -> Unit,
 ) {
 	navigation<TimetableBaseRoute>(startDestination = TimetableRoute()) {
@@ -91,9 +97,11 @@ fun NavGraphBuilder.timetableScreen(
 
 			TimetableScreen(
 				viewModel = viewModel,
+				featureRoutes = featureRoutes,
+				onNavigate = navController::navigate,
 				onUserEdit = onUserEdit,
 				onElementClick = onElementClick,
-				onPeriodDetails = onPeriodDetails,
+				onPeriodDetails = onPeriodDetails
 			)
 		}
 		periodDetailsDestination()

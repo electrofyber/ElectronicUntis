@@ -48,9 +48,11 @@ import kotlinx.coroutines.launch
 @Composable
 fun TimetableDrawer(
 	viewModel: TimetableDrawerViewModel = hiltViewModel(),
+	navRoutes: List<NavItemNavigation> = emptyList(),
 	drawerState: DrawerState = rememberDrawerState(initialValue = DrawerValue.Closed),
 	personalTimetableSelected: Boolean = false,
 	displayedElement: Element? = null,
+	onNavigate: (Any) -> Unit,
 	onElementPicked: (Element?) -> Unit,
 	content: @Composable () -> Unit
 ) {
@@ -185,16 +187,17 @@ fun TimetableDrawer(
 				DrawerText(stringResource(id = R.string.feature_timetable_navigation_timetables))
 
 				DrawerItems(
+					navigationItems = navRoutes,
 					disableTypeSelection = displayedElement == null || isBookmarkSelected,
 					displayedElement = displayedElement,
 					onElementTypeClick = {
 						scope.launch { drawerState.close() }
 						showElementPicker = it
 					},
-					/*onNavigationClick = { item ->
+					onNavigationClick = { item ->
 						scope.launch { drawerState.close() }
-						onItemPicked(item)
-					}*/
+						onNavigate(item.route)
+					}
 				)
 			}
 		},
@@ -258,10 +261,11 @@ fun TimetableDrawer(
 
 @Composable
 fun DrawerItems(
+	navigationItems: List<NavItemNavigation> = emptyList(),
 	disableTypeSelection: Boolean = false,
 	displayedElement: Element? = null,
 	onElementTypeClick: (ElementType) -> Unit,
-	//onNavigationClick: (item: NavItemNavigation) -> Unit,
+	onNavigationClick: (item: NavItemNavigation) -> Unit,
 ) {
 	val navItemsElementTypes = listOf(
 		NavItemTimetable(
@@ -281,8 +285,7 @@ fun DrawerItems(
 		),
 	)
 
-	/*val navItemsNavigation = listOf(
-		NavItemNavigation(
+		/*NavItemNavigation(
 			icon = painterResource(id = R.drawable.all_infocenter),
 			label = stringResource(id = R.string.activity_title_info_center),
 			route = AppRoutes.InfoCenter
@@ -291,13 +294,7 @@ fun DrawerItems(
 			icon = painterResource(id = R.drawable.all_search_rooms),
 			label = stringResource(id = R.string.activity_title_free_rooms),
 			route = AppRoutes.RoomFinder
-		),
-		NavItemNavigation(
-			icon = painterResource(id = R.drawable.all_settings),
-			label = stringResource(id = R.string.activity_title_settings),
-			route = AppRoutes.Settings
-		)
-	)*/
+		),*/
 
 	navItemsElementTypes.forEach { item ->
 		NavigationDrawerItem(
@@ -311,7 +308,7 @@ fun DrawerItems(
 
 	DrawerDivider()
 
-	/*navItemsNavigation.forEach { item ->
+	navigationItems.forEach { item ->
 		NavigationDrawerItem(
 			icon = { Icon(item.icon, contentDescription = null) },
 			label = { Text(item.label) },
@@ -319,7 +316,7 @@ fun DrawerItems(
 			onClick = { onNavigationClick(item) },
 			modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding)
 		)
-	}*/
+	}
 }
 
 @Composable

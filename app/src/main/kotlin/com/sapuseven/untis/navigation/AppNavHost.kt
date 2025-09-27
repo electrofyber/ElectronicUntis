@@ -7,6 +7,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
 import com.sapuseven.untis.feature.login.navigation.loginScreen
 import com.sapuseven.untis.feature.login.navigation.navigateToLoginDataInput
+import com.sapuseven.untis.feature.settings.navigation.settingsRoute
+import com.sapuseven.untis.feature.settings.navigation.settingsScreen
 import com.sapuseven.untis.feature.timetable.navigation.navigateToPeriodDetails
 import com.sapuseven.untis.feature.timetable.navigation.navigateToTimetable
 import com.sapuseven.untis.feature.timetable.navigation.periodDetailsScreen
@@ -31,15 +33,25 @@ fun AppNavHost(
 		)
 
 		timetableScreen(
+			navController = navController,
 			onElementClick = navController::navigateToTimetable,
 			onUserEdit = navController::navigateToLoginDataInput,
-			onPeriodDetails = navController::navigateToPeriodDetails
+			onPeriodDetails = navController::navigateToPeriodDetails,
+			featureRoutes = { listOf(
+				//route(InfoCenterRoute),
+				//route(RoomFinderRoute),
+				settingsRoute(),
+			)}
 		) {
 			periodDetailsScreen(
 				onBackClick = navController::popBackStack,
 				onElementClick = navController::navigateToTimetable,
 			)
 		}
+
+		settingsScreen(
+			navController = navController
+		)
 
 		/*infoCenterScreen(
 			onBackClick = navController::popBackStack
@@ -77,16 +89,10 @@ fun AppNavHost(
 			},
 		) {
 			RoomFinder()
-		}
-
-		navigation<AppRoutes.Settings>(
-			startDestination = AppRoutes.Settings.Categories,
-			enterTransition = { materialSharedAxisXIn(true, 100) },
-			exitTransition = { materialSharedAxisXOut(true, 100) },
-			popEnterTransition = { materialSharedAxisXIn(false, 100) },
-			popExitTransition = { materialSharedAxisXOut(false, 100) }
-		) {
-			settingsNav(navController = navController)
 		}*/
+
+		settingsScreen(
+			navController = navController
+		)
 	}
 }

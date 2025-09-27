@@ -22,18 +22,22 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.sapuseven.untis.core.domain.navigation.FeatureRoute
+import com.sapuseven.untis.core.domain.navigation.FeatureRouteItem
 import com.sapuseven.untis.core.model.timetable.ElementType
 import com.sapuseven.untis.core.model.timetable.Period
 import com.sapuseven.untis.core.ui.common.ProfileSelectorAction
 import com.sapuseven.untis.core.ui.functional.None
 import com.sapuseven.untis.core.ui.functional.bottomInsets
 import com.sapuseven.untis.core.ui.functional.insetsPaddingValues
+import com.sapuseven.untis.feature.timetable.drawer.NavItemNavigation
 import com.sapuseven.untis.feature.timetable.drawer.TimetableDrawer
 import com.sapuseven.untis.feature.timetable.weekview.WeekViewCompose
 import com.sapuseven.untis.feature.timetable.weekview.WeekViewStyle
@@ -45,14 +49,12 @@ import kotlinx.datetime.toLocalDateTime
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun TimetableScreen(
+	viewModel: TimetableViewModel = hiltViewModel(),
+	featureRoutes: @Composable FeatureRoute.() -> List<FeatureRouteItem>,
+	onNavigate: (Any) -> Unit,
 	onUserEdit: (userId: Long?) -> Unit,
 	onElementClick: (id: Long?, type: ElementType?) -> Unit,
 	onPeriodDetails: (id: Long, type: ElementType, timetablePage: Int, periodIds: List<Long>, initialPeriod: Int) -> Unit,
-	viewModel: TimetableViewModel = hiltViewModel()
-	//factory: TimetableViewModel.Factory = hiltEntryPointViewModelFactory() // explained below
-	/*viewModel: TimetableViewModel = hiltViewModel<TimetableViewModel, TimetableViewModel.Factory>(
-		creationCallback = { factory -> factory.create(colorScheme, typography) }
-	)*/
 ) {
 	val scope = rememberCoroutineScope()
 	val uiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -84,6 +86,15 @@ internal fun TimetableScreen(
 		drawerState = drawerState,
 		displayedElement = uiState.currentElement,
 		personalTimetableSelected = uiState.currentElementIsPersonal,
+		navRoutes = FeatureRoute.featureRoutes()
+			.map {
+				NavItemNavigation(
+					painterResource(it.icon),
+					stringResource(it.label),
+					it.route
+				)
+			},
+		onNavigate = onNavigate,
 		onElementPicked = {
 			onElementClick(it?.id, it?.type)
 		}
