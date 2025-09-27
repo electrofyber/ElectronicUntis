@@ -127,7 +127,10 @@ class TimetableViewModel @AssistedInject constructor(
 			}
 
 			_uiState.update {
-				it.copy(currentElement = elementFromArgs ?: user.element)
+				it.copy(
+					currentElement = elementFromArgs ?: user.element,
+					currentElementIsPersonal = elementFromArgs == null
+				)
 			}
 		}
 	}
@@ -194,6 +197,7 @@ data class TimetableUiState(
 
 	// Timetable
 	val currentElement: Element? = null,
+	val currentElementIsPersonal: Boolean = false,
 
 	// WeekView
 	val eventStyle: WeekViewEventStyle = WeekViewEventStyle.default(),

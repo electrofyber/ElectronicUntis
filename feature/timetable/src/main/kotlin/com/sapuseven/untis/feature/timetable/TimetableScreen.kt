@@ -83,6 +83,7 @@ internal fun TimetableScreen(
 	TimetableDrawer(
 		drawerState = drawerState,
 		displayedElement = uiState.currentElement,
+		personalTimetableSelected = uiState.currentElementIsPersonal,
 		onElementPicked = {
 			onElementClick(it?.id, it?.type)
 		}

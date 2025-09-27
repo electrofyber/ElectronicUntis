@@ -1,6 +1,7 @@
 package com.sapuseven.untis.feature.timetable.drawer
 
 import androidx.activity.compose.BackHandler
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.height
@@ -32,11 +33,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.sapuseven.untis.core.model.timetable.Element
 import com.sapuseven.untis.core.model.timetable.ElementType
+import com.sapuseven.untis.core.ui.animation.fullscreenDialogAnimationEnter
+import com.sapuseven.untis.core.ui.animation.fullscreenDialogAnimationExit
+import com.sapuseven.untis.core.ui.dialogs.ElementPickerDialogFullscreen
 import com.sapuseven.untis.feature.timetable.R
 import kotlinx.coroutines.launch
 
@@ -44,7 +49,7 @@ import kotlinx.coroutines.launch
 fun TimetableDrawer(
 	viewModel: TimetableDrawerViewModel = hiltViewModel(),
 	drawerState: DrawerState = rememberDrawerState(initialValue = DrawerValue.Closed),
-	personalElement: Element? = null,
+	personalTimetableSelected: Boolean = false,
 	displayedElement: Element? = null,
 	onElementPicked: (Element?) -> Unit,
 	content: @Composable () -> Unit
@@ -78,22 +83,7 @@ fun TimetableDrawer(
 			periodElement?.let {
 				//onShowTimetable(it to state.timetableDatabaseInterface.getLongName(it))
 			}
-		}
-
-	LaunchedEffect(state.drawerState) {
-		snapshotFlow { state.drawerState.isOpen }
-			.distinctUntilChanged()
-			.drop(1)
-			.collect {
-				Log.i("Sentry", "Drawer isOpen: ${state.drawerState.isOpen}")
-				Breadcrumb().apply {
-					category = "ui.drawer"
-					level = SentryLevel.INFO
-					setData("isOpen", state.drawerState.isOpen)
-					Sentry.addBreadcrumb(this)
-				}
-			}
-	}*/
+		}*/
 
 	BackHandler(enabled = drawerState.isOpen) {
 		scope.launch {
@@ -123,7 +113,7 @@ fun TimetableDrawer(
 						)
 					},
 					label = { Text(stringResource(id = R.string.feature_timetable_personal_timetable)) },
-					selected = displayedElement != null && displayedElement == personalElement,
+					selected = personalTimetableSelected,
 					onClick = {
 						scope.launch {
 							drawerState.close()
@@ -164,7 +154,7 @@ fun TimetableDrawer(
 							}
 						},
 						label = { Text(text = viewModel.getBookmarkDisplayName(bookmark)) },
-						selected = displayedElement?.equals(bookmark) == true,
+						selected = !personalTimetableSelected && displayedElement?.equals(bookmark) == true,
 						onClick = {
 							scope.launch {
 								scope.launch { drawerState.close() }
@@ -190,6 +180,8 @@ fun TimetableDrawer(
 					modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding)
 				)
 
+				DrawerDivider()
+
 				DrawerText(stringResource(id = R.string.feature_timetable_navigation_timetables))
 
 				DrawerItems(
@@ -209,33 +201,27 @@ fun TimetableDrawer(
 		content = content
 	)
 
-	/*AnimatedVisibility(
+	AnimatedVisibility(
 		visible = showElementPicker != null,
-		//enter = fullscreenDialogAnimationEnter(),
-		//exit = fullscreenDialogAnimationExit()
+		enter = fullscreenDialogAnimationEnter(),
+		exit = fullscreenDialogAnimationExit()
 	) {
 		ElementPickerDialogFullscreen(
-			title = { /*TODO*/ },
+			title = { Text(stringResource(R.string.feature_timetable_elementpicker_timetable_select)) },
 			elements = elements,
 			onDismiss = { showElementPicker = null },
-			onSelect = { item ->
-				item?.let {
-					onElementPicked(item)
-				} ?: run {
-					onElementPicked(null)
-				}
-			},
+			onSelect = onElementPicked,
 			initialType = showElementPicker
 		)
 	}
 
 	AnimatedVisibility(
 		visible = bookmarksElementPicker != null,
-		//enter = fullscreenDialogAnimationEnter(),
-		//exit = fullscreenDialogAnimationExit()
+		enter = fullscreenDialogAnimationEnter(),
+		exit = fullscreenDialogAnimationExit()
 	) {
 		ElementPickerDialogFullscreen(
-			title = { /*TODO*/ },
+			title = { Text(stringResource(R.string.feature_timetable_add_bookmark)) },
 			elements = elements,
 			hideTypeSelectionPersonal = true,
 			onDismiss = { bookmarksElementPicker = null },
@@ -246,7 +232,7 @@ fun TimetableDrawer(
 			},
 			initialType = bookmarksElementPicker
 		)
-	}*/
+	}
 
 	viewModel.bookmarkDeleteDialog?.let { bookmark ->
 		AlertDialog(
@@ -350,6 +336,28 @@ fun DrawerText(text: String) {
 		text = text,
 		style = MaterialTheme.typography.labelMedium,
 		modifier = Modifier.padding(start = 28.dp, top = 16.dp, bottom = 8.dp)
+	)
+}
+
+@Preview
+@Composable
+fun NavigationDrawerItemWithBadgePreview() {
+	NavigationDrawerItem(
+		icon = { Icon(painterResource(com.sapuseven.untis.core.ui.R.drawable.core_ui_classes), contentDescription = null) },
+		badge = {
+			IconButton(
+				onClick = { }
+			) {
+				Icon(
+					painter = painterResource(id = R.drawable.feature_timetable_bookmark_remove),
+					contentDescription = "Remove Bookmark"
+				) //TODO: Extract String resource
+			}
+		},
+		label = { Text(text = "Drawer item") },
+		selected = true,
+		onClick = {},
+		modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding)
 	)
 }
 
