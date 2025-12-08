@@ -155,7 +155,7 @@ fun SettingsCategoryGeneral(viewModel: SettingsViewModel) {
 		Preference(
 			title = { Text(stringResource(R.string.feature_settings_preference_reports_info)) },
 			summary = { Text(stringResource(R.string.feature_settings_preference_reports_info_desc)) },
-			leadingContent = { Icon(painterResource(R.drawable.settings_info), null) }
+			leadingContent = { Icon(painterResource(R.drawable.feature_settings_info), null) }
 		)
 
 		SwitchPreference(

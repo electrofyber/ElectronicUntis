@@ -62,7 +62,7 @@ fun SettingsScreen(
 				summary = { Text(stringResource(id = R.string.feature_settings_preferences_general_summary)) },
 				icon = {
 					Icon(
-						painter = painterResource(id = R.drawable.settings_general),
+						painter = painterResource(id = R.drawable.feature_settings_general),
 						contentDescription = null
 					)
 				},
@@ -115,7 +115,7 @@ fun SettingsScreen(
 				summary = { Text(stringResource(id = R.string.feature_settings_preferences_info_summary)) },
 				icon = {
 					Icon(
-						painter = painterResource(id = R.drawable.settings_info),
+						painter = painterResource(id = R.drawable.feature_settings_info),
 						contentDescription = null
 					)
 				},
