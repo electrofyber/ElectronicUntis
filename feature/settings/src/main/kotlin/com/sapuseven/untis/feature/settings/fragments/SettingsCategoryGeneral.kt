@@ -200,7 +200,8 @@ fun SettingsCategoryGeneral(viewModel: SettingsViewModel) {
 			leadingContent = { Icon(painterResource(R.drawable.feature_settings_general_animation), null) },
 			settingsDataSource = viewModel.userSettingsDataSource,
 			value = { it.enableSharedTransitions },
-			onValueChange = { enableSharedTransitions = it }
+			onValueChange = { enableSharedTransitions = it },
+			enabledCondition = { false } // TODO not yet implemented
 		)
 	}
 

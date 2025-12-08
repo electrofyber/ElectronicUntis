@@ -59,7 +59,7 @@ fun SettingsCategoryAbout(navController: NavController) {
 		Preference(
 			title = { Text(stringResource(R.string.feature_settings_preference_info_github)) },
 			summary = {
-				//Text(URL_GITHUB_REPOSITORY)
+				Text(URL_GITHUB_REPOSITORY.removePrefix("https://github.com/"))
 			},
 			onClick = {
 				uriHandler.openUri(URL_GITHUB_REPOSITORY)
