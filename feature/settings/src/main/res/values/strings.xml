@@ -430,4 +430,7 @@
 	<string name="feature_settings_automute_zen_rule_name">School - %1$s</string>
 	<string name="feature_settings_preference_automute_preferences">Auto-mute preferences</string>
 	<string name="feature_settings_infocenter_messages_details_error">Error loading message details</string>
+    <string name="feature_settings_preference_category_animations">Animations</string>
+	<string name="feature_settings_preference_shared_transitions_enable">Enable shared transitions</string>
+	<string name="feature_settings_preference_shared_transitions_enable_desc">Animates elements between screens.\nMay cause brief slowdowns or visual glitches.</string>
 </resources>

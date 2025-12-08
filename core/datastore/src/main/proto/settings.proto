@@ -78,6 +78,7 @@ message UserSettings {
   bool infocenterAbsencesSortReverse = 51;
   AbsencesTimeRange infocenterAbsencesTimeRange = 52;
   repeated TimetableElement bookmarks = 57;
+  bool enableSharedTransitions = 58 [default = true];
 }
 
 message GlobalSettings {

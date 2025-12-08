@@ -2,7 +2,6 @@ package com.sapuseven.untis.feature.settings.fragments
 
 import android.annotation.SuppressLint
 import android.content.Intent
-import android.net.Uri
 import android.os.Build
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -12,6 +11,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.core.net.toUri
 import com.sapuseven.compose.protostore.ui.preferences.Preference
 import com.sapuseven.compose.protostore.ui.preferences.PreferenceGroup
 import com.sapuseven.compose.protostore.ui.preferences.SwitchPreference
@@ -74,7 +74,8 @@ fun SettingsCategoryGeneral(viewModel: SettingsViewModel) {
 	}*/
 
 	if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-		val visible by viewModel.userSettingsDataSource.getSettings().map { it.automuteEnable }.collectAsState(initial = false)
+		val visible by viewModel.userSettingsDataSource.getSettings().map { it.automuteEnable }
+			.collectAsState(initial = false)
 		ScheduleExactAlarmInfoMessage(
 			visible = visible,
 			primaryText = R.string.feature_settings_preference_automute_exact_alarms_unavailable,
@@ -154,16 +155,12 @@ fun SettingsCategoryGeneral(viewModel: SettingsViewModel) {
 		Preference(
 			title = { Text(stringResource(R.string.feature_settings_preference_reports_info)) },
 			summary = { Text(stringResource(R.string.feature_settings_preference_reports_info_desc)) },
-			leadingContent = {
-				Icon(
-					painter = painterResource(R.drawable.settings_info),
-					contentDescription = null
-				)
-			}
+			leadingContent = { Icon(painterResource(R.drawable.settings_info), null) }
 		)
 
 		SwitchPreference(
 			title = { Text(stringResource(R.string.feature_settings_preference_reports_enable)) },
+			leadingContent = { Icon(painterResource(R.drawable.feature_settings_general_reports), null) },
 			settingsDataSource = viewModel.globalSettingsDataSource,
 			value = { it.errorReportingEnable },
 			onValueChange = { errorReportingEnable = it }
@@ -172,6 +169,7 @@ fun SettingsCategoryGeneral(viewModel: SettingsViewModel) {
 		SwitchPreference(
 			title = { Text(stringResource(R.string.feature_settings_preference_reports_breadcrumbs)) },
 			summary = { Text(stringResource(R.string.feature_settings_preference_reports_breadcrumbs_desc)) },
+			leadingContent = { Icon(painterResource(R.drawable.feature_settings_general_reports_breadcrumbs), null) },
 			settingsDataSource = viewModel.globalSettingsDataSource,
 			value = { it.errorReportingEnableBreadcrumbs },
 			onValueChange = { errorReportingEnableBreadcrumbs = it },
@@ -195,16 +193,28 @@ fun SettingsCategoryGeneral(viewModel: SettingsViewModel) {
 		}*/
 	}
 
+	PreferenceGroup(stringResource(R.string.feature_settings_preference_category_animations)) {
+		SwitchPreference(
+			title = { Text(stringResource(R.string.feature_settings_preference_shared_transitions_enable)) },
+			summary = { Text(stringResource(R.string.feature_settings_preference_shared_transitions_enable_desc)) },
+			leadingContent = { Icon(painterResource(R.drawable.feature_settings_general_animation), null) },
+			settingsDataSource = viewModel.userSettingsDataSource,
+			value = { it.enableSharedTransitions },
+			onValueChange = { enableSharedTransitions = it }
+		)
+	}
+
 	if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
 		val packageName = LocalContext.current.packageName
 		val context = LocalContext.current
 		Preference(
 			title = { Text(text = stringResource(id = R.string.feature_settings_preference_app_language)) },
+			leadingContent = { Icon(painterResource(R.drawable.feature_settings_general_language), null) },
 			onClick = {
 				context.startActivity(
 					Intent(
 						android.provider.Settings.ACTION_APP_LOCALE_SETTINGS,
-						Uri.parse("package:$packageName")
+						"package:$packageName".toUri()
 					)
 				)
 			}
