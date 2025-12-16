@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
-	<style name="NightAdjusted.Theme.BetterUntis" parent="android:Theme.Material.NoActionBar" />
-
-	<style name="NightAdjusted.Theme.Splash" parent="Theme.SplashScreen">
-		<item name="android:windowLightStatusBar" tools:targetApi="23">false</item>
+	<style name="Theme.BetterUntis.Splash" parent="Theme.SplashScreen">
+		<item name="android:windowLightStatusBar">false</item>
 		<item name="android:windowLightNavigationBar" tools:targetApi="27">false</item>
+
+		<item name="windowSplashScreenAnimatedIcon">@mipmap/ic_launcher</item>
+		<item name="postSplashScreenTheme">@style/Theme.BetterUntis</item>
 	</style>
 </resources>
