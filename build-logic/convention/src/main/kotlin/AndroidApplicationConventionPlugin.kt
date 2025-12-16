@@ -16,8 +16,6 @@ class AndroidApplicationConventionPlugin : Plugin<Project> {
 
 			extensions.configure<ApplicationExtension> {
 				configureKotlinAndroid(this)
-				defaultConfig.minSdk = 21
-				defaultConfig.targetSdk = 35
 
 				// Per-app language support
 				@Suppress("UnstableApiUsage")

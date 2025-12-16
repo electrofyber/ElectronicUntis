@@ -20,6 +20,7 @@ import com.sapuseven.untis.feature.timetable.navigation.navigateToPeriodDetails
 import com.sapuseven.untis.feature.timetable.navigation.navigateToTimetable
 import com.sapuseven.untis.feature.timetable.navigation.periodDetailsScreen
 import com.sapuseven.untis.feature.timetable.navigation.timetableScreen
+import com.sapuseven.untis.feature.timetable.navigation.userListScreen
 
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
@@ -34,32 +35,16 @@ fun AppNavHost(
 			navController = navController,
 			startDestination = startDestination,
 			enterTransition = {
-				/*if (initialState.destination.route in topLevelScreens && targetState.destination.route in topLevelScreens) {
-					fadeIn(tween(250))
-				} else {*/
 				fadeIn(tween(250)) + slideInHorizontally { it / 2 }
-				//}
 			},
 			exitTransition = {
-				/*if (initialState.destination.route in topLevelScreens && targetState.destination.route in topLevelScreens) {
-					fadeOut(tween(200))
-				} else {*/
 				fadeOut(tween(200)) + slideOutHorizontally { -it / 2 }
-				//}
 			},
 			popEnterTransition = {
-				/*if ((initialState.destination.route in topLevelScreens || initialState.destination.route?.startsWith("search/") == true) && targetState.destination.route in topLevelScreens) {
-					fadeIn(tween(250))
-				} else {*/
 				fadeIn(tween(250)) + slideInHorizontally { -it / 2 }
-				//}
 			},
 			popExitTransition = {
-				/*if ((initialState.destination.route in topLevelScreens || initialState.destination.route?.startsWith("search/") == true) && targetState.destination.route in topLevelScreens) {
-					fadeOut(tween(200))
-				} else {*/
 				fadeOut(tween(200)) + slideOutHorizontally { it / 2 }
-				//}
 			},
 		) {
 			loginScreen(
@@ -72,7 +57,6 @@ fun AppNavHost(
 			timetableScreen(
 				navController = navController,
 				onElementClick = navController::navigateToTimetable,
-				onUserEdit = navController::navigateToLoginDataInput,
 				onPeriodDetails = navController::navigateToPeriodDetails,
 				sharedTransitionScope = this@SharedTransitionLayout,
 				featureRoutes = {
@@ -81,14 +65,21 @@ fun AppNavHost(
 						//route(RoomFinderRoute),
 						settingsRoute(),
 					)
+				},
+				userListDestination = {
+					userListScreen(
+						onBackClick = navController::popBackStack,
+						onUserEdit = navController::navigateToLoginDataInput,
+					)
+				},
+				periodDetailsDestination = {
+					periodDetailsScreen(
+						onBackClick = navController::popBackStack,
+						onElementClick = navController::navigateToTimetable,
+						sharedTransitionScope = this@SharedTransitionLayout,
+					)
 				}
-			) {
-				periodDetailsScreen(
-					onBackClick = navController::popBackStack,
-					onElementClick = navController::navigateToTimetable,
-					sharedTransitionScope = this@SharedTransitionLayout,
-				)
-			}
+			)
 
 			settingsScreen(
 				navController = navController

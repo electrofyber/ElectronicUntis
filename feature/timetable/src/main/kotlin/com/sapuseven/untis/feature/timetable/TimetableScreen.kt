@@ -38,7 +38,7 @@ import com.sapuseven.untis.core.domain.navigation.FeatureRoute
 import com.sapuseven.untis.core.domain.navigation.FeatureRouteItem
 import com.sapuseven.untis.core.model.timetable.ElementType
 import com.sapuseven.untis.core.model.timetable.Period
-import com.sapuseven.untis.core.ui.common.ProfileSelectorAction
+import com.sapuseven.untis.core.ui.common.UserSelectorAction
 import com.sapuseven.untis.core.ui.functional.None
 import com.sapuseven.untis.core.ui.functional.bottomInsets
 import com.sapuseven.untis.core.ui.functional.insetsPaddingValues
@@ -59,7 +59,7 @@ internal fun TimetableScreen(
 	sharedTransitionScope: SharedTransitionScope,
 	animatedVisibilityScope: AnimatedVisibilityScope,
 	onNavigate: (Any) -> Unit,
-	onUserEdit: (userId: Long?) -> Unit,
+	onUserListClick: () -> Unit,
 	onElementClick: (id: Long?, type: ElementType?) -> Unit,
 	onPeriodDetails: (id: Long, type: ElementType, timetablePage: Int, periodIds: List<Long>, initialPeriod: Int) -> Unit,
 ) {
@@ -130,7 +130,7 @@ internal fun TimetableScreen(
 								viewModel.debugInfoRepository.getColorSchemeDebugInfo(MaterialTheme.colorScheme.toString())
 							)*/
 
-						ProfileSelectorAction(
+						UserSelectorAction(
 							users = uiState.userList,
 							currentSelection = uiState.user,
 							showProfileActions = true,
@@ -139,7 +139,7 @@ internal fun TimetableScreen(
 							},
 							onActionEdit = {
 								viewModel.editUsers()
-								onUserEdit(null) // TODO show management dialog
+								onUserListClick()
 							}
 						)
 					}
@@ -268,25 +268,7 @@ internal fun TimetableScreen(
 	}
 
 	// TODO: Implement a nicer animation (see https://m3.material.io/components/dialogs/guidelines#007536b9-76b1-474a-a152-2f340caaff6f)
-	/*AnimatedVisibility(
-		visible = viewModel.timetableItemDetailsDialog != null,
-		enter = fullscreenDialogAnimationEnter(),
-		exit = fullscreenDialogAnimationExit()
-	) {
-		TimetableItemDetailsDialog(
-			periodItems = remember {
-				viewModel.timetableItemDetailsDialog?.first?.mapNotNull { it.data } ?: emptyList()
-			},
-			initialPage = remember {
-				viewModel.timetableItemDetailsDialog?.second ?: 0
-			},
-			onDismiss = {
-				viewModel.timetableItemDetailsDialog = null
-				it?.let { viewModel.showElement(it) }
-			}
-		)
-	}
-
+	/*
 	AnimatedVisibility(
 		visible = viewModel.profileManagementDialog,
 		enter = fullscreenDialogAnimationEnter(),

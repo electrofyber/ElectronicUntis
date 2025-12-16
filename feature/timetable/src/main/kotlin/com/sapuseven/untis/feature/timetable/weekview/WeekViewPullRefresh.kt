@@ -161,6 +161,9 @@ fun WeekViewPullRefreshIndicator_Refreshing_Preview() {
 		override val distanceFraction: Float
 			get() = 1f
 
+		override val isAnimating: Boolean
+			get() = true
+
 		override suspend fun animateToHidden() {}
 
 		override suspend fun animateToThreshold() {}
@@ -186,6 +189,9 @@ fun WeekViewPullRefreshIndicator_CollapsingRefreshing_Preview() {
 	val state = object : PullToRefreshState {
 		override val distanceFraction: Float
 			get() = 1f
+
+		override val isAnimating: Boolean
+			get() = true
 
 		override suspend fun animateToHidden() {}
 

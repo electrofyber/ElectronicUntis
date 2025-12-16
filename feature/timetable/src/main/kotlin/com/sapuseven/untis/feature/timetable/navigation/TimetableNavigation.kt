@@ -9,6 +9,8 @@ import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.runtime.Composable
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
@@ -26,6 +28,7 @@ import com.sapuseven.untis.feature.timetable.TimetableScreen
 import com.sapuseven.untis.feature.timetable.TimetableViewModel
 import com.sapuseven.untis.feature.timetable.details.PeriodDetailsScreen
 import com.sapuseven.untis.feature.timetable.details.PeriodDetailsViewModel
+import com.sapuseven.untis.feature.timetable.userlist.UserListDialogContent
 import kotlinx.serialization.Serializable
 import kotlin.reflect.typeOf
 
@@ -51,6 +54,9 @@ data class PeriodDetailsRoute(
 	private companion object
 }
 
+@Serializable
+data object UserListRoute
+
 fun NavController.navigateToTimetable(
 	elementId: Long? = null,
 	elementType: ElementType? = null,
@@ -72,13 +78,17 @@ fun NavController.navigateToPeriodDetails(
 	navigate(route = PeriodDetailsRoute(id, type, page, periodIds, initialPeriod))
 }
 
+fun NavController.navigateToUserList() {
+	navigate(route = UserListRoute)
+}
+
 fun NavGraphBuilder.timetableScreen(
 	navController: NavHostController,
 	onElementClick: (id: Long?, type: ElementType?) -> Unit,
-	onUserEdit: (Long?) -> Unit,
 	onPeriodDetails: (id: Long, type: ElementType, timetablePage: Int, periodIds: List<Long>, initialPeriod: Int) -> Unit,
 	sharedTransitionScope: SharedTransitionScope,
 	featureRoutes: @Composable FeatureRoute.() -> List<FeatureRouteItem>,
+	userListDestination: NavGraphBuilder.() -> Unit,
 	periodDetailsDestination: NavGraphBuilder.() -> Unit,
 ) {
 	navigation<TimetableBaseRoute>(startDestination = TimetableRoute()) {
@@ -106,14 +116,42 @@ fun NavGraphBuilder.timetableScreen(
 				viewModel = viewModel,
 				featureRoutes = featureRoutes,
 				onNavigate = navController::navigate,
-				onUserEdit = onUserEdit,
+				onUserListClick = navController::navigateToUserList,
 				onElementClick = onElementClick,
 				onPeriodDetails = onPeriodDetails,
 				sharedTransitionScope = sharedTransitionScope,
 				animatedVisibilityScope = this
 			)
 		}
+
+		userListDestination()
 		periodDetailsDestination()
+	}
+}
+
+fun NavGraphBuilder.userListScreen(
+	onBackClick: () -> Unit,
+	onUserEdit: (Long?) -> Unit,
+) {
+	composable<UserListRoute>(
+		typeMap = mapOf(typeOf<ElementType>() to NavType.EnumType(ElementType::class.java)),
+		enterTransition = {
+			fadeIn(tween(250)) + slideInVertically { it / 2 }
+		},
+		exitTransition = {
+			fadeOut(tween(200)) + slideOutVertically { -it / 2 }
+		},
+		popEnterTransition = {
+			fadeIn(tween(250)) + slideInVertically { -it / 2 }
+		},
+		popExitTransition = {
+			fadeOut(tween(200)) + slideOutVertically { it / 2 }
+		},
+	) {
+		UserListDialogContent(
+			onBackClick = onBackClick,
+			onUserEdit = onUserEdit
+		)
 	}
 }
 
