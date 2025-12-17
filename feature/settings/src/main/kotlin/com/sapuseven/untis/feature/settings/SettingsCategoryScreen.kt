@@ -1,8 +1,12 @@
 package com.sapuseven.untis.feature.settings
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeDrawing
+import androidx.compose.foundation.layout.windowInsetsBottomHeight
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -22,7 +26,7 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
-import com.sapuseven.untis.core.ui.functional.bottomInsets
+import com.sapuseven.untis.core.ui.functional.None
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -57,16 +61,17 @@ fun SettingsCategoryScreen(
 				},
 				scrollBehavior = scrollBehavior
 			)
-		}
+		},
+		contentWindowInsets = WindowInsets.None
 	) { innerPadding ->
 		Column(
 			modifier = Modifier
 				.padding(innerPadding)
-				.bottomInsets()
 				.fillMaxSize()
 				.verticalScroll(rememberScrollState())
 		) {
 			content(viewModel)
+			Spacer(Modifier.windowInsetsBottomHeight(WindowInsets.safeDrawing))
 		}
 	}
 }
