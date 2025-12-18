@@ -45,7 +45,7 @@
     <string name="feature_timetable_menu_infocenter_events">Termine</string>
     <string name="feature_timetable_menu_infocenter_absences">Abwesenheiten</string>
     <string name="feature_timetable_mainactivitydrawer_dropdown_show">Alle Profile anzeigen</string>
-    <string name="feature_timetable_mainactivitydrawer_profile_add">Ein Profil hinzufügen</string>
+    <string name="feature_timetable_user_add">Ein Profil hinzufügen</string>
     <string name="feature_timetable_mainactivitydrawer_profile_delete_hint">Lange auf ein Profil tippen, um zu bearbeiten</string>
     <string name="feature_timetable_main_dialog_delete_profile_title">Profil löschen?</string>
     <string name="feature_timetable_main_dialog_delete_profile_message">Bist du sicher, dass du dein Profil mit dem Benutzer %1$s an der Schule %2$s löschen möchtest\?</string>
@@ -316,7 +316,7 @@
     <string name="feature_timetable_lessontopic_none">(Kein Lehrstoff)</string>
     <string name="feature_timetable_main_dialog_itemdetails_timeformat">%1$s - %2$s</string>
     <string name="feature_timetable_delete_bookmark_dialog_message">Dieses Lesezeichen löschen?</string>
-    <string name="feature_timetable_core_ui_profile_edit">Profile bearbeiten</string>
+    <string name="feature_timetable_user_list">Profile bearbeiten</string>
     <string name="feature_timetable_add_bookmark">Stundenplan hinzufügen</string>
     <string name="feature_timetable_favourites">Favoriten</string>
     <string name="feature_timetable_preferences_theme_color">Designfarbe</string>
@@ -333,7 +333,7 @@
     <string name="feature_timetable_widget_disclaimer_title">Beta-Funktion</string>
     <string name="feature_timetable_widget_disclaimer_text">Die Widget-Funktion befindet sich noch in der Entwicklungsphase und funktioniert unter Umständen nicht auf jedem Gerät.</string>
     <string name="feature_timetable_login_demo">Zuerst ausprobieren!</string>
-    <string name="feature_timetable_mainactivitydrawer_profile_edit_hint">Tippe auf ein Profil, um es zu bearbeiten</string>
+    <string name="feature_timetable_user_edit_hint">Tippe auf ein Profil, um es zu bearbeiten</string>
     <string name="feature_timetable_lesson_online">Findet online statt</string>
     <string name="feature_timetable_open_link">Link öffnen</string>
     <string name="feature_timetable_preference_dialog_permission_alarms_title">Berechtigung erforderlich</string>

@@ -62,9 +62,9 @@ class UserRepositoryImpl @Inject constructor(
 
 	override suspend fun getUserById(userId: Long) = userDao.getById(userId)?.toDomain()
 
-	override suspend fun deleteUser(user: User) {
-		userDao.delete(user.id)
-		if (user == getActiveUser()) {
+	override suspend fun deleteUser(userId: Long) {
+		userDao.delete(userId)
+		if (userId == getActiveUser().id) {
 			val remainingUsers = userDao.getAllAsync().map(UserEntity::toDomain)
 			if (remainingUsers.isEmpty()) {
 				switchUser(remainingUsers.firstOrNull()?.id)

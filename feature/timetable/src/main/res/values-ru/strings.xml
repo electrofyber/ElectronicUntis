@@ -30,7 +30,7 @@
     <string name="feature_timetable_preference_background_exam">Уроки с тестами</string>
     <string name="feature_timetable_classes">Классы</string>
     <string name="feature_timetable_no">Нет</string>
-    <string name="feature_timetable_mainactivitydrawer_profile_add">Добавить профиль</string>
+    <string name="feature_timetable_user_add">Добавить профиль</string>
     <string name="feature_timetable_logindatainput_proxy_host">Прокси-сервер (необязательно)</string>
     <string name="feature_timetable_teachers">Учителя</string>
     <string name="feature_timetable_cancel">Отмена</string>
@@ -135,7 +135,7 @@
     <string name="feature_timetable_errors_button_dismiss">Отклонить все</string>
     <string name="feature_timetable_delete_bookmark_dialog_message">Вы точно хотите удалить эту закладку\?</string>
     <string name="feature_timetable_main_dialog_delete_profile_message">Вы уверены, что хотите удалить свой профиль пользователя %1$s в школе %2$s?</string>
-    <string name="feature_timetable_core_ui_profile_edit">Редактировать профили</string>
+    <string name="feature_timetable_user_list">Редактировать профили</string>
     <string name="feature_timetable_time_diff_just_now">только что</string>
     <string name="feature_timetable_preference_notifications_visibility_long">Длинное имя</string>
     <string name="feature_timetable_preference_timetable_hide_cancelled">Скрыть отменённые уроки</string>
@@ -366,7 +366,7 @@
         <item quantity="many">Эта комната свободна в течение %d часов.</item>
         <item quantity="other">Эта комната свободна в течение %d часов.</item>
     </plurals>
-    <string name="feature_timetable_mainactivitydrawer_profile_edit_hint">Нажмите на профиль для редактирования</string>
+    <string name="feature_timetable_user_edit_hint">Нажмите на профиль для редактирования</string>
     <string name="feature_timetable_lesson_online">Проводится онлайн</string>
     <string name="feature_timetable_open_link">Открыть ссылку</string>
     <string name="feature_timetable_preference_dialog_permission_alarms_title">Необходимо разрешение</string>

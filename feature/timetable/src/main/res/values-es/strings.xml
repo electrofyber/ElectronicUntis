@@ -164,9 +164,9 @@
     <string name="feature_timetable_main_dialog_update_profile_title">Se requiere actualizar el perfil</string>
     <string name="feature_timetable_main_press_back_double">Pulse Atrás dos veces para salir</string>
     <string name="feature_timetable_time_diff_just_now">justo ahora</string>
-    <string name="feature_timetable_core_ui_profile_edit">Editar perfiles</string>
+    <string name="feature_timetable_user_list">Editar perfiles</string>
     <string name="feature_timetable_mainactivitydrawer_dropdown_show">Mostrar lista de perfiles</string>
-    <string name="feature_timetable_mainactivitydrawer_profile_add">Añadir un perfil</string>
+    <string name="feature_timetable_user_add">Añadir un perfil</string>
     <string name="feature_timetable_notifications_channel_backgrounderrors">Errores en segundo plano</string>
     <string name="feature_timetable_notifications_text_message_rooms">Aula: %1$s</string>
     <string name="feature_timetable_notifications_text_error_title">No se pudo cargar el horario</string>

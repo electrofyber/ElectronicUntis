@@ -59,7 +59,7 @@
     <string name="feature_timetable_main_dialog_delete_profile_message">Ziur zaude %2$s eskolako %1$s erabiltzailea duen profila ezabatu nahi duzula\?</string>
     <string name="feature_timetable_main_dialog_delete_profile_title">Profila ezabatu nahi duzu\?</string>
     <string name="feature_timetable_mainactivitydrawer_profile_delete_hint">Ukitu luze profil bat editatzeko</string>
-    <string name="feature_timetable_mainactivitydrawer_profile_add">Gehitu profila</string>
+    <string name="feature_timetable_user_add">Gehitu profila</string>
     <string name="feature_timetable_mainactivitydrawer_dropdown_show">Erakutsi profil-zerrenda</string>
     <string name="feature_timetable_menu_infocenter_events">Gertaerak</string>
     <string name="feature_timetable_menu_infocenter_messagesofday">Mezuak</string>

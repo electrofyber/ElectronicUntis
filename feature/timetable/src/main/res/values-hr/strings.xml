@@ -216,7 +216,7 @@
     <string name="feature_timetable_main_dialog_delete_profile_message">Stvarno želiš izbrisati tvoj profil s korisnikom %1$s u školi %2$s\?</string>
     <string name="feature_timetable_main_dialog_delete_profile_title">Izbrisati profil\?</string>
     <string name="feature_timetable_mainactivitydrawer_profile_delete_hint">Dodirni dugo za uređivanje profila</string>
-    <string name="feature_timetable_mainactivitydrawer_profile_add">Dodaj profil</string>
+    <string name="feature_timetable_user_add">Dodaj profil</string>
     <string name="feature_timetable_mainactivitydrawer_dropdown_show">Pokaži popis profila</string>
     <string name="feature_timetable_menu_infocenter_absences">Izostanci</string>
     <string name="feature_timetable_menu_infocenter_events">Događaji</string>
@@ -302,13 +302,13 @@
     <string name="feature_timetable_errors_button_report">Prijavi sve</string>
     <string name="feature_timetable_infocenter_absence_excused">Opravdano</string>
     <string name="feature_timetable_infocenter_absence_unexcused">Neopravdano</string>
-    <string name="feature_timetable_core_ui_profile_edit">Uredi profile</string>
+    <string name="feature_timetable_user_list">Uredi profile</string>
     <string name="feature_timetable_preference_info_license">Licenca</string>
     <string name="feature_timetable_preference_info_privacy">Eksterni sadržaj</string>
     <string name="feature_timetable_preference_info_privacy_desc">Doprinositelji se učitavaju s GitHuba. Za daljnje informacije pročitaj njihovu zaštitu privatnosti.</string>
     <string name="feature_timetable_preferences_theme_color">Boja teme</string>
     <string name="feature_timetable_preferences_theme_color_system">Sustavska boja teme</string>
-    <string name="feature_timetable_mainactivitydrawer_profile_edit_hint">Dodirni profil koji želiš urediti</string>
+    <string name="feature_timetable_user_edit_hint">Dodirni profil koji želiš urediti</string>
     <string name="feature_timetable_errors_button_dismiss">Odbaci sve</string>
     <string name="feature_timetable_infocenter_absences_filter_time_ranges">Vremenski raspon</string>
     <string name="feature_timetable_preference_automute_mute_priority">Nemoj dopustiti da prioritetni događaji ignoriraju automatsko isključivanje zvuka</string>

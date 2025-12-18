@@ -215,7 +215,7 @@
     <string name="feature_timetable_main_dialog_delete_profile_message">Êtes-vous sûr·e de vouloir supprimer votre profil avec l’utilisateur %1$s de l’école %2$s \?</string>
     <string name="feature_timetable_main_dialog_delete_profile_title">Supprimer le profil \?</string>
     <string name="feature_timetable_mainactivitydrawer_profile_delete_hint">Restez appuyé sur un profil pour le modifier</string>
-    <string name="feature_timetable_mainactivitydrawer_profile_add">Ajouter un profil</string>
+    <string name="feature_timetable_user_add">Ajouter un profil</string>
     <string name="feature_timetable_mainactivitydrawer_dropdown_show">Afficher la liste des profils</string>
     <string name="feature_timetable_menu_infocenter_absences">Absences</string>
     <string name="feature_timetable_menu_infocenter_events">Évènements</string>
@@ -286,7 +286,7 @@
     <string name="feature_timetable_lessontopic_edit">Editer le sujet de la leçon</string>
     <string name="feature_timetable_preference_automute_mute_priority">Ne pas permettre aux événements prioritaires d\'ignorer la mise en sourdine automatique</string>
     <string name="feature_timetable_errors_button_dismiss">Rejeter tout</string>
-    <string name="feature_timetable_core_ui_profile_edit">Modifier les profils</string>
+    <string name="feature_timetable_user_list">Modifier les profils</string>
     <string name="feature_timetable_settings_recommend_title">Recommander BetterUntis</string>
     <string name="feature_timetable_preference_automute_minimum_break_length_summary">Ne pas rétablir le son de l\'appareil pendant les pauses d\'une durée inférieure à la durée spécifiée (en minutes)</string>
     <string name="feature_timetable_settings_dialog_url_open_title">Aucune application compatible trouvée</string>
@@ -312,7 +312,7 @@
     <string name="feature_timetable_datepicker_month_next">Le mois prochain</string>
     <string name="feature_timetable_datepicker_month_previous">Le mois précédent</string>
     <string name="feature_timetable_favourites">Favoris</string>
-    <string name="feature_timetable_mainactivitydrawer_profile_edit_hint">Tapez sur un profil pour le modifier</string>
+    <string name="feature_timetable_user_edit_hint">Tapez sur un profil pour le modifier</string>
     <string name="feature_timetable_dialog_open_settings">Ouvrir les paramètres</string>
     <string name="feature_timetable_infocenter_absences_filter_sort">Ordre de tri</string>
     <string name="feature_timetable_infocenter_absences_filter_oldest_first">Le plus vieux en premier</string>

@@ -136,7 +136,7 @@
     <string name="mainactivitydrawer_dropdown_show">Profillista megjelenítése</string>
     <string name="mainactivitydrawer_profile_add">Profil hozzáadása</string>
     <string name="mainactivitydrawer_profile_delete_hint">Hosszan nyomj meg egy profilt a szerkesztéshez</string>
-    <string name="core_ui_profile_edit">Profilok szerkesztése</string>
+    <string name="core_ui_userlist">Profilok szerkesztése</string>
     <string name="maindrawer_bookmarks_add">Órarend hozzáadása</string>
     <string name="menu_infocenter_events">Események</string>
     <string name="menu_infocenter_messagesofday">Üzenetek</string>

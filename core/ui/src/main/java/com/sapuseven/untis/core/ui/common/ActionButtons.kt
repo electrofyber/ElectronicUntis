@@ -40,7 +40,7 @@ fun UserSelectorAction(
 
 	if (!showProfileActions && hideIfSingleProfile && users.size <= 1) return
 
-	IconButton(onClick = { expanded = true }, modifier = Modifier.testTag("action_profiles")) {
+	IconButton(onClick = { expanded = true }, modifier = Modifier.testTag("action_users")) {
 		Icon(
 			imageVector = Icons.Outlined.AccountCircle,
 			contentDescription = stringResource(id = R.string.core_ui_profiles_show)
@@ -87,7 +87,7 @@ fun UserSelectorAction(
 				containerColor = MenuDefaults.groupVibrantContainerColor
 			) {
 				DropdownMenuItem(
-					text = { Text(stringResource(id = R.string.core_ui_profile_edit)) },
+					text = { Text(stringResource(id = R.string.core_ui_userlist)) },
 					colors = MenuDefaults.selectableItemVibrantColors(),
 					shapes = MenuDefaults.itemShape(users.size + 0, itemCount),
 					selected = false,

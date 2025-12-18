@@ -18,6 +18,7 @@ import com.sapuseven.untis.feature.settings.navigation.settingsRoute
 import com.sapuseven.untis.feature.settings.navigation.settingsScreen
 import com.sapuseven.untis.feature.timetable.navigation.navigateToPeriodDetails
 import com.sapuseven.untis.feature.timetable.navigation.navigateToTimetable
+import com.sapuseven.untis.feature.timetable.navigation.navigateToUserDelete
 import com.sapuseven.untis.feature.timetable.navigation.periodDetailsScreen
 import com.sapuseven.untis.feature.timetable.navigation.timetableScreen
 import com.sapuseven.untis.feature.timetable.navigation.userListScreen
@@ -70,6 +71,7 @@ fun AppNavHost(
 					userListScreen(
 						onBackClick = navController::popBackStack,
 						onUserEdit = navController::navigateToLoginDataInput,
+						onUserDelete = navController::navigateToUserDelete,
 					)
 				},
 				periodDetailsDestination = {

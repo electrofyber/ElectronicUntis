@@ -23,8 +23,10 @@
 	<string name="feature_timetable_dialog_crash_copied">Crash log copied to clipboard.</string>
 	<string name="feature_timetable_dialog_crash_title">Crash log found</string>
 	<string name="feature_timetable_dialog_datepicker_button_today">Today</string>
-	<string name="feature_timetable_dialog_error_message">Request ID: %1$d\nError code: %2$d\nError message: %3$s</string>
 	<string name="feature_timetable_dialog_error_title">Error information</string>
+	<string name="feature_timetable_dialog_error_message">Request ID: %1$d\nError code: %2$d\nError message: %3$s</string>
+	<string name="feature_timetable_dialog_user_delete_title">Delete profile?</string>
+	<string name="feature_timetable_dialog_user_delete_message">Are you sure you want to delete this profile?</string>
 	<string name="feature_timetable_edit">Edit</string>
 	<string name="feature_timetable_error">Error</string>
 	<string name="feature_timetable_api_error_generic">API Error: %1$s</string>
@@ -180,9 +182,8 @@
 	<string name="feature_timetable_main_press_back_double">Press BACK twice to exit</string>
 	<string name="feature_timetable_time_diff_just_now">just now</string>
 	<string name="feature_timetable_mainactivitydrawer_dropdown_show">Show profile list</string>
-	<string name="feature_timetable_mainactivitydrawer_profile_add">Add a profile</string>
-	<string name="feature_timetable_mainactivitydrawer_profile_delete_hint">Long-press a profile to edit</string>
-	<string name="feature_timetable_core_ui_profile_edit">Edit profiles</string>
+	<string name="feature_timetable_user_add">Add a new user</string>
+	<string name="feature_timetable_user_list">Edit users</string>
 	<string name="feature_timetable_add_bookmark">Add Timetable</string>
 	<string name="feature_timetable_menu_infocenter_absences">Absences</string>
 	<string name="feature_timetable_menu_infocenter_events">Events</string>
@@ -387,7 +388,7 @@
 		<item quantity="other">%1$d contributions</item>
 	</plurals>
 	<string name="feature_timetable_favourites">Favourites</string>
-	<string name="feature_timetable_mainactivitydrawer_profile_edit_hint">Tap on a profile to edit</string>
+	<string name="feature_timetable_user_edit_hint">Tap on a user to edit</string>
 	<string name="feature_timetable_lesson_online">Taking place online</string>
 	<string name="feature_timetable_open_link">Open link</string>
 	<string name="feature_timetable_preference_dialog_permission_alarms_title">Permission needed</string>

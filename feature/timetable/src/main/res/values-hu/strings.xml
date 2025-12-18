@@ -134,9 +134,9 @@
     <string name="feature_timetable_main_go_to_settings">Menjen a beállításokhoz</string>
     <string name="feature_timetable_main_press_back_double">A kilépéshez nyomja meg kétszer a VISSZA gombot</string>
     <string name="feature_timetable_mainactivitydrawer_dropdown_show">Profillista megjelenítése</string>
-    <string name="feature_timetable_mainactivitydrawer_profile_add">Profil hozzáadása</string>
+    <string name="feature_timetable_user_add">Profil hozzáadása</string>
     <string name="feature_timetable_mainactivitydrawer_profile_delete_hint">Hosszan nyomj meg egy profilt a szerkesztéshez</string>
-    <string name="feature_timetable_core_ui_profile_edit">Profilok szerkesztése</string>
+    <string name="feature_timetable_user_list">Profilok szerkesztése</string>
     <string name="feature_timetable_add_bookmark">Órarend hozzáadása</string>
     <string name="feature_timetable_menu_infocenter_events">Események</string>
     <string name="feature_timetable_menu_infocenter_messagesofday">Üzenetek</string>

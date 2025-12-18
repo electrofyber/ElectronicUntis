@@ -52,7 +52,7 @@ interface UserRepository {
 	 * Switches the currently active user.
 	 * If the user is `null`, it will clear the active user.
 	 *
-	 * @param userId The id of the user to switch to.
+	 * @param userId The ID of the user to switch to.
 	 */
 	suspend fun switchUser(userId: Long?)
 
@@ -61,9 +61,9 @@ interface UserRepository {
 	 * If the user to delete is active,
 	 * it will switch to the first available user or clear the active user.
 	 *
-	 * @param user An instance of the user to delete.
+	 * @param userId The ID of the user to delete.
 	 */
-	suspend fun deleteUser(user: User)
+	suspend fun deleteUser(userId: Long)
 
 	/**
 	 * Updates a user in the database.

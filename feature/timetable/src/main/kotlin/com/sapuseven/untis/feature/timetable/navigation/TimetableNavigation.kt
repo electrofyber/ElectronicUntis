@@ -9,7 +9,9 @@ import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.runtime.Composable
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -19,6 +21,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.NavOptionsBuilder
 import androidx.navigation.NavType
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.dialog
 import androidx.navigation.compose.navigation
 import androidx.navigation.toRoute
 import com.sapuseven.untis.core.domain.navigation.FeatureRoute
@@ -28,7 +31,9 @@ import com.sapuseven.untis.feature.timetable.TimetableScreen
 import com.sapuseven.untis.feature.timetable.TimetableViewModel
 import com.sapuseven.untis.feature.timetable.details.PeriodDetailsScreen
 import com.sapuseven.untis.feature.timetable.details.PeriodDetailsViewModel
-import com.sapuseven.untis.feature.timetable.userlist.UserListDialogContent
+import com.sapuseven.untis.feature.timetable.user.UserDeleteDialog
+import com.sapuseven.untis.feature.timetable.user.UserListDialogContent
+import com.sapuseven.untis.feature.timetable.user.UserListViewModel
 import kotlinx.serialization.Serializable
 import kotlin.reflect.typeOf
 
@@ -57,6 +62,11 @@ data class PeriodDetailsRoute(
 @Serializable
 data object UserListRoute
 
+@Serializable
+data class UserDeleteRoute(
+	val id: Long
+)
+
 fun NavController.navigateToTimetable(
 	elementId: Long? = null,
 	elementType: ElementType? = null,
@@ -80,6 +90,10 @@ fun NavController.navigateToPeriodDetails(
 
 fun NavController.navigateToUserList() {
 	navigate(route = UserListRoute)
+}
+
+fun NavController.navigateToUserDelete(id: Long) {
+	navigate(route = UserDeleteRoute(id))
 }
 
 fun NavGraphBuilder.timetableScreen(
@@ -132,6 +146,7 @@ fun NavGraphBuilder.timetableScreen(
 fun NavGraphBuilder.userListScreen(
 	onBackClick: () -> Unit,
 	onUserEdit: (Long?) -> Unit,
+	onUserDelete: (Long) -> Unit,
 ) {
 	composable<UserListRoute>(
 		typeMap = mapOf(typeOf<ElementType>() to NavType.EnumType(ElementType::class.java)),
@@ -139,10 +154,10 @@ fun NavGraphBuilder.userListScreen(
 			fadeIn(tween(250)) + slideInVertically { it / 2 }
 		},
 		exitTransition = {
-			fadeOut(tween(200)) + slideOutVertically { -it / 2 }
+			fadeOut(tween(200)) + slideOutHorizontally { -it / 2 }
 		},
 		popEnterTransition = {
-			fadeIn(tween(250)) + slideInVertically { -it / 2 }
+			fadeIn(tween(250)) + slideInHorizontally { -it / 2 }
 		},
 		popExitTransition = {
 			fadeOut(tween(200)) + slideOutVertically { it / 2 }
@@ -150,7 +165,23 @@ fun NavGraphBuilder.userListScreen(
 	) {
 		UserListDialogContent(
 			onBackClick = onBackClick,
-			onUserEdit = onUserEdit
+			onUserEdit = onUserEdit,
+			onUserDelete = onUserDelete,
+		)
+	}
+
+	dialog<UserDeleteRoute> { backStackEntry ->
+		val route = backStackEntry.toRoute<UserDeleteRoute>()
+		val viewModel: UserListViewModel = hiltViewModel(backStackEntry)
+
+		UserDeleteDialog(
+			onConfirm = {
+				viewModel.deleteUser(route.id)
+				onBackClick()
+			},
+			onDismiss = {
+				onBackClick()
+			}
 		)
 	}
 }
@@ -166,8 +197,8 @@ fun NavGraphBuilder.periodDetailsScreen(
 		exitTransition  = { ExitTransition.None },
 		popEnterTransition = { EnterTransition.None },
 		popExitTransition  = { ExitTransition.None }
-	) { entry ->
-		val route = entry.toRoute<PeriodDetailsRoute>()
+	) { backStackEntry ->
+		val route = backStackEntry.toRoute<PeriodDetailsRoute>()
 		val viewModel = hiltViewModel<PeriodDetailsViewModel, PeriodDetailsViewModel.Factory>(
 			key = "period-${route.type}-${route.id}-${route.page}-${route.periodIds.hashCode()}"
 		) { factory ->

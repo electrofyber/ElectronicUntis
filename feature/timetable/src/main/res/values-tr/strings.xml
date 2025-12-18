@@ -126,7 +126,7 @@
     <string name="feature_timetable_main_dialog_delete_profile_message">%2$s okulundan %1$s kullanıcı profilini silmek istediğinize emin misiniz\?</string>
     <string name="feature_timetable_main_dialog_delete_profile_title">Profil silinsin mi\?</string>
     <string name="feature_timetable_mainactivitydrawer_profile_delete_hint">Profili düzenlemek için basılı tut</string>
-    <string name="feature_timetable_mainactivitydrawer_profile_add">Profil ekle</string>
+    <string name="feature_timetable_user_add">Profil ekle</string>
     <string name="feature_timetable_mainactivitydrawer_dropdown_show">Profil listesini göster</string>
     <string name="feature_timetable_menu_infocenter_absences">Devamsızlık</string>
     <string name="feature_timetable_menu_infocenter_events">Etkinlikler</string>
@@ -273,7 +273,7 @@
     <string name="feature_timetable_activity_title_messenger">Sohbet</string>
     <string name="feature_timetable_preference_category_timetable_range">Zaman Çizelgesi Aralığı</string>
     <string name="feature_timetable_logindatainput_key_saved">Anahtar veya Şifre (kaydedilmiş)</string>
-    <string name="feature_timetable_core_ui_profile_edit">Profilleri düzenle</string>
+    <string name="feature_timetable_user_list">Profilleri düzenle</string>
     <string name="feature_timetable_infocenter_absences_timerange">%1$s - %2$s</string>
     <string name="feature_timetable_preference_automute_allow_priority">Öncelikli olayların sessizliği yok saymasına izin ver</string>
     <string name="feature_timetable_dialog_absences_save">Devamsızlık kontrolünü gönderin</string>
