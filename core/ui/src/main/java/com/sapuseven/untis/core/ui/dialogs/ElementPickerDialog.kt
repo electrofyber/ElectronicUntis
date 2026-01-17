@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -39,8 +40,8 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.mutableStateSetOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -61,6 +62,7 @@ import com.sapuseven.untis.core.ui.R
 import com.sapuseven.untis.core.ui.common.AbbreviatedText
 import com.sapuseven.untis.core.ui.common.NavigationBarInset
 import com.sapuseven.untis.core.ui.common.disabled
+import com.sapuseven.untis.core.ui.functional.None
 import com.sapuseven.untis.core.ui.functional.insetsPaddingValues
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -77,15 +79,10 @@ fun ElementPickerDialogFullscreen(
 	onMultiSelect: (selectedItems: List<Element>) -> Unit = {},
 	additionalActions: (@Composable () -> Unit) = {}
 ) {
+	val selection = remember { mutableStateSetOf<Element>() }
 	var selectedType by remember { mutableStateOf(initialType) }
 	var showSearch by remember { mutableStateOf(false) }
 	var search by remember { mutableStateOf("") }
-
-	val items = remember(selectedType) {
-		mutableStateMapOf<Element, Boolean>().apply {
-			elements[selectedType]?.forEach { put(it, false) }
-		}
-	}
 
 	BackHandler {
 		onDismiss(false)
@@ -170,18 +167,16 @@ fun ElementPickerDialogFullscreen(
 
 					if (multiSelect) {
 						IconButton(onClick = {
-							onMultiSelect(items.filter { it.value }.keys.toList())
+							onMultiSelect(selection.toList())
 							onDismiss(true)
 						}) {
-							Icon(
-								imageVector = Icons.Outlined.Check,
-								contentDescription = "TODO"
-							)
+							Icon(Icons.Outlined.Check, "TODO")
 						}
 					}
 				}
 			)
-		}
+		},
+		contentWindowInsets = WindowInsets.None
 	) { innerPadding ->
 		Column(
 			modifier = Modifier
@@ -193,7 +188,8 @@ fun ElementPickerDialogFullscreen(
 				multiSelect = multiSelect,
 				onDismiss = onDismiss,
 				onSelect = onSelect,
-				items = items,
+				elements = elements,
+				selection = selection,
 				filter = search,
 				modifier = Modifier
 					.fillMaxWidth()
@@ -223,13 +219,8 @@ fun ElementPickerDialog(
 	onDismiss: (success: Boolean) -> Unit = {},
 	onSelect: (selectedItem: Element?) -> Unit = {}
 ) {
+	val selection = remember { mutableStateSetOf<Element>() }
 	var selectedType by remember { mutableStateOf(initialType) }
-
-	val items = remember(selectedType) {
-		mutableStateMapOf<Element, Boolean>().apply {
-			elements[selectedType]?.forEach { put(it, false) }
-		}
-	}
 
 	Dialog(onDismissRequest = { onDismiss(false) }) {
 		Surface(
@@ -255,7 +246,8 @@ fun ElementPickerDialog(
 					selectedType = selectedType,
 					onDismiss = onDismiss,
 					onSelect = onSelect,
-					items = items,
+					elements = elements,
+					selection = selection,
 					modifier = Modifier
 						.fillMaxWidth()
 						.weight(1f)
@@ -282,10 +274,18 @@ fun ElementPickerElements(
 	modifier: Modifier,
 	onDismiss: (success: Boolean) -> Unit = {},
 	onSelect: (selectedItem: Element?) -> Unit = {},
-	items: MutableMap<Element, Boolean>,
+	elements: Map<ElementType, List<Element>>,
+	selection: MutableSet<Element>,
 	filter: String = "",
 	contentPadding: PaddingValues = PaddingValues(0.dp)
 ) {
+	val visibleItems = remember(selectedType, filter, elements) {
+		elements[selectedType]
+			?.filter { it.shortName.contains(filter, true) }
+			?.sortedWith(compareBy({ !it.timetableAllowed }, { it.shortName }))
+			.orEmpty()
+	}
+
 	Box(
 		contentAlignment = Alignment.Center,
 		modifier = modifier
@@ -297,17 +297,8 @@ fun ElementPickerElements(
 				contentPadding = contentPadding
 			) {
 				items(
-					items = items.keys
-						.map {
-							object {
-								val element = it
-								val name = it.shortName
-								val enabled = it.timetableAllowed
-							}
-						}
-						.filter { it.name.contains(filter, true) }
-						.sortedWith(compareBy({ !it.enabled }, { it.name })),
-					key = { it.hashCode() }
+					items = visibleItems,
+					key = { it.id }          // ← your Element must have a stable id
 				) { item ->
 					val interactionSource = remember { MutableInteractionSource() }
 
@@ -316,34 +307,39 @@ fun ElementPickerElements(
 					) {
 						if (multiSelect)
 							Checkbox(
-								checked = items[item.element] == true,
-								onCheckedChange = { items[item.element] = it },
+								checked = selection.contains(item),
+								onCheckedChange = { checked ->
+									if (checked) selection += item
+									else selection -= item
+								},
 								interactionSource = interactionSource,
-								enabled = item.enabled
+								enabled = item.timetableAllowed
 							)
 
 						Text(
-							text = item.name,
+							text = item.shortName,
 							style = MaterialTheme.typography.bodyLarge,
 							modifier = Modifier
 								.clickable(
 									interactionSource = interactionSource,
 									indication = if (!multiSelect) LocalIndication.current else null,
 									role = Role.Checkbox,
-									enabled = item.enabled
+									enabled = item.timetableAllowed
 								) {
-									onSelect(item.element)
-									if (multiSelect)
-										items[item.element] = items[item.element] == false
-									else
+									if (multiSelect) {
+										if (selection.contains(item)) selection -= item
+										else selection += item
+									} else {
+										onSelect(item)
 										onDismiss(true)
+									}
 								}
 								.weight(1f)
 								.padding(
 									vertical = 16.dp,
 									horizontal = if (!multiSelect) 16.dp else 0.dp
 								)
-								.disabled(!item.enabled)
+								.disabled(!item.timetableAllowed)
 						)
 					}
 				}
