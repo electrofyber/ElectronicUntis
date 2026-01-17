@@ -39,7 +39,8 @@ class UntisTimetableRepository @Inject constructor(
 	override fun getTimetable(
 		user: User,
 		params: TimetableRepository.TimetableParams,
-		fromCache: FromCache
+		fromCache: FromCache,
+		maxAge: Long?,
 	): Flow<Timetable> {
 		return CachedSource<TimetableRepository.TimetableParams, TimetableResult>(
 			source = { params ->
@@ -59,6 +60,7 @@ class UntisTimetableRepository @Inject constructor(
 		).getRaw(
 			params = params,
 			fromCache = fromCache.toData(),
+			maxAge = maxAge,
 			additionalKey = user.id
 		).map { result ->
 			if (!result.fromCache) {

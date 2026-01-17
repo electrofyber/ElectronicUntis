@@ -12,8 +12,11 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
+import com.sapuseven.untis.core.model.timetable.ElementType
 import com.sapuseven.untis.feature.login.navigation.loginScreen
 import com.sapuseven.untis.feature.login.navigation.navigateToLoginDataInput
+import com.sapuseven.untis.feature.roomfinder.navigation.roomFinderRoute
+import com.sapuseven.untis.feature.roomfinder.navigation.roomFinderScreen
 import com.sapuseven.untis.feature.settings.navigation.settingsRoute
 import com.sapuseven.untis.feature.settings.navigation.settingsScreen
 import com.sapuseven.untis.feature.timetable.navigation.navigateToPeriodDetails
@@ -62,8 +65,8 @@ fun AppNavHost(
 				sharedTransitionScope = this@SharedTransitionLayout,
 				featureRoutes = {
 					listOf(
-						//route(InfoCenterRoute),
-						//route(RoomFinderRoute),
+						//infoCenterRoute(),
+						roomFinderRoute(),
 						settingsRoute(),
 					)
 				},
@@ -81,6 +84,11 @@ fun AppNavHost(
 						sharedTransitionScope = this@SharedTransitionLayout,
 					)
 				}
+			)
+
+			roomFinderScreen(
+				navController = navController,
+				onRoomClick = { navController.navigateToTimetable(it, ElementType.ROOM) }
 			)
 
 			settingsScreen(
@@ -106,28 +114,7 @@ fun AppNavHost(
 				},
 			) {
 				InfoCenter()
-			}
-
-			composable<AppRoutes.RoomFinder>(
-				enterTransition = {
-					slideInVertically() { it / 2 } + fadeIn()
-				},
-				exitTransition = {
-					slideOutVertically() { it / 2 } + fadeOut()
-				},
-				popEnterTransition = {
-					slideInVertically() { it / 2 } + fadeIn()
-				},
-				popExitTransition = {
-					slideOutVertically() { it / 2 } + fadeOut()
-				},
-			) {
-				RoomFinder()
 			}*/
-
-			settingsScreen(
-				navController = navController
-			)
 		}
 	}
 }

@@ -4,7 +4,7 @@ import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 
 data class FeatureRouteItem(
-	@DrawableRes val icon: Int,
-	@StringRes val label: Int,
+	@field:DrawableRes val icon: Int,
+	@field:StringRes val label: Int,
 	val route: Any
 )

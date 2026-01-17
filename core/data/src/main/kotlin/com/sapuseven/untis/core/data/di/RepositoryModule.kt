@@ -43,4 +43,9 @@ internal interface RepositoryModule {
 	fun bindMasterDataRepository(
 		impl: UntisMasterDataRepository,
 	): MasterDataRepository
+
+	@Binds
+	fun bindRoomFinderRepository(
+		impl: com.sapuseven.untis.core.data.repository.RoomFinderRepository,
+	): com.sapuseven.untis.core.domain.repository.RoomFinderRepository
 }

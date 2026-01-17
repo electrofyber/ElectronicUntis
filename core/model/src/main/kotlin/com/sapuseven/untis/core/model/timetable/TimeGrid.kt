@@ -21,3 +21,9 @@ data class TimeGridUnit(
 	val startTime: LocalTime,
 	val endTime: LocalTime
 )
+
+@Serializable
+data class TimeGridItem(
+	val day: TimeGridDay,
+	val unit: TimeGridUnit
+)

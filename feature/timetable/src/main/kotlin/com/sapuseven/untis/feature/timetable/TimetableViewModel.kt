@@ -8,13 +8,13 @@ import androidx.lifecycle.viewModelScope
 import com.sapuseven.untis.core.datastore.UserSettingsDataSource
 import com.sapuseven.untis.core.domain.repository.MasterDataRepository
 import com.sapuseven.untis.core.domain.repository.UserRepository
-import com.sapuseven.untis.core.domain.timetable.GetHourListUseCase
+import com.sapuseven.untis.core.domain.timetable.GetTimeGridUnitListUseCase
 import com.sapuseven.untis.core.domain.timetable.GetTimetableUseCase
 import com.sapuseven.untis.core.domain.timetable.WeekLogicService
 import com.sapuseven.untis.core.model.timetable.Element
 import com.sapuseven.untis.core.model.timetable.ElementKey
 import com.sapuseven.untis.core.model.timetable.ElementType
-import com.sapuseven.untis.core.model.timetable.WeekViewHour
+import com.sapuseven.untis.core.model.timetable.TimeGridUnit
 import com.sapuseven.untis.core.model.user.User
 import com.sapuseven.untis.feature.timetable.mapper.TimetableMapper
 import com.sapuseven.untis.feature.timetable.weekview.WeekViewColorScheme
@@ -51,7 +51,7 @@ class TimetableViewModel @AssistedInject constructor(
 	internal val weekLogicService: WeekLogicService,
 	clock: Clock,
 	masterDataRepository: MasterDataRepository,
-	getHourList: GetHourListUseCase,
+	getHourList: GetTimeGridUnitListUseCase,
 	@Assisted val elementId: Long?,
 	@Assisted val elementType: ElementType?,
 ) : ViewModel() {
@@ -251,7 +251,7 @@ data class TimetableUiState(
 	// WeekView
 	val eventStyle: WeekViewEventStyle = WeekViewEventStyle.default(),
 	val colorScheme: WeekViewColorScheme = WeekViewColorScheme.default(),
-	val hourList: List<WeekViewHour> = emptyList(),
+	val hourList: List<TimeGridUnit> = emptyList(),
 	val holidays: List<WeekViewHoliday> = emptyList(),
 )
 

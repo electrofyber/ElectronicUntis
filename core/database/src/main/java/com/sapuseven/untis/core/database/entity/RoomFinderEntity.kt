@@ -7,6 +7,8 @@ import androidx.room.Index
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import com.sapuseven.untis.core.database.utils.EntityMapper
+import com.sapuseven.untis.core.model.roomfinder.RoomFinderItemData
 import kotlinx.coroutines.flow.Flow
 
 @Entity(
@@ -17,12 +19,19 @@ import kotlinx.coroutines.flow.Flow
 data class RoomFinderEntity(
 	val id: Long,
 	val userId: Long
-)
+) {
+	companion object : EntityMapper<RoomFinderItemData, RoomFinderEntity> {
+		override fun map(from: RoomFinderItemData, userId: Long) = RoomFinderEntity(
+			id = from.room.elementId,
+			userId = userId,
+		)
+	}
+}
 
 @Dao
 interface RoomFinderDao {
 	@Insert(onConflict = OnConflictStrategy.REPLACE)
-	suspend fun insertAll(vararg roomFinderEntities: RoomFinderEntity)
+	suspend fun insertAll(roomFinderEntities: List<RoomFinderEntity>)
 
 	@Delete
 	suspend fun delete(roomFinderEntity: RoomFinderEntity)

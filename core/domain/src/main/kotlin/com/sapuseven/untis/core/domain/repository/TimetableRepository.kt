@@ -16,7 +16,8 @@ interface TimetableRepository {
 	fun getTimetable(
 		user: User,
 		params: TimetableParams,
-		fromCache: FromCache
+		fromCache: FromCache,
+		maxAge: Long? = null,
 	): Flow<Timetable>
 
 	suspend fun getPeriodData(

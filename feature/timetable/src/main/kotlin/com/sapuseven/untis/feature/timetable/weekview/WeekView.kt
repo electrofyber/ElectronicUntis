@@ -78,7 +78,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.fastAny
 import androidx.compose.ui.util.fastForEach
 import com.sapuseven.untis.core.domain.timetable.WeekLogicService
-import com.sapuseven.untis.core.model.timetable.WeekViewHour
+import com.sapuseven.untis.core.model.timetable.TimeGridUnit
 import com.sapuseven.untis.core.ui.common.conditional
 import com.sapuseven.untis.core.ui.common.ifNotNull
 import com.sapuseven.untis.core.ui.dialogs.DatePickerDialog
@@ -193,7 +193,7 @@ fun WeekViewHeaderPreview() {
 
 @Composable
 fun WeekViewSidebarLabel(
-	hour: WeekViewHour,
+	hour: TimeGridUnit,
 	modifier: Modifier = Modifier,
 ) {
 	val eventStyle = LocalWeekViewEventStyle.current
@@ -238,10 +238,10 @@ fun WeekViewSidebarLabel(
 fun BasicSidebarLabelPreview() {
 	WeekViewStyle {
 		WeekViewSidebarLabel(
-			hour = WeekViewHour(
+			hour = TimeGridUnit(
+				"1",
 				kotlinx.datetime.LocalTime(9, 45),
-				kotlinx.datetime.LocalTime(10, 30),
-				"1"
+				kotlinx.datetime.LocalTime(10, 30)
 			),
 			Modifier.sizeIn(maxHeight = 64.dp, maxWidth = 72.dp)
 		)
@@ -253,10 +253,10 @@ fun BasicSidebarLabelPreview() {
 fun CompactSidebarLabelPreview() {
 	WeekViewStyle {
 		WeekViewSidebarLabel(
-			hour = WeekViewHour(
+			hour = TimeGridUnit(
+				"1",
 				kotlinx.datetime.LocalTime(9, 45),
-				kotlinx.datetime.LocalTime(10, 30),
-				"1"
+				kotlinx.datetime.LocalTime(10, 30)
 			),
 			Modifier.sizeIn(maxHeight = 48.dp, maxWidth = 68.dp)
 		)
@@ -269,8 +269,8 @@ fun WeekViewSidebar(
 	endTime: LocalTime,
 	hourHeight: Dp,
 	modifier: Modifier = Modifier,
-	hourList: List<WeekViewHour>,
-	label: @Composable (hour: WeekViewHour) -> Unit = { WeekViewSidebarLabel(hour = it) },
+	hourList: List<TimeGridUnit>,
+	label: @Composable (hour: TimeGridUnit) -> Unit = { WeekViewSidebarLabel(hour = it) },
 ) {
 	Box(
 		modifier = modifier
@@ -309,10 +309,10 @@ fun WeekViewSidebarPreview() {
 			endTime = LocalTime.of(13, 45),
 			hourHeight = 72.dp,
 			hourList = (1..4).map {
-				WeekViewHour(
+				TimeGridUnit(
+					it.toString(),
 					kotlinx.datetime.LocalTime(it + 8, 45),
-					kotlinx.datetime.LocalTime(it + 9, 30),
-					it.toString()
+					kotlinx.datetime.LocalTime(it + 9, 30)
 				)
 			}
 		)
@@ -323,7 +323,7 @@ fun DrawScope.weekViewContentGrid(
 	numDays: Int = 5,
 	startTime: LocalTime,
 	hourHeight: Dp,
-	hourList: List<WeekViewHour>,
+	hourList: List<TimeGridUnit>,
 	dividerColor: Color,
 	dividerWidth: Float,
 ) {
@@ -495,7 +495,7 @@ fun <T> WeekViewContent(
 	endTime: LocalTime,
 	endTimeOffset: Dp,
 	hourHeight: Dp,
-	hourList: List<WeekViewHour>,
+	hourList: List<TimeGridUnit>,
 	indicatorColor: Color,
 	pastBackgroundColor: Color,
 	futureBackgroundColor: Color,
@@ -633,7 +633,7 @@ fun <T> WeekView(
 	enableZoomGesture: Boolean = true,
 	initialScale: Float = 1f,
 	hourHeight: Dp = 72.dp,
-	hourList: List<WeekViewHour> = emptyList(),
+	hourList: List<TimeGridUnit> = emptyList(),
 	colorScheme: WeekViewColorScheme = WeekViewColorScheme.default(),
 	dividerWidth: Float = Stroke.HairlineWidth,
 	startTime: kotlinx.datetime.LocalTime = hourList.firstOrNull()?.startTime ?: kotlinx.datetime.LocalTime(6, 0),

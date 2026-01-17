@@ -3,17 +3,17 @@ package com.sapuseven.untis.core.domain.timetable
 import com.sapuseven.compose.protostore.ui.preferences.convertRangeToPair
 import com.sapuseven.untis.core.datastore.UserSettingsDataSource
 import com.sapuseven.untis.core.domain.repository.UserRepository
-import com.sapuseven.untis.core.model.timetable.WeekViewHour
+import com.sapuseven.untis.core.model.timetable.TimeGridUnit
 import com.sapuseven.untis.core.model.user.User
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
-class GetHourListUseCase @Inject constructor(
+class GetTimeGridUnitListUseCase @Inject constructor(
 	private val userRepository: UserRepository,
 	private val userSettingsDataSource: UserSettingsDataSource
 ) {
-	operator fun invoke(): Flow<List<WeekViewHour>> {
+	operator fun invoke(): Flow<List<TimeGridUnit>> {
 		return userSettingsDataSource.getSettings().map { settings ->
 			buildHourList(
 				user = userRepository.getActiveUser(),
@@ -25,7 +25,7 @@ class GetHourListUseCase @Inject constructor(
 
 	private fun buildHourList(
 		user: User, range: Pair<Int, Int>?, rangeIndexReset: Boolean
-	): List<WeekViewHour> = user.timeGrid.days
+	): List<TimeGridUnit> = user.timeGrid.days
 		.maxByOrNull { it.units.size }
 		?.units
 		?.mapIndexedNotNull { index, hour ->
@@ -39,6 +39,6 @@ class GetHourListUseCase @Inject constructor(
 				hour.label.ifEmpty { (index + 1).toString() }
 			}
 
-			WeekViewHour(hour.startTime, hour.endTime, label)
+			TimeGridUnit(label, hour.startTime, hour.endTime)
 		}.orEmpty()
 }
