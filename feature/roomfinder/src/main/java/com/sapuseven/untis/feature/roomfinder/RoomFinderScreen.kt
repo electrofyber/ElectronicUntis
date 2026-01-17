@@ -9,9 +9,13 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeDrawing
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.text.InlineTextContent
@@ -53,8 +57,6 @@ import com.sapuseven.untis.core.ui.animation.fullscreenDialogAnimationEnter
 import com.sapuseven.untis.core.ui.animation.fullscreenDialogAnimationExit
 import com.sapuseven.untis.core.ui.common.SmallCircularProgressIndicator
 import com.sapuseven.untis.core.ui.dialogs.ElementPickerDialogFullscreen
-import com.sapuseven.untis.core.ui.functional.None
-import com.sapuseven.untis.core.ui.functional.bottomInsets
 import kotlinx.datetime.toJavaLocalTime
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
@@ -73,7 +75,7 @@ fun RoomFinderScreen(
 	var showElementPicker by rememberSaveable { mutableStateOf(false) }
 
 	Scaffold(
-		modifier = Modifier.bottomInsets(), topBar = {
+		topBar = {
 			CenterAlignedTopAppBar(
 				title = {
 					Text(stringResource(id = R.string.feature_roomfinder_title))
@@ -99,15 +101,17 @@ fun RoomFinderScreen(
 			}
 		}, bottomBar = {
 			AnimatedVisibility(
-				visible = uiState.roomList.isNotEmpty(),
+				visible = (uiState as? RoomFinderUiState.Success)?.roomList?.isNotEmpty() == true,
 				enter = fadeIn() + expandVertically(),
 				exit = fadeOut() + shrinkVertically()
 			) {
-				RoomFinderHourSelector(uiState.hourState) {
-					viewModel.selectHour(it)
+				(uiState as? RoomFinderUiState.Success)?.let { uiState ->
+					RoomFinderHourSelector(uiState.hourState) {
+						viewModel.selectHour(it)
+					}
 				}
 			}
-		}, contentWindowInsets = WindowInsets.None
+		}
 	) { innerPadding ->
 		Column(
 			modifier = Modifier
@@ -121,29 +125,32 @@ fun RoomFinderScreen(
 					.fillMaxWidth()
 					.weight(1f)
 			) {
-				LazyColumn(
-					Modifier
-						.fillMaxWidth()
-						.weight(1f)
-				) {
-					items(
-						uiState.roomList, key = { it.room.elementId }) {
-						RoomListItem(
-							element = uiState.elements[ElementType.ROOM]?.find { element -> element.id == it.room.elementId },
-							itemData = it,
-							hourState = uiState.hourState,
-							onDelete = { viewModel.deleteRoom(it.room) },
+				when (uiState) {
+					is RoomFinderUiState.Loading -> {}
+					is RoomFinderUiState.Success -> with(uiState as RoomFinderUiState.Success) {
+						LazyColumn(Modifier
+							.fillMaxWidth()
+							.weight(1f)
+						) {
+							items(roomList, key = { it.room.elementId }) {
+								RoomListItem(
+									element = elements[ElementType.ROOM]?.find { element -> element.id == it.room.elementId },
+									itemData = it,
+									hourState = hourState,
+									onDelete = { viewModel.deleteRoom(it.room) },
+									modifier = Modifier
+										.animateItem()
+										.clickable { onRoomClick(it.room.elementId) })
+							}
+						}
+
+						if (roomList.isEmpty()) RoomFinderListEmpty(
 							modifier = Modifier
-								.animateItem()
-								.clickable { onRoomClick(it.room.elementId) })
+								.align(Alignment.CenterHorizontally)
+								.weight(1f)
+						)
 					}
 				}
-
-				if (uiState.roomList.isEmpty()) RoomFinderListEmpty(
-					modifier = Modifier
-						.align(Alignment.CenterHorizontally)
-						.weight(1f)
-				)
 			}
 		}
 	}
@@ -153,15 +160,20 @@ fun RoomFinderScreen(
 		enter = fullscreenDialogAnimationEnter(),
 		exit = fullscreenDialogAnimationExit()
 	) {
-		ElementPickerDialogFullscreen(
-			title = { Text(stringResource(id = com.sapuseven.untis.core.ui.R.string.all_add)) }, // TODO: Proper string resource
-			multiSelect = true,
-			hideTypeSelection = true,
-			initialType = ElementType.ROOM,
-			onDismiss = { showElementPicker = false },
-			onMultiSelect = { viewModel.addRooms(it) },
-			elements = uiState.elements
-		)
+		(uiState as? RoomFinderUiState.Success)?.let { uiState ->
+			ElementPickerDialogFullscreen(
+				title = { Text(stringResource(id = com.sapuseven.untis.core.ui.R.string.all_add)) }, // TODO: Proper string resource
+				multiSelect = true,
+				hideTypeSelection = true,
+				initialType = ElementType.ROOM,
+				onDismiss = {
+					@Suppress("AssignedValueIsNeverRead")
+					showElementPicker = false
+				},
+				onMultiSelect = { viewModel.addRooms(it) },
+				elements = uiState.elements
+			)
+		}
 	}
 }
 
@@ -203,44 +215,53 @@ fun RoomFinderHourSelector(
 	hourState: HourState, onSelectionChange: (Int?) -> Unit
 ) = with(hourState) {
 	hours[selectedIndex].let { hour ->
-		ListItem(headlineContent = {
-			Text(
-				text = stringResource(
-					id = R.string.feature_roomfinder_current_hour,
-					hour.day.dayOfWeek.getDisplayName(
-						TextStyle.FULL_STANDALONE, Locale.getDefault()
-					),
-					hour.unit.label
-				), textAlign = TextAlign.Center, modifier = Modifier.fillMaxWidth()
-			)
-		}, supportingContent = {
-			Text(
-				text = stringResource(
-					id = R.string.feature_roomfinder_current_hour_time,
-					hour.unit.startTime.toJavaLocalTime()
-						.format(DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT)),
-					hour.unit.endTime.toJavaLocalTime()
-						.format(DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT))
-				), textAlign = TextAlign.Center, modifier = Modifier.fillMaxWidth()
-			)
-		}, leadingContent = {
-			IconButton(
-				enabled = selectedIndex > 0, onClick = { onSelectionChange(selectedIndex - 1) }) {
-				Icon(
-					painter = painterResource(id = R.drawable.feature_roomfinder_previous),
-					contentDescription = stringResource(id = R.string.feature_roomfinder_image_previous_hour)
+		ListItem(
+			headlineContent = {
+				Text(
+					text = stringResource(
+						id = R.string.feature_roomfinder_current_hour,
+						hour.day.dayOfWeek.getDisplayName(
+							TextStyle.FULL_STANDALONE, Locale.getDefault()
+						),
+						hour.unit.label
+					), textAlign = TextAlign.Center, modifier = Modifier.fillMaxWidth()
 				)
-			}
-		}, trailingContent = {
-			IconButton(
-				enabled = selectedIndex < hours.lastIndex,
-				onClick = { onSelectionChange(selectedIndex + 1) }) {
-				Icon(
-					painter = painterResource(id = R.drawable.feature_roomfinder_next),
-					contentDescription = stringResource(id = R.string.feature_roomfinder_image_next_hour)
+			},
+			supportingContent = {
+				Text(
+					text = stringResource(
+						id = R.string.feature_roomfinder_current_hour_time,
+						hour.unit.startTime.toJavaLocalTime()
+							.format(DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT)),
+						hour.unit.endTime.toJavaLocalTime()
+							.format(DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT))
+					), textAlign = TextAlign.Center, modifier = Modifier.fillMaxWidth()
 				)
-			}
-		}, modifier = Modifier.clickable { onSelectionChange(null) })
+			},
+			leadingContent = {
+				IconButton(
+					enabled = selectedIndex > 0,
+					onClick = { onSelectionChange(selectedIndex - 1) }) {
+					Icon(
+						painter = painterResource(id = R.drawable.feature_roomfinder_previous),
+						contentDescription = stringResource(id = R.string.feature_roomfinder_image_previous_hour)
+					)
+				}
+			},
+			trailingContent = {
+				IconButton(
+					enabled = selectedIndex < hours.lastIndex,
+					onClick = { onSelectionChange(selectedIndex + 1) }) {
+					Icon(
+						painter = painterResource(id = R.drawable.feature_roomfinder_next),
+						contentDescription = stringResource(id = R.string.feature_roomfinder_image_next_hour)
+					)
+				}
+			},
+			modifier = Modifier
+				.clickable { onSelectionChange(null) }
+				.windowInsetsPadding(WindowInsets.safeDrawing.only(WindowInsetsSides.Bottom))
+		)
 	}
 }
 

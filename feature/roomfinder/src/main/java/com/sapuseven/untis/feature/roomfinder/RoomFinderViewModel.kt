@@ -55,6 +55,8 @@ class RoomFinderViewModel @Inject constructor(
 
 	private val currentDateTime = clock.now().toLocalDateTime(zone)
 
+	private var currentHourIndex = 0;
+
 	//private val _uiState = MutableStateFlow(RoomFinderUiState())
 	val uiState: StateFlow<RoomFinderUiState> = combine(
 		_elements,
@@ -62,7 +64,7 @@ class RoomFinderViewModel @Inject constructor(
 		getRoomFinderItemsUseCase(),
 		_selectedHourIndex,
 	) { elements, hourList, roomList, selectedHourIndex ->
-		RoomFinderUiState(
+		RoomFinderUiState.Success(
 			elements = elements,
 			hourState = HourState(
 				hours = hourList,
@@ -72,7 +74,7 @@ class RoomFinderViewModel @Inject constructor(
 			),
 			roomList = sortRoomList(roomList, selectedHourIndex)
 		)
-	}.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), RoomFinderUiState())
+	}.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), RoomFinderUiState.Loading)
 
 	init {
 		_hourList.filter { it.isNotEmpty() }.take(1)
@@ -80,16 +82,17 @@ class RoomFinderViewModel @Inject constructor(
 				val initialIndex = hourList.indexOfFirst {
 					it.day.dayOfWeek == currentDateTime.dayOfWeek && currentDateTime.time < it.unit.endTime
 				}.coerceAtLeast(0)
-				_selectedHourIndex.value = initialIndex
+				currentHourIndex = initialIndex
+				_selectedHourIndex.value = currentHourIndex
 			}
 			.launchIn(viewModelScope)
 	}
 
 	private fun sortRoomList(roomList: List<RoomFinderItemData>, selectedIndex: Int) =
 		roomList.sortedWith(
-			compareByDescending<RoomFinderItemData> { it
-				.freeHoursAt(selectedIndex) }
-				.thenBy { uiState.value.elements[ElementType.ROOM]?.find { element -> element.id == it.room.elementId }?.longName }
+			compareByDescending<RoomFinderItemData> {
+				it.freeHoursAt(selectedIndex)
+			}.thenBy { uiState.value.getElement(it.room)?.longName }
 		)
 
 	fun addRooms(rooms: List<Element>) = viewModelScope.launch {
@@ -101,7 +104,7 @@ class RoomFinderViewModel @Inject constructor(
 	}
 
 	fun selectHour(hourIndex: Int?) {
-		hourIndex?.let { _selectedHourIndex.value = it }
+		_selectedHourIndex.value = hourIndex ?: currentHourIndex
 	}
 }
 
@@ -115,8 +118,18 @@ data class HourState(
 		get() = hours[selectedIndex]
 }
 
-data class RoomFinderUiState(
-	val elements: Map<ElementType, List<Element>> = emptyMap(),
-	val roomList: List<RoomFinderItemData> = emptyList(),
-	val hourState: HourState = HourState(),
-)
+sealed interface RoomFinderUiState {
+	data object Loading : RoomFinderUiState
+
+	data class Success(
+		val elements: Map<ElementType, List<Element>> = emptyMap(),
+		val roomList: List<RoomFinderItemData> = emptyList(),
+		val hourState: HourState = HourState(),
+	) : RoomFinderUiState {
+		override fun getElement(room: RoomFinderItem) =
+			elements[ElementType.ROOM]?.find { element -> element.id == room.elementId }
+	}
+
+	fun getElement(room: RoomFinderItem): Element? = null
+}
+
