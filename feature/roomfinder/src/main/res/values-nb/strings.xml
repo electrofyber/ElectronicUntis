@@ -7,7 +7,7 @@
     <string name="feature_roomfinder_delete_item">Slett element</string>
     <string name="feature_roomfinder_image_availability_indicator">Tilgjengelighetsindikator for rom</string>
     <string name="feature_roomfinder_item_desc_occupied">Dette rommet er opptatt.</string>
-    <string name="feature_roomfinder_roomfinder_no_rooms">Ingen rom å vise.\nTrykk + for å legge til et!</string>
+    <string name="feature_roomfinder_no_rooms">Ingen rom å vise.\nTrykk + for å legge til et!</string>
 	<string name="feature_roomfinder_image_previous_hour">forrige time</string>
     <string name="feature_roomfinder_image_next_hour">neste time</string>
     <string name="feature_roomfinder_loading_data">Laster inn data…</string>

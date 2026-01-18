@@ -12,5 +12,5 @@
 	<string name="feature_roomfinder_image_previous_hour">hora anterior</string>
     <string name="feature_roomfinder_item_desc_free_day">Esta aula está libre por el resto del día.</string>
     <string name="feature_roomfinder_item_desc_free_week">Esta aula está libre por el resto de la semana.</string>
-    <string name="feature_roomfinder_roomfinder_no_rooms">No hay aulas para mostrar.\nToque + para añadir una.</string>
+    <string name="feature_roomfinder_no_rooms">No hay aulas para mostrar.\nToque + para añadir una.</string>
 </resources>

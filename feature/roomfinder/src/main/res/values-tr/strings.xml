@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 	<string name="feature_roomfinder_error">Hata</string>
-	<string name="feature_roomfinder_roomfinder_no_rooms">Görüntülenebilecek bir oda yok.
+	<string name="feature_roomfinder_no_rooms">Görüntülenebilecek bir oda yok.
 \nYeni bir tane eklemek için +\'ya basın!</string>
     <string name="feature_roomfinder_loading_data">Veri yükleniyor…</string>
     <string name="feature_roomfinder_item_desc_occupied">Bu oda meşgul.</string>

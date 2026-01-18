@@ -5,7 +5,7 @@
         <item quantity="few">Ova je prostorija još %d sata slobodna.</item>
         <item quantity="other">Ova je prostorija još %d sati slobodna.</item>
     </plurals>
-	<string name="feature_roomfinder_roomfinder_no_rooms">Nema prostorija.\nDodirni + za dodavanje prostorije!</string>
+	<string name="feature_roomfinder_no_rooms">Nema prostorija.\nDodirni + za dodavanje prostorije!</string>
     <string name="feature_roomfinder_loading_data">Učitavanje podataka …</string>
     <string name="feature_roomfinder_item_desc_occupied">Ova je prostorija zauzeta.</string>
     <string name="feature_roomfinder_image_previous_hour">prethodni sat</string>

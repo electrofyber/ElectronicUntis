@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="feature_roomfinder_roomfinder_no_rooms">Ez dago gelarik erakusteko.
+    <string name="feature_roomfinder_no_rooms">Ez dago gelarik erakusteko.
 \nUkitu + bat gehitzeko!</string>
     <string name="feature_roomfinder_loading_data">Datuak kargatzen…</string>
     <string name="feature_roomfinder_item_desc_occupied">Gela hau okupatuta dago.</string>

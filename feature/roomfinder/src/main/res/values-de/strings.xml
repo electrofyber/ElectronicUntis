@@ -8,7 +8,7 @@
     <string name="feature_roomfinder_delete_item">Raum löschen</string>
     <string name="feature_roomfinder_image_availability_indicator">Freier-Raum-Anzeige</string>
     <string name="feature_roomfinder_item_desc_occupied">Dieser Raum ist besetzt.</string>
-    <string name="feature_roomfinder_roomfinder_no_rooms">Keine Räume vorhanden.\nTippe auf +, um Räume hinzuzufügen!</string>
+    <string name="feature_roomfinder_no_rooms">Keine Räume vorhanden.\nTippe auf +, um Räume hinzuzufügen!</string>
 	<string name="feature_roomfinder_image_previous_hour">vorherige Stunde</string>
     <string name="feature_roomfinder_image_next_hour">nächste Stunde</string>
     <string name="feature_roomfinder_loading_data">Lade Daten…</string>

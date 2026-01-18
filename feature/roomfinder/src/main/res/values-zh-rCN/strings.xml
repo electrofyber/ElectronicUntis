@@ -6,7 +6,7 @@
 	<string name="feature_roomfinder_delete_item">删除此项</string>
     <string name="feature_roomfinder_image_availability_indicator">可用教室标识</string>
     <string name="feature_roomfinder_item_desc_occupied">此教室被占。</string>
-    <string name="feature_roomfinder_roomfinder_no_rooms">没有可显示的教室。
+    <string name="feature_roomfinder_no_rooms">没有可显示的教室。
 \n点击 + 添加！</string>
 	<string name="feature_roomfinder_image_previous_hour">前一小时</string>
     <string name="feature_roomfinder_image_next_hour">后一小时</string>

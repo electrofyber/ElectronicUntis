@@ -11,7 +11,7 @@
     <string name="feature_roomfinder_image_next_hour">следующий час</string>
     <string name="feature_roomfinder_image_previous_hour">предыдущий час</string>
     <string name="feature_roomfinder_loading_data">Загрузка данных…</string>
-    <string name="feature_roomfinder_roomfinder_no_rooms">Нет комнат для отображения.\nНажмите +, чтобы добавить одну!</string>
+    <string name="feature_roomfinder_no_rooms">Нет комнат для отображения.\nНажмите +, чтобы добавить одну!</string>
 	<string name="feature_roomfinder_item_desc_free_day">Эта комната свободна до конца дня.</string>
 	<string name="feature_roomfinder_item_desc_free_week">До конца недели эта комната свободна.</string>
 	<plurals name="feature_roomfinder_item_desc">
