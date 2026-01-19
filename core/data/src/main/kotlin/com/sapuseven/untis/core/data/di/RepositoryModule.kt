@@ -1,12 +1,16 @@
 package com.sapuseven.untis.core.data.di
 
+import com.sapuseven.untis.core.data.repository.GenericRoomFinderRepository
+import com.sapuseven.untis.core.data.repository.UntisInfoCenterRepository
 import com.sapuseven.untis.core.data.repository.UntisLoginRepository
 import com.sapuseven.untis.core.data.repository.UntisMasterDataRepository
 import com.sapuseven.untis.core.data.repository.UntisSchoolRepository
 import com.sapuseven.untis.core.data.repository.UntisTimetableRepository
 import com.sapuseven.untis.core.data.repository.UserRepositoryImpl
+import com.sapuseven.untis.core.domain.repository.InfoCenterRepository
 import com.sapuseven.untis.core.domain.repository.LoginRepository
 import com.sapuseven.untis.core.domain.repository.MasterDataRepository
+import com.sapuseven.untis.core.domain.repository.RoomFinderRepository
 import com.sapuseven.untis.core.domain.repository.SchoolRepository
 import com.sapuseven.untis.core.domain.repository.TimetableRepository
 import com.sapuseven.untis.core.domain.repository.UserRepository
@@ -46,6 +50,11 @@ internal interface RepositoryModule {
 
 	@Binds
 	fun bindRoomFinderRepository(
-		impl: com.sapuseven.untis.core.data.repository.RoomFinderRepository,
-	): com.sapuseven.untis.core.domain.repository.RoomFinderRepository
+		impl: GenericRoomFinderRepository,
+	): RoomFinderRepository
+
+	@Binds
+	fun bindInfoCenterRepository(
+		impl: UntisInfoCenterRepository,
+	): InfoCenterRepository
 }

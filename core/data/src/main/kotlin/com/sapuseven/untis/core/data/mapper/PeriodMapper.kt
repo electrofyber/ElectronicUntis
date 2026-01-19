@@ -27,7 +27,7 @@ internal fun Period.toDomain(
 	rights = can.map { it.toDomain() },
 	states = `is`.map { it.toDomain() },
 	attachments = text.attachments?.map { it.toDomain() } ?: emptyList(),
-	homeworks = homeWorks?.map { it.toDomain() } ?: emptyList(),
+	homeworks = homeWorks?.map { it.toDomain(allElements) } ?: emptyList(),
 	exam = exam?.toDomain(),
 	onlinePeriod = isOnlinePeriod,
 	onlinePeriodLink = onlinePeriodLink,

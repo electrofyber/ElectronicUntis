@@ -4,7 +4,7 @@ import com.sapuseven.untis.core.model.absences.Absence
 
 data class PeriodDetails(
 	val absenceChecked: Boolean,
-	val studentIds: List<Long> = emptyList(),
+	val students: List<Element> = emptyList(),
 	val absences: List<Absence> = emptyList(),
 	//val classRegEvents: List<ClassRegEvent>?,
 	//val exemptions: List<StudentExemption>?,

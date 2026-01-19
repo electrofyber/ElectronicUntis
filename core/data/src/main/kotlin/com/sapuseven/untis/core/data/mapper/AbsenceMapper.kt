@@ -2,24 +2,33 @@ package com.sapuseven.untis.core.data.mapper
 
 import com.sapuseven.untis.core.api.model.untis.absence.Excuse
 import com.sapuseven.untis.core.api.model.untis.absence.StudentAbsence
+import com.sapuseven.untis.core.model.timetable.Element
+import com.sapuseven.untis.core.model.timetable.ElementKey
+import com.sapuseven.untis.core.model.timetable.ElementType
 import com.sapuseven.untis.core.model.absences.Absence as DomainAbsence
 import com.sapuseven.untis.core.model.absences.Excuse as DomainExcuse
 
-internal fun StudentAbsence.toDomain() = DomainAbsence(
+internal fun StudentAbsence.toDomain(
+	allElements: Map<ElementKey, Element>,
+	students: Map<Long, Element>,
+) = DomainAbsence(
 	id = id,
-	studentId = studentId,
-	klasseId = klasseId,
+	text = text,
+	absentStudent = students[studentId],
+	absentClass = allElements[(ElementKey(klasseId, ElementType.CLASS))],
 	startDateTime = startDateTime,
 	endDateTime = endDateTime,
 	owner = owner,
-	excused = excused,
-	excuse = excuse?.toDomain(),
+	excuse = excuse?.toDomain(excused),
 	absenceReason = absenceReason,
-	text = text,
 )
 
-internal fun Excuse.toDomain() = DomainExcuse(
+internal fun Excuse.toDomain(
+	excused: Boolean
+) = DomainExcuse(
 	id = id,
 	text = text,
-	date = date,
+	excused = excused,
+	active = true,
+	excusedDate = date,
 )

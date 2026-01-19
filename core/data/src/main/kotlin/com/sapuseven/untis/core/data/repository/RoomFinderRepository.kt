@@ -11,7 +11,7 @@ import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
-class RoomFinderRepository @Inject constructor(
+class GenericRoomFinderRepository @Inject constructor(
 	private val dao: RoomFinderDao
 ) : RoomFinderRepository {
 	override fun observeAllRooms(userId: Long): Flow<List<RoomFinderItem>> =

@@ -9,5 +9,7 @@ android {
 
 dependencies {
 	implementation(projects.core.domain)
+	implementation(libs.fornewid.placeholder.material3)
+	implementation(libs.coil)
 	lintChecks(projects.core.lint)
 }

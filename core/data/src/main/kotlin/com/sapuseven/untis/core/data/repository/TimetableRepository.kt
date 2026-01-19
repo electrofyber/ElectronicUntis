@@ -88,7 +88,12 @@ class UntisTimetableRepository @Inject constructor(
 				timeProvider = timeProvider
 			)
 				.get(periods, FromCache.IF_FAILED.toData(), additionalKey = user.id)
-				.map { result -> result.dataByTTId.mapValues { it.value.toDomain() } }
+				.map { result ->
+					// TODO block is untested
+					val allElements = masterDataRepository.getAllElements().associateBy { ElementKey(it.id, it.type) }
+					val students = user.element?.let { mapOf(it.id to it) } ?: emptyMap()
+					result.dataByTTId.mapValues { it.value.toDomain(allElements, students) }
+				}
 				.last()
 		}
 	}
@@ -112,6 +117,9 @@ class UntisTimetableRepository @Inject constructor(
 		startTime: LocalTime,
 		endTime: LocalTime
 	): Result<List<Absence>> {
+		// TODO block is untested
+		val allElements = masterDataRepository.getAllElements().associateBy { ElementKey(it.id, it.type) }
+		val students = user.element?.let { mapOf(it.id to it) } ?: emptyMap()
 		return runCatching {
 			api.postAbsence(
 				periodId = periodId,
@@ -121,7 +129,7 @@ class UntisTimetableRepository @Inject constructor(
 				apiUrl = user.school.apiUrl,
 				user = user.credentials?.user,
 				key = user.credentials?.key
-			).map { it.toDomain() }
+			).map { it.toDomain(allElements, students) }
 		}
 	}
 
