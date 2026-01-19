@@ -1,9 +1,11 @@
 package com.sapuseven.untis.feature.infocenter.pages
 
 import android.widget.TextView
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.Crossfade
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionLayout
+import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -42,6 +44,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImagePainter
 import coil.compose.rememberAsyncImagePainter
+import com.sapuseven.untis.core.model.messages.DirectMessage
 import com.sapuseven.untis.core.model.messages.MessageOfDay
 import com.sapuseven.untis.core.model.timetable.Attachment
 import com.sapuseven.untis.core.ui.dialogs.AttachmentsDialog
@@ -63,9 +66,9 @@ import java.time.format.FormatStyle
 @Composable
 fun InfoCenterMessages(viewModel: InfoCenterViewModel = hiltViewModel()) {
 	val uiState by viewModel.messagesState.collectAsStateWithLifecycle()
-	//val selectedMessage by viewModel.selectedMessage.collectAsStateWithLifecycle()
-	//val selectedMessageContent by viewModel.selectedMessageContent.collectAsStateWithLifecycle()
-	//val selectedMessageError by viewModel.selectedMessageError.collectAsStateWithLifecycle()
+	val selectedMessage by viewModel.selectedMessage.collectAsStateWithLifecycle()
+	val selectedMessageContent by viewModel.selectedMessageContent.collectAsStateWithLifecycle()
+	val selectedMessageError by viewModel.selectedMessageError.collectAsStateWithLifecycle()
 
 	var attachmentsDialog by remember { mutableStateOf<List<Attachment>?>(null) }
 
@@ -78,81 +81,58 @@ fun InfoCenterMessages(viewModel: InfoCenterViewModel = hiltViewModel()) {
 				when (state) {
 					MessagesUiState.Loading -> items(3) { CardLoading() }
 					is MessagesUiState.Success -> {
-						state.messagesOfDay.fold(
-							onSuccess = {
-								if (state.isMessagesEmpty) {
-									item {
-										Text(
-											text = stringResource(R.string.feature_infocenter_messages_empty),
-											textAlign = TextAlign.Center,
-											modifier = Modifier.fillMaxWidth()
-										)
-									}
-								} else {
-									items(it) { message ->
-										Card(
-											modifier = Modifier
-												.padding(horizontal = 16.dp, vertical = 8.dp)
-												.clip(CardDefaults.shape)
-										) {
-											MessagePreview(
-												subject = message.subject,
-												body = message.body,
-												attachments = message.attachments,
-											) { attachmentsDialog = message.attachments }
-										}
-									}
-								}
-							},
-							onFailure = {
-								item {
-									InfoCenterError(it)
-								}
-							}
-						)
+						items(state.errors) {
+							InfoCenterError(it)
+						}
 
-						/*state.messages.fold(
-							onSuccess = {
-								if (!state.isMessagesEmpty) {
-									items(it) { message ->
-										AnimatedVisibility(
-											visible = message != selectedMessage,
-											modifier = Modifier.animateItem()
-										) {
-											Card(
-												modifier = Modifier
-													.padding(horizontal = 16.dp, vertical = 8.dp)
-													.sharedBounds(
-														sharedContentState = rememberSharedContentState(key = "${message.id}-bounds"),
-														animatedVisibilityScope = this@AnimatedVisibility,
-														clipInOverlayDuringTransition = OverlayClip(CardDefaults.shape),
-														resizeMode = SharedTransitionScope.ResizeMode.RemeasureToBounds
-													)
-													.clip(CardDefaults.shape),
-												onClick = {
-													viewModel.onMessageClicked(message)
-												}
-											) {
-												MessagePreview(
-													subject = message.subject ?: "",
-													body = message.contentPreview ?: "",
-													sender = message.sender?.displayName,
-													imageUrl = message.sender?.imageUrl,
-													time = message.sentDateTime,
-													read = message.isMessageRead ?: true,
-													attachments = null // TODO: Support attachments (message.hasAttachments)
-												)
-											}
+						if (state.messages.isEmpty()) {
+							item {
+								Text(
+									text = stringResource(R.string.feature_infocenter_messages_empty),
+									textAlign = TextAlign.Center,
+									modifier = Modifier.fillMaxWidth()
+								)
+							}
+						} else {
+							items(state.messages) { message ->
+								AnimatedVisibility(
+									visible = message != selectedMessage,
+									modifier = Modifier.animateItem()
+								) {
+									Card(
+										modifier = Modifier
+											.padding(horizontal = 16.dp, vertical = 8.dp)
+											.sharedBounds(
+												sharedContentState = rememberSharedContentState(key = "${message.id}-bounds"),
+												animatedVisibilityScope = this@AnimatedVisibility,
+												clipInOverlayDuringTransition = OverlayClip(
+													CardDefaults.shape
+												),
+												resizeMode = SharedTransitionScope.ResizeMode.RemeasureToBounds
+											)
+											.clip(CardDefaults.shape),
+										onClick = {
+											viewModel.onMessageClicked(message)
 										}
+									) {
+										MessagePreview(
+											subject = message.subject ?: "(no subject)", // TODO proper fallback
+											body = message.content,
+											attachments = message.attachments,
+										) { attachmentsDialog = message.attachments }
+										/*MessagePreview(
+											subject = message.subject ?: "",
+											body = message.contentPreview ?: "",
+											sender = message.sender?.displayName,
+											imageUrl = message.sender?.imageUrl,
+											time = message.sentDateTime,
+											read = message.isMessageRead ?: true,
+											attachments = null // TODO: Support attachments (message.hasAttachments)
+										)*/
 									}
 								}
-							},
-							onFailure = {
-								item {
-									InfoCenterError(it)
-								}
 							}
-						)*/
+						}
 					}
 				}
 			}
@@ -426,15 +406,32 @@ private fun MessagePreview(
 	}
 }
 
+sealed interface Message {
+	val id: String
+	val subject: String?
+	val content: String?
+	val attachments: List<Attachment>?
+
+	data class Day(val messageOfDay: MessageOfDay) : Message {
+		override val id = "day-${messageOfDay.id}"
+		override val subject = messageOfDay.subject
+		override val content = messageOfDay.body
+		override val attachments = messageOfDay.attachments
+	}
+
+	data class Direct(val directMessage: DirectMessage) : Message {
+		override val id = "direct-${directMessage.id}"
+		override val subject = directMessage.subject
+		override val content = directMessage.body
+		override val attachments = directMessage.attachments
+	}
+}
+
 sealed interface MessagesUiState {
 	data object Loading : MessagesUiState
 
 	data class Success(
-		val messagesOfDay: Result<List<MessageOfDay>>,
-		//val messages: Result<List<Message>>
-	) : MessagesUiState {
-		val isMessagesEmpty: Boolean
-			get() = messagesOfDay.getOrDefault(emptyList()).isEmpty()
-				//&& messages.getOrDefault(emptyList()).isEmpty()
-	}
+		val errors: List<Throwable>,
+		val messages: List<Message>,
+	) : MessagesUiState
 }

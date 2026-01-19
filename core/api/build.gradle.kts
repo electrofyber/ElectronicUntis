@@ -1,5 +1,4 @@
 import org.openapitools.generator.gradle.plugin.tasks.GenerateTask
-import java.util.Locale
 
 plugins {
 	alias(libs.plugins.betteruntis.jvm.library)
@@ -26,37 +25,40 @@ dir.walk().filter { it.isFile && Regex("""untis-.*\.yaml""").matches(it.name) }.
 	apiSpecList.add(file)
 }
 apiSpecList.forEach { file ->
-	val apiName = file.name.replace(".yaml", "").replace("untis-", "")
-	val taskName = "Untis" + apiName.split('-').joinToString("") { it.replaceFirstChar { c -> c.titlecase(Locale.getDefault()) } }
+	val apiName = file.name.removePrefix("untis-").removeSuffix(".yaml")
+	val taskName = "openApiGenerate" + apiName.split('-')
+		.joinToString("") { it.replaceFirstChar(Char::uppercase) }
 	val packageName = apiName.replace("-", "_")
 
 	// Register OpenAPI generator task for each API spec
-	tasks.register("openApiGenerate$taskName", GenerateTask::class) {
+	val task = tasks.register<GenerateTask>(taskName) {
 		generatorName.set("kotlin")
-		inputSpec.set("${layout.projectDirectory}/spec/untis-intern/untis-$apiName.yaml")
-		outputDir.set("${layout.buildDirectory.get()}/generated/openapi/$apiName")
-		apiPackage.set("com.sapuseven.untis.core.api.$packageName")
-		modelPackage.set("com.sapuseven.untis.core.api.model.$packageName")
+		generateApiTests.set(false)
+		generateModelTests.set(false)
+		inputSpec.set(file.path)
+		outputDir.set("${layout.buildDirectory.get()}/generated/openapi")
+		apiPackage.set("com.sapuseven.untis.core.api.$packageName.client")
+		modelPackage.set("com.sapuseven.untis.core.api.$packageName.model")
 		configOptions.set(
 			mapOf(
 				"library" to "jvm-ktor",
-				"dateLibrary" to "java8",
-				"serializationLibrary" to "kotlinx_serialization"
+				"dateLibrary" to "kotlinx-datetime",
+				"serializationLibrary" to "kotlinx_serialization",
 			)
 		)
 		typeMappings.set(
 			mapOf(
-				"java.time.OffsetDateTime" to "com.sapuseven.untis.core.api.serializer.DateTime"
+				"DateTime" to "DateTime"
+			)
+		)
+		importMappings.set(
+			mapOf(
+				"DateTime" to "com.sapuseven.untis.core.api.serializer.DateTime",
 			)
 		)
 	}
 
-	// Ensure all OpenAPI generation tasks run before compiling Kotlin
-	tasks.named("compileKotlin").configure {
-		dependsOn("openApiGenerate$taskName")
+	kotlin.sourceSets.named("main") {
+		kotlin.srcDir(task)
 	}
-}
-
-kotlin.sourceSets.named("main") {
-	kotlin.srcDir("${layout.buildDirectory.get()}/generated/src/main/kotlin")
 }
