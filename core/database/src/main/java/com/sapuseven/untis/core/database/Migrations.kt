@@ -6,9 +6,9 @@ import androidx.room.RenameColumn
 import androidx.room.migration.AutoMigrationSpec
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
-import com.sapuseven.untis.core.api.model.untis.masterdata.TimeGrid
-import com.sapuseven.untis.core.api.model.untis.masterdata.timegrid.Day
-import com.sapuseven.untis.core.api.model.untis.masterdata.timegrid.Unit
+import com.sapuseven.untis.core.api.mobile.model.untis.masterdata.TimeGrid
+import com.sapuseven.untis.core.api.mobile.model.untis.masterdata.timegrid.Day
+import com.sapuseven.untis.core.api.mobile.model.untis.masterdata.timegrid.Unit
 import kotlinx.serialization.json.Json
 import com.sapuseven.untis.core.model.timetable.TimeGrid as DomainTimeGrid
 import com.sapuseven.untis.core.model.timetable.TimeGridDay as DomainTimeGridDay

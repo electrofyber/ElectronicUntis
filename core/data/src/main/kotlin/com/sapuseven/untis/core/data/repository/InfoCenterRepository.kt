@@ -1,14 +1,14 @@
 package com.sapuseven.untis.core.data.repository
 
-import com.sapuseven.untis.core.api.client.AbsenceApi
-import com.sapuseven.untis.core.api.client.ClassRegApi
-import com.sapuseven.untis.core.api.client.MessagesApi
-import com.sapuseven.untis.core.api.client.OfficeHoursApi
-import com.sapuseven.untis.core.api.model.response.ExamsResult
-import com.sapuseven.untis.core.api.model.response.HomeworkResult
-import com.sapuseven.untis.core.api.model.response.MessagesOfDayResult
-import com.sapuseven.untis.core.api.model.response.OfficeHoursResult
-import com.sapuseven.untis.core.api.model.response.StudentAbsencesResult
+import com.sapuseven.untis.core.api.mobile.client.AbsenceJsonrpcApi
+import com.sapuseven.untis.core.api.mobile.client.ClassRegJsonrpcApi
+import com.sapuseven.untis.core.api.mobile.client.MessagesJsonrpcApi
+import com.sapuseven.untis.core.api.mobile.client.OfficeHoursJsonrpcApi
+import com.sapuseven.untis.core.api.mobile.model.response.ExamsResult
+import com.sapuseven.untis.core.api.mobile.model.response.HomeworkResult
+import com.sapuseven.untis.core.api.mobile.model.response.MessagesOfDayResult
+import com.sapuseven.untis.core.api.mobile.model.response.OfficeHoursResult
+import com.sapuseven.untis.core.api.mobile.model.response.StudentAbsencesResult
 import com.sapuseven.untis.core.data.mapper.toData
 import com.sapuseven.untis.core.data.mapper.toDomain
 import com.sapuseven.untis.core.domain.repository.InfoCenterRepository
@@ -30,10 +30,10 @@ import javax.inject.Named
 
 class UntisInfoCenterRepository @Inject constructor(
 	private val masterDataRepository: MasterDataRepository,
-	private val messagesApi: MessagesApi,
-	private val classRegApi: ClassRegApi,
-	private val absenceApi: AbsenceApi,
-	private val officeHoursApi: OfficeHoursApi,
+	private val messagesApi: MessagesJsonrpcApi,
+	private val classRegApi: ClassRegJsonrpcApi,
+	private val absenceApi: AbsenceJsonrpcApi,
+	private val officeHoursApi: OfficeHoursJsonrpcApi,
 	@Named("cacheDir") cacheDir: File,
 	timeProvider: TimeProvider,
 ) : BaseCachedRepository(cacheDir, timeProvider), InfoCenterRepository {

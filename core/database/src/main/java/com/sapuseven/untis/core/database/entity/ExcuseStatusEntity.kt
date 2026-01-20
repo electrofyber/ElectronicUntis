@@ -3,7 +3,7 @@ package com.sapuseven.untis.core.database.entity
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
-import com.sapuseven.untis.core.api.model.untis.masterdata.ExcuseStatus
+import com.sapuseven.untis.core.api.mobile.model.untis.masterdata.ExcuseStatus
 import com.sapuseven.untis.core.database.utils.EntityMapper
 
 @Entity(

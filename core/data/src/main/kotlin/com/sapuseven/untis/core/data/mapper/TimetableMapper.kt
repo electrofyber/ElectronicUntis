@@ -1,6 +1,6 @@
 package com.sapuseven.untis.core.data.mapper
 
-import com.sapuseven.untis.core.api.model.untis.Timetable
+import com.sapuseven.untis.core.api.mobile.model.untis.Timetable
 import com.sapuseven.untis.core.model.timetable.Element
 import com.sapuseven.untis.core.model.timetable.ElementKey
 import kotlinx.datetime.Clock

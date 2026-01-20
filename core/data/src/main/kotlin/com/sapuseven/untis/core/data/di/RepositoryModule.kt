@@ -1,14 +1,14 @@
 package com.sapuseven.untis.core.data.di
 
 import com.sapuseven.untis.core.data.repository.GenericRoomFinderRepository
-import com.sapuseven.untis.core.data.repository.UntisDirectMessagesRepository
+import com.sapuseven.untis.core.data.repository.UntisDirectMessageRepository
 import com.sapuseven.untis.core.data.repository.UntisInfoCenterRepository
 import com.sapuseven.untis.core.data.repository.UntisLoginRepository
 import com.sapuseven.untis.core.data.repository.UntisMasterDataRepository
 import com.sapuseven.untis.core.data.repository.UntisSchoolRepository
 import com.sapuseven.untis.core.data.repository.UntisTimetableRepository
 import com.sapuseven.untis.core.data.repository.UserRepositoryImpl
-import com.sapuseven.untis.core.domain.repository.DirectMessagesRepository
+import com.sapuseven.untis.core.domain.repository.DirectMessageRepository
 import com.sapuseven.untis.core.domain.repository.InfoCenterRepository
 import com.sapuseven.untis.core.domain.repository.LoginRepository
 import com.sapuseven.untis.core.domain.repository.MasterDataRepository
@@ -62,6 +62,6 @@ internal interface RepositoryModule {
 
 	@Binds
 	fun bindDirectMessagesRepository(
-		impl: UntisDirectMessagesRepository,
-	): DirectMessagesRepository
+		impl: UntisDirectMessageRepository,
+	): DirectMessageRepository
 }

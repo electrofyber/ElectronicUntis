@@ -1,9 +1,9 @@
 package com.sapuseven.untis.core.data.mapper
 
-import com.sapuseven.untis.core.api.model.untis.enumeration.ElementType
-import com.sapuseven.untis.core.api.model.untis.enumeration.PeriodRight
-import com.sapuseven.untis.core.api.model.untis.enumeration.PeriodState
-import com.sapuseven.untis.core.api.model.untis.enumeration.Right
+import com.sapuseven.untis.core.api.mobile.model.untis.enumeration.ElementType
+import com.sapuseven.untis.core.api.mobile.model.untis.enumeration.PeriodRight
+import com.sapuseven.untis.core.api.mobile.model.untis.enumeration.PeriodState
+import com.sapuseven.untis.core.api.mobile.model.untis.enumeration.Right
 import crocodile8.universal_cache.FromCache
 import com.sapuseven.untis.core.domain.cache.FromCache as DomainFromCache
 import com.sapuseven.untis.core.model.timetable.ElementType as DomainElementType

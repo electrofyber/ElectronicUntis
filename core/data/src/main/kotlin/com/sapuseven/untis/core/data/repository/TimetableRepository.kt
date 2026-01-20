@@ -1,8 +1,8 @@
 package com.sapuseven.untis.core.data.repository
 
-import com.sapuseven.untis.core.api.client.TimetableApi
-import com.sapuseven.untis.core.api.model.response.PeriodDataResult
-import com.sapuseven.untis.core.api.model.response.TimetableResult
+import com.sapuseven.untis.core.api.mobile.client.TimetableJsonrpcApi
+import com.sapuseven.untis.core.api.mobile.model.response.PeriodDataResult
+import com.sapuseven.untis.core.api.mobile.model.response.TimetableResult
 import com.sapuseven.untis.core.data.cache.DiskCache
 import com.sapuseven.untis.core.data.mapper.toData
 import com.sapuseven.untis.core.data.mapper.toDomain
@@ -31,7 +31,7 @@ import javax.inject.Named
 
 class UntisTimetableRepository @Inject constructor(
 	@Named("cacheDir") private val cacheDir: File,
-	private val api: TimetableApi,
+	private val api: TimetableJsonrpcApi,
 	private val timeProvider: TimeProvider,
 	private val userDao: UserDao,
 	private val masterDataRepository: MasterDataRepository,

@@ -1,8 +1,8 @@
 package com.sapuseven.untis.core.data.mapper
 
-import com.sapuseven.untis.core.api.model.untis.masterdata.TimeGrid
-import com.sapuseven.untis.core.api.model.untis.masterdata.timegrid.Day
-import com.sapuseven.untis.core.api.model.untis.masterdata.timegrid.Unit
+import com.sapuseven.untis.core.api.mobile.model.untis.masterdata.TimeGrid
+import com.sapuseven.untis.core.api.mobile.model.untis.masterdata.timegrid.Day
+import com.sapuseven.untis.core.api.mobile.model.untis.masterdata.timegrid.Unit
 import com.sapuseven.untis.core.model.timetable.TimeGrid as DomainTimeGrid
 import com.sapuseven.untis.core.model.timetable.TimeGridDay as DomainTimeGridDay
 import com.sapuseven.untis.core.model.timetable.TimeGridUnit as DomainTimeGridUnit

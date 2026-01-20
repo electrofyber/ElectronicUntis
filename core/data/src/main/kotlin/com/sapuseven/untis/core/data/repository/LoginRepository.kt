@@ -1,10 +1,10 @@
 package com.sapuseven.untis.core.data.repository
 
-import com.sapuseven.untis.core.api.client.UserDataApi
-import com.sapuseven.untis.core.api.exception.UntisApiException
-import com.sapuseven.untis.core.api.model.response.UntisErrorCode
-import com.sapuseven.untis.core.api.model.untis.MasterData
-import com.sapuseven.untis.core.api.model.untis.enumeration.Right
+import com.sapuseven.untis.core.api.mobile.client.UserDataJsonrpcApi
+import com.sapuseven.untis.core.api.mobile.exception.UntisApiException
+import com.sapuseven.untis.core.api.mobile.model.response.UntisErrorCode
+import com.sapuseven.untis.core.api.mobile.model.untis.MasterData
+import com.sapuseven.untis.core.api.mobile.model.untis.enumeration.Right
 import com.sapuseven.untis.core.data.mapper.toDomain
 import com.sapuseven.untis.core.database.entity.UserDao
 import com.sapuseven.untis.core.domain.exception.LoginException
@@ -23,7 +23,7 @@ import javax.inject.Inject
 
 class UntisLoginRepository @Inject constructor(
 	private val userDao: UserDao,
-	private val userDataApi: UserDataApi,
+	private val userDataApi: UserDataJsonrpcApi,
 	private val userRepository: UserRepository,
 ) : LoginRepository {
 	override suspend fun getAppSharedSecret(

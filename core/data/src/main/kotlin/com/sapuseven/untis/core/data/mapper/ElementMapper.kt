@@ -1,6 +1,6 @@
 package com.sapuseven.untis.core.data.mapper
 
-import com.sapuseven.untis.core.api.model.untis.timetable.PeriodElement
+import com.sapuseven.untis.core.api.mobile.model.untis.timetable.PeriodElement
 import com.sapuseven.untis.core.database.entity.ElementEntity
 import com.sapuseven.untis.core.model.timetable.Element
 import com.sapuseven.untis.core.model.timetable.ElementKey

@@ -1,9 +1,9 @@
 package com.sapuseven.untis.core.data.mapper
 
 import androidx.core.net.toUri
-import com.sapuseven.untis.core.api.model.untis.UserData
-import com.sapuseven.untis.core.api.model.untis.enumeration.ElementType
-import com.sapuseven.untis.core.api.model.untis.enumeration.Right
+import com.sapuseven.untis.core.api.mobile.model.untis.UserData
+import com.sapuseven.untis.core.api.mobile.model.untis.enumeration.ElementType
+import com.sapuseven.untis.core.api.mobile.model.untis.enumeration.Right
 import com.sapuseven.untis.core.database.entity.UserEntity
 import com.sapuseven.untis.core.model.timetable.Element
 import com.sapuseven.untis.core.model.timetable.School

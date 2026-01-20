@@ -3,8 +3,8 @@ package com.sapuseven.untis.core.database.entity
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
-import com.sapuseven.untis.core.api.model.untis.enumeration.DutyType
-import com.sapuseven.untis.core.api.model.untis.masterdata.Duty
+import com.sapuseven.untis.core.api.mobile.model.untis.enumeration.DutyType
+import com.sapuseven.untis.core.api.mobile.model.untis.masterdata.Duty
 import com.sapuseven.untis.core.database.utils.EntityMapper
 
 @Entity(

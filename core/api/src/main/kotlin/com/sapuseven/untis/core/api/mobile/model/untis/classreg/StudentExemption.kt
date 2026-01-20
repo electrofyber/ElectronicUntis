@@ -1,0 +1,21 @@
+package com.sapuseven.untis.core.api.mobile.model.untis.classreg
+
+import com.sapuseven.untis.core.api.serializer.DayOfWeekSerializer
+import kotlinx.datetime.DayOfWeek
+import kotlinx.serialization.Serializable
+
+@Serializable
+data class StudentExemption(
+	val endDate: String,
+	val endTime: String,
+	val exemptionReason: String,
+	val id: Long,
+	val startDate: String,
+	val startTime: String,
+	val studentId: Long,
+	val subjectGroup: String,
+	val subjectId: Long,
+	val text: String,
+	@Serializable(with = DayOfWeekSerializer::class)
+	val weekDay: DayOfWeek
+)

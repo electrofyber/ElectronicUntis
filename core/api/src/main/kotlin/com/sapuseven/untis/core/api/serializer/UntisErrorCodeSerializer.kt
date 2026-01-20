@@ -1,6 +1,6 @@
 package com.sapuseven.untis.core.api.serializer
 
-import com.sapuseven.untis.core.api.model.response.UntisErrorCode
+import com.sapuseven.untis.core.api.mobile.model.response.UntisErrorCode
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.descriptors.PrimitiveKind
 import kotlinx.serialization.descriptors.PrimitiveSerialDescriptor

@@ -1,12 +1,12 @@
 package com.sapuseven.untis.module
 
-import com.sapuseven.untis.core.api.client.AbsenceApi
-import com.sapuseven.untis.core.api.client.ClassRegApi
-import com.sapuseven.untis.core.api.client.MessagesApi
-import com.sapuseven.untis.core.api.client.OfficeHoursApi
-import com.sapuseven.untis.core.api.client.SchoolSearchApi
-import com.sapuseven.untis.core.api.client.TimetableApi
-import com.sapuseven.untis.core.api.client.UserDataApi
+import com.sapuseven.untis.core.api.mobile.client.AbsenceJsonrpcApi
+import com.sapuseven.untis.core.api.mobile.client.ClassRegJsonrpcApi
+import com.sapuseven.untis.core.api.mobile.client.MessagesJsonrpcApi
+import com.sapuseven.untis.core.api.mobile.client.OfficeHoursJsonrpcApi
+import com.sapuseven.untis.core.api.mobile.client.SchoolSearchJsonrpcApi
+import com.sapuseven.untis.core.api.mobile.client.TimetableJsonrpcApi
+import com.sapuseven.untis.core.api.mobile.client.UserDataJsonrpcApi
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -45,30 +45,30 @@ object JsonRpcApiClientModule {
 
 	@Provides
 	@Singleton
-	fun provideSchoolSearchApi(engineFactory: HttpClientEngineFactory<*>): SchoolSearchApi =
-		SchoolSearchApi(engineFactory)
+	fun provideSchoolSearchApi(engineFactory: HttpClientEngineFactory<*>): SchoolSearchJsonrpcApi =
+		SchoolSearchJsonrpcApi(engineFactory)
 
 	@Provides
 	@Singleton
-	fun provideUserDataApi(engineFactory: HttpClientEngineFactory<*>): UserDataApi = UserDataApi(engineFactory)
+	fun provideUserDataApi(engineFactory: HttpClientEngineFactory<*>): UserDataJsonrpcApi = UserDataJsonrpcApi(engineFactory)
 
 	@Provides
 	@Singleton
-	fun provideTimetableApi(engineFactory: HttpClientEngineFactory<*>): TimetableApi = TimetableApi(engineFactory)
+	fun provideTimetableApi(engineFactory: HttpClientEngineFactory<*>): TimetableJsonrpcApi = TimetableJsonrpcApi(engineFactory)
 
 	@Provides
 	@Singleton
-	fun provideMessagesApi(engineFactory: HttpClientEngineFactory<*>): MessagesApi = MessagesApi(engineFactory)
+	fun provideMessagesApi(engineFactory: HttpClientEngineFactory<*>): MessagesJsonrpcApi = MessagesJsonrpcApi(engineFactory)
 
 	@Provides
 	@Singleton
-	fun provideClassRegApi(engineFactory: HttpClientEngineFactory<*>): ClassRegApi = ClassRegApi(engineFactory)
+	fun provideClassRegApi(engineFactory: HttpClientEngineFactory<*>): ClassRegJsonrpcApi = ClassRegJsonrpcApi(engineFactory)
 
 	@Provides
 	@Singleton
-	fun provideAbsenceApi(engineFactory: HttpClientEngineFactory<*>): AbsenceApi = AbsenceApi(engineFactory)
+	fun provideAbsenceApi(engineFactory: HttpClientEngineFactory<*>): AbsenceJsonrpcApi = AbsenceJsonrpcApi(engineFactory)
 
 	@Provides
 	@Singleton
-	fun provideOfficeHoursApi(engineFactory: HttpClientEngineFactory<*>): OfficeHoursApi = OfficeHoursApi(engineFactory)
+	fun provideOfficeHoursApi(engineFactory: HttpClientEngineFactory<*>): OfficeHoursJsonrpcApi = OfficeHoursJsonrpcApi(engineFactory)
 }

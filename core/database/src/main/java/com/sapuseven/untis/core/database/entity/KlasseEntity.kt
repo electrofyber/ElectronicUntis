@@ -4,7 +4,7 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Ignore
 import androidx.room.Index
-import com.sapuseven.untis.core.api.model.untis.masterdata.Klasse
+import com.sapuseven.untis.core.api.mobile.model.untis.masterdata.Klasse
 import com.sapuseven.untis.core.database.utils.EntityMapper
 import com.sapuseven.untis.core.model.timetable.ElementType
 import kotlinx.datetime.LocalDate

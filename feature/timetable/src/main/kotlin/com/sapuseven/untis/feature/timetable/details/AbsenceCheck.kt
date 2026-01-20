@@ -22,9 +22,9 @@ import androidx.compose.ui.res.painterResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.sapuseven.untis.R
-import com.sapuseven.untis.core.api.model.untis.Person
-import com.sapuseven.untis.core.api.model.untis.timetable.Period
-import com.sapuseven.untis.core.api.model.untis.timetable.PeriodData
+import com.sapuseven.untis.core.api.mobile.model.untis.Person
+import com.sapuseven.untis.core.api.mobile.model.untis.timetable.Period
+import com.sapuseven.untis.core.api.mobile.model.untis.timetable.PeriodData
 import com.sapuseven.untis.data.repository.TimetableRepository
 import com.sapuseven.untis.ui.animations.fullscreenDialogAnimationEnter
 import com.sapuseven.untis.ui.animations.fullscreenDialogAnimationExit

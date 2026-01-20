@@ -5,9 +5,9 @@ import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverter
 import androidx.room.TypeConverters
-import com.sapuseven.untis.core.api.model.untis.SchoolInfo
-import com.sapuseven.untis.core.api.model.untis.Settings
-import com.sapuseven.untis.core.api.model.untis.UserData
+import com.sapuseven.untis.core.api.mobile.model.untis.SchoolInfo
+import com.sapuseven.untis.core.api.mobile.model.untis.Settings
+import com.sapuseven.untis.core.api.mobile.model.untis.UserData
 import com.sapuseven.untis.core.database.entity.AbsenceReasonEntity
 import com.sapuseven.untis.core.database.entity.DepartmentEntity
 import com.sapuseven.untis.core.database.entity.DutyEntity

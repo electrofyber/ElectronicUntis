@@ -1,7 +1,7 @@
 package com.sapuseven.untis.core.data.mapper
 
-import com.sapuseven.untis.core.api.model.untis.classreg.Exam
-import com.sapuseven.untis.core.api.model.untis.timetable.PeriodExam
+import com.sapuseven.untis.core.api.mobile.model.untis.classreg.Exam
+import com.sapuseven.untis.core.api.mobile.model.untis.timetable.PeriodExam
 import com.sapuseven.untis.core.model.timetable.Element
 import com.sapuseven.untis.core.model.timetable.ElementKey
 import com.sapuseven.untis.core.model.timetable.ElementType

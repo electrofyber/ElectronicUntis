@@ -15,5 +15,5 @@ data class PeriodDetails(
 	//val seatingPlan: SeatingPlan?,
 	//val classRoles: List<ClassRole>?,
 	//val channel: MessengerChannel? = null,
-	//val can: List<com.sapuseven.untis.core.api.model.untis.enumeration.PeriodRight>
+	//val can: List<com.sapuseven.untis.core.api.mobile.model.untis.enumeration.PeriodRight>
 )
