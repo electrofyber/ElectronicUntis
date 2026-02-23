@@ -57,7 +57,7 @@ class UntisLoginRepository @Inject constructor(
 		school: School,
 		credentials: UserCredentials?,
 	): Result<Long> = runCatching {
-		val dto = userDataApi.getUserData(school.apiUrl, credentials?.user, credentials?.key)
+		val dto = userDataApi.getUserData(school.api.jsonRpc, credentials?.user, credentials?.key)
 
 		val user = dto.run {
 			User(

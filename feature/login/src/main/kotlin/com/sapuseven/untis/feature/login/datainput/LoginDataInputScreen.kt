@@ -50,6 +50,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
@@ -81,6 +82,7 @@ import com.sapuseven.untis.core.ui.common.SmallCircularProgressIndicator
 import com.sapuseven.untis.core.ui.common.ifNotNull
 import com.sapuseven.untis.core.ui.functional.None
 import com.sapuseven.untis.feature.login.schoolsearch.SchoolSearchResults
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
@@ -101,7 +103,12 @@ fun LoginDataInputScreen(
 	}
 
 	var showSchoolSearch by rememberSaveable { mutableStateOf(false) }
-	var showAdvanced by rememberSaveable { mutableStateOf(uiState.formData.apiUrl.isNotEmpty()) }
+	var showAdvanced by rememberSaveable { mutableStateOf(false) }
+
+	LaunchedEffect(Unit) {
+		snapshotFlow { uiState.formData.apiUrl }.first { it.isNotEmpty() }
+		showAdvanced = true
+	}
 
 	BackHandler(showSchoolSearch) {
 		showSchoolSearch = false
@@ -189,12 +196,12 @@ fun LoginDataInputScreen(
 						value = uiState.formData.schoolName,
 						onValueChange = viewModel.onSchoolNameChanged,
 						label = { Text(stringResource(id = R.string.logindatainput_school)) },
-						enabled = !uiState.isLoading && !uiState.isSchoolNameLocked,
+						enabled = !uiState.isLoading,
 						valid = !uiState.validate || uiState.formData.isSchoolNameValid,
 						errorText = stringResource(id = R.string.logindatainput_error_field_empty),
 						trailingIcon = {
 							IconButton(
-								enabled = !uiState.isLoading && !uiState.isSchoolNameLocked,
+								enabled = !uiState.isLoading,
 								onClick = { showSchoolSearch = true }
 							) {
 								Icon(
@@ -260,12 +267,12 @@ fun LoginDataInputScreen(
 						value = uiState.formData.schoolName,
 						onValueChange = viewModel.onSchoolNameChanged,
 						label = { Text(stringResource(id = R.string.logindatainput_school)) },
-						enabled = !uiState.isLoading && !uiState.isSchoolNameLocked,
+						enabled = !uiState.isLoading,
 						valid = !uiState.validate || uiState.formData.isSchoolNameValid,
 						errorText = stringResource(id = R.string.logindatainput_error_field_empty),
 						trailingIcon = {
 							IconButton(
-								enabled = !uiState.isLoading && !uiState.isSchoolNameLocked,
+								enabled = !uiState.isLoading,
 								onClick = { showSchoolSearch = true }
 							) {
 								Icon(

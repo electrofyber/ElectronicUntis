@@ -1,8 +1,5 @@
 package com.sapuseven.untis.core.database.entity
 
-import android.content.Context
-import android.net.Uri
-import androidx.core.net.toUri
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Embedded
@@ -27,8 +24,8 @@ import kotlinx.coroutines.flow.Flow
 data class UserEntity(
 	@PrimaryKey(autoGenerate = true) val id: Long,
 	val profileName: String = "",
-	val apiHost: String, // When populated before schema version 12, this may be a full URL, not just the host
-	val schoolInfo: SchoolInfo? = null,
+	val apiHost: String, // When populated before schema version 12, this may be a full URL. Afterwards it acts as an override for the JsonRPC URL
+	val schoolInfo: SchoolInfo? = null, // New with schema version 12
 	@Deprecated(
 		"Not populated with schema version 12",
 		ReplaceWith("schoolInfo.schoolId")
@@ -41,72 +38,7 @@ data class UserEntity(
 	val userData: UserData,
 	val settings: Settings? = null,
 	val created: Long? = null,
-) {
-	companion object {
-		fun buildApiUrl(
-			apiHost: String,
-			schoolInfo: SchoolInfo? = null
-		): Uri {
-
-			val host = apiHost.ifBlank {
-				if (schoolInfo?.useMobileServiceUrlAndroid == true && !schoolInfo.mobileServiceUrl.isNullOrBlank()) schoolInfo.mobileServiceUrl
-				else schoolInfo?.serverUrl
-			}!!.toUri().host
-
-			return Uri.Builder()
-				.scheme("https")
-				.authority(host)
-				.appendPath("WebUntis")
-				.build()
-		}
-
-		fun buildJsonRpcApiUrl(apiUrl: Uri, schoolName: String): Uri {
-			return apiUrl.buildUpon()
-				.appendEncodedPath("jsonrpc_intern.do")
-				.appendQueryParameter("school", schoolName)
-				.build()
-		}
-	}
-
-	@Deprecated("TODO")
-	fun getDisplayedName(context: Context): String {
-		return when {
-			profileName.isNotBlank() -> profileName
-			anonymous -> "(anonymous)"// TODO find a solution without resource strings for context.getString(R.string.all_anonymous)
-			else -> userData.displayName
-		}
-	}
-
-	@Deprecated("Use getDisplayedName() with context")
-	fun getDisplayedName(): String {
-		return when {
-			profileName.isNotBlank() -> profileName
-			anonymous -> "(anonymous)"// TODO find a solution without resource strings for stringResource(R.string.all_anonymous)
-			else -> userData.displayName
-		}
-	}
-
-	val apiUrl: Uri by lazy {
-		buildApiUrl(apiHost, schoolInfo)
-	}
-
-	val jsonRpcApiUrl: Uri by lazy {
-		val schoolName = schoolInfo?.loginName ?: apiHost.toUri().getQueryParameter("school") ?: ""
-		buildJsonRpcApiUrl(apiUrl, schoolName)
-	}
-
-	val restApiUrl: Uri by lazy {
-		apiUrl.buildUpon()
-			.appendEncodedPath("api/rest")
-			.build()
-	}
-
-	val restApiAuthUrl: Uri by lazy {
-		apiUrl.buildUpon()
-			.appendEncodedPath("api/mobile/v2")
-			.build()
-	}
-}
+)
 
 data class UserWithData(
 	@Embedded val user: UserEntity,

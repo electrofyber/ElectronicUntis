@@ -5,6 +5,7 @@ import com.sapuseven.untis.core.domain.repository.LoginRepository
 import com.sapuseven.untis.core.domain.repository.SchoolRepository
 import com.sapuseven.untis.core.domain.repository.UserRepository
 import com.sapuseven.untis.core.model.timetable.School
+import com.sapuseven.untis.core.model.timetable.SchoolApi
 import com.sapuseven.untis.core.model.user.UserCredentials
 import javax.inject.Inject
 
@@ -22,11 +23,7 @@ class LoginAndSaveUserUseCase @Inject constructor(
 		secondFactor: String? = null,
 		apiUrl: String? = null,
 	): Result<Long> = runCatching {
-		val school = loadSchoolInfo(schoolName, apiUrl) ?: run {
-			error("Invalid school")
-			//errorText = com.sapuseven.untis.feature.login.R.string.logindatainput_error_invalid_school
-			//return@launch
-		}
+		val school = loadSchoolInfo(schoolName, apiUrl)
 
 		val credentials = username?.let {
 			UserCredentials(
@@ -42,12 +39,18 @@ class LoginAndSaveUserUseCase @Inject constructor(
 	private suspend fun loadSchoolInfo(
 		schoolName: String,
 		apiUrl: String? = null,
-	): School? {
+	): School {
 		return apiUrl?.let {
 			School(
 				name = schoolName,
 				displayName = schoolName,
-				apiUrl = apiUrl
+				api = SchoolApi(
+					base = apiUrl,
+					jsonRpc = apiUrl,
+					// REST APIs are not supported with a custom API URL
+					rest = "",
+					restAuth = "",
+				)
 			)
 		} ?: run {
 			schoolRepository.searchSchool(schoolName).getOrThrow()
@@ -69,7 +72,7 @@ class LoginAndSaveUserUseCase @Inject constructor(
 		secondFactor: String? = null
 	): String {
 		return loginRepository.getAppSharedSecret(
-			school.apiUrl,
+			school.api.jsonRpc,
 			username,
 			password,
 			secondFactor

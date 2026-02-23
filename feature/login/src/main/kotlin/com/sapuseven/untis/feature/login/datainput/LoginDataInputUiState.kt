@@ -8,18 +8,16 @@ data class LoginDataInputUiState(
 	val isLoading: Boolean = false,
 	val validate: Boolean = false,
 	val formData: LoginData = LoginData(),
-	@StringRes val errorText: Int? = null,
+	@param:StringRes val errorText: Int? = null,
 	val errorTextRaw: String? = null,
 	val showQrError: Boolean = false,
 	val showProfileUpdate: Boolean = false,
 	val isExistingUser: Boolean = false,
-	val isSchoolNameLocked: Boolean = false,
 	val isSecondFactorRequired: Boolean = false,
 	val isLoggedIn: Boolean = false,
 ) {
 	fun withLoadedUser(user: User): LoginDataInputUiState = copy(
 		formData = LoginData.fromUser(user),
-		isSchoolNameLocked = true
 	)
 }
 
@@ -52,7 +50,7 @@ data class LoginData(
 			anonymous = user.isAnonymous,
 			username = user.credentials?.user ?: "",
 			storedPassword = user.credentials?.key,
-			apiUrl = user.school.apiUrl
+			apiUrl = user.school.api.jsonRpc
 		)
 	}
 }

@@ -7,6 +7,6 @@ import javax.inject.Inject
 class UntisMessagesRestApiClient @Inject constructor(
 	userRepository: UserRepository
 ) : MessagesApi(
-	baseUrl = userRepository.getActiveUser().school.apiUrl
+	baseUrl = userRepository.getActiveUser().school.api.rest
 ) {
 }

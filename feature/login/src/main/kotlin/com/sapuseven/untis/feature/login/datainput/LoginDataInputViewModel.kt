@@ -41,7 +41,6 @@ class LoginDataInputViewModel @Inject constructor(
 				anonymous = args.demoSchool,
 				apiUrl = if (args.demoSchool) DEMO_API_URL else ""
 			),
-			isSchoolNameLocked = args.schoolName != null
 		)
 	)
 	val uiState: StateFlow<LoginDataInputUiState> = _uiState
@@ -118,7 +117,7 @@ class LoginDataInputViewModel @Inject constructor(
 				schoolName,
 				profileName,
 				username.takeIf { !anonymous },
-				password.takeIf { !anonymous },
+				(storedPassword ?: password).takeIf { !anonymous },
 				secondFactor.takeIf { it.isNotEmpty() },
 				apiUrl.takeIf { it.isNotBlank() && isApiUrlValid }
 			)

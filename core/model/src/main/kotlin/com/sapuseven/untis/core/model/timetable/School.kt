@@ -4,5 +4,12 @@ data class School(
 	val name: String,
 	val displayName: String,
 	val address: String? = null,
-	val apiUrl: String,
+	val api: SchoolApi,
+)
+
+data class SchoolApi(
+	val base: String,
+	val jsonRpc: String,
+	val rest: String,
+	val restAuth: String,
 )

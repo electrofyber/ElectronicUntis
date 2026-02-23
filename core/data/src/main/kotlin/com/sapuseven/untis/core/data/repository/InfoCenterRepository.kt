@@ -44,7 +44,7 @@ class UntisInfoCenterRepository @Inject constructor(
 		cached<LocalDate, MessagesOfDayResult>("infocenter/messagesofday") {
 			messagesApi.getMessagesOfDay(
 				date = day,
-				apiUrl = user.school.apiUrl,
+				apiUrl = user.school.api.jsonRpc,
 				user = user.credentials?.user,
 				key = user.credentials?.key
 			)
@@ -64,7 +64,7 @@ class UntisInfoCenterRepository @Inject constructor(
 				type = params.elementType.toData(),
 				startDate = params.startDate,
 				endDate = params.endDate,
-				apiUrl = user.school.apiUrl,
+				apiUrl = user.school.api.jsonRpc,
 				user = user.credentials?.user,
 				key = user.credentials?.key
 			)
@@ -84,7 +84,7 @@ class UntisInfoCenterRepository @Inject constructor(
 				type = params.elementType.toData(),
 				startDate = params.startDate,
 				endDate = params.endDate,
-				apiUrl = user.school.apiUrl,
+				apiUrl = user.school.api.jsonRpc,
 				user = user.credentials?.user,
 				key = user.credentials?.key
 			)
@@ -102,7 +102,7 @@ class UntisInfoCenterRepository @Inject constructor(
 			officeHoursApi.getOfficeHours(
 				klasseId = params.classId,
 				startDate = params.startDate,
-				apiUrl = user.school.apiUrl,
+				apiUrl = user.school.api.jsonRpc,
 				user = user.credentials?.user,
 				key = user.credentials?.key
 			)
@@ -123,7 +123,7 @@ class UntisInfoCenterRepository @Inject constructor(
 				endDate = params.endDate,
 				includeExcused = params.includeExcused,
 				includeUnExcused = params.includeUnExcused,
-				apiUrl = user.school.apiUrl,
+				apiUrl = user.school.api.jsonRpc,
 				user = user.credentials?.user,
 				key = user.credentials?.key
 			)

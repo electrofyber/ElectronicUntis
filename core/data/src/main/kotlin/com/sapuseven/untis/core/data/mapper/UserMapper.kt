@@ -7,6 +7,7 @@ import com.sapuseven.untis.core.api.mobile.model.untis.enumeration.Right
 import com.sapuseven.untis.core.database.entity.UserEntity
 import com.sapuseven.untis.core.model.timetable.Element
 import com.sapuseven.untis.core.model.timetable.School
+import com.sapuseven.untis.core.model.timetable.SchoolApi
 import com.sapuseven.untis.core.model.user.User
 import com.sapuseven.untis.core.model.user.UserCredentials
 import kotlin.time.Clock
@@ -18,7 +19,7 @@ internal fun UserEntity.toDomain() = User(
 	name = userData.displayName,
 	displayName = profileName.takeIf(String::isNotBlank) ?: userData.displayName,
 	credentials = UserCredentials(user.orEmpty(), key.orEmpty()).takeIf { !anonymous },
-	school = schoolInfo?.toDomain() ?: defaultSchoolInfo(),
+	school = schoolInfo?.toDomain(apiHost) ?: defaultSchoolInfo(),
 	element = userData.elemType?.let { elementType ->
 		Element.personal(
 			id = userData.elemId,
@@ -34,7 +35,12 @@ private fun UserEntity.defaultSchoolInfo(): School = School(
 	name = schoolInfo?.loginName ?: apiHost.toUri().getQueryParameter("school") ?: "",
 	displayName = userData.schoolName,
 	address = null,
-	apiUrl = apiHost
+	api = SchoolApi(
+		base = apiHost,
+		jsonRpc = apiHost,
+		rest = "",
+		restAuth = "",
+	)
 )
 
 // Map Domain -> Entity
@@ -42,7 +48,7 @@ private fun UserEntity.defaultSchoolInfo(): School = School(
 internal fun User.toEntity(): UserEntity = UserEntity(
 	id = id,
 	profileName = displayName,
-	apiHost = school.apiUrl,
+	apiHost = school.api.base.takeIf { it == school.api.jsonRpc }.orEmpty(), // If a custom API URL was provided, it was set for both base and jsonRpc. Otherwise they would be different.
 	schoolInfo = school.toEntity(),
 	user = credentials?.user,
 	key = credentials?.key,

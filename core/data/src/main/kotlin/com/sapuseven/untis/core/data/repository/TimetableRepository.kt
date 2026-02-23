@@ -50,7 +50,7 @@ class UntisTimetableRepository @Inject constructor(
 					startDate = params.startDate,
 					endDate = params.endDate,
 					masterDataTimestamp = 0L,//TODO user.masterData.timestamp,
-					apiUrl = user.school.apiUrl,
+					apiUrl = user.school.api.jsonRpc,
 					user = user.credentials?.user,
 					key = user.credentials?.key
 				)
@@ -79,7 +79,7 @@ class UntisTimetableRepository @Inject constructor(
 				source = { params ->
 					api.getPeriodData(
 						periodIds = params.map { it.id }.toSet(),
-						apiUrl = user.school.apiUrl,
+						apiUrl = user.school.api.jsonRpc,
 						user = user.credentials?.user,
 						key = user.credentials?.key
 					)
@@ -103,7 +103,7 @@ class UntisTimetableRepository @Inject constructor(
 			api.postLessonTopic(
 				periodId = periodId,
 				lessonTopic = lessonTopic,
-				apiUrl = user.school.apiUrl,
+				apiUrl = user.school.api.jsonRpc,
 				user = user.credentials?.user,
 				key = user.credentials?.key
 			)
@@ -126,7 +126,7 @@ class UntisTimetableRepository @Inject constructor(
 				studentId = studentId,
 				startTime = startTime,
 				endTime = endTime,
-				apiUrl = user.school.apiUrl,
+				apiUrl = user.school.api.jsonRpc,
 				user = user.credentials?.user,
 				key = user.credentials?.key
 			).map { it.toDomain(allElements, students) }
@@ -137,7 +137,7 @@ class UntisTimetableRepository @Inject constructor(
 		return runCatching {
 			api.deleteAbsence(
 				absenceId = absenceId,
-				apiUrl = user.school.apiUrl,
+				apiUrl = user.school.api.jsonRpc,
 				user = user.credentials?.user,
 				key = user.credentials?.key
 			)
@@ -148,7 +148,7 @@ class UntisTimetableRepository @Inject constructor(
 		return runCatching {
 			api.postAbsencesChecked(
 				periodIds = periodIds,
-				apiUrl = user.school.apiUrl,
+				apiUrl = user.school.api.jsonRpc,
 				user = user.credentials?.user,
 				key = user.credentials?.key
 			)

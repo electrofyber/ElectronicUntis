@@ -26,6 +26,7 @@ open class JsonrpcApiClient() {
 	) : this() {
 		val clientConfig: (HttpClientConfig<*>) -> Unit by lazy {
 			{
+				it.expectSuccess = true
 				it.install(ContentNegotiation) {
 					json(jsonBlock, contentType = ContentType.Application.Json)
 					json(jsonBlock, contentType = ContentType.Application.JsonRpc)
