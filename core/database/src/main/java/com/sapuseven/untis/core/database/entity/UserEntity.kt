@@ -24,7 +24,7 @@ import kotlinx.coroutines.flow.Flow
 data class UserEntity(
 	@PrimaryKey(autoGenerate = true) val id: Long,
 	val profileName: String = "",
-	val apiHost: String, // When populated before schema version 12, this may be a full URL. Afterwards it acts as an override for the JsonRPC URL
+	val apiHost: String, // When populated before schema version 12, this may be a full URL. Afterwards it acts as an override for the JsonRPC URL. TODO: Rename to apiUrlOverride and make nullable
 	val schoolInfo: SchoolInfo? = null, // New with schema version 12
 	@Deprecated(
 		"Not populated with schema version 12",

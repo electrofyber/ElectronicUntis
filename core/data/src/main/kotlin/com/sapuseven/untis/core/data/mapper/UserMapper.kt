@@ -1,5 +1,6 @@
 package com.sapuseven.untis.core.data.mapper
 
+import android.webkit.URLUtil
 import androidx.core.net.toUri
 import com.sapuseven.untis.core.api.mobile.model.untis.UserData
 import com.sapuseven.untis.core.api.mobile.model.untis.enumeration.ElementType
@@ -19,7 +20,7 @@ internal fun UserEntity.toDomain() = User(
 	name = userData.displayName,
 	displayName = profileName.takeIf(String::isNotBlank) ?: userData.displayName,
 	credentials = UserCredentials(user.orEmpty(), key.orEmpty()).takeIf { !anonymous },
-	school = schoolInfo?.toDomain(apiHost) ?: defaultSchoolInfo(),
+	school = schoolInfo?.toDomain(apiHost.takeIf(URLUtil::isValidUrl)) ?: defaultSchoolInfo(),
 	element = userData.elemType?.let { elementType ->
 		Element.personal(
 			id = userData.elemId,
