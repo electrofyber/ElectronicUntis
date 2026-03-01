@@ -1,4 +1,4 @@
-package com.sapuseven.untis.core.api.mobile.client
+package com.sapuseven.untis.core.api.mobile.client.jsonrpc
 
 import com.sapuseven.untis.core.api.mobile.exception.UntisApiException
 import com.sapuseven.untis.core.api.mobile.model.request.MessagesOfDayParams
@@ -10,16 +10,13 @@ import io.ktor.client.HttpClientConfig
 import io.ktor.client.call.body
 import io.ktor.client.engine.HttpClientEngineFactory
 import kotlinx.datetime.LocalDate
-import kotlinx.serialization.json.Json
 
 open class MessagesJsonrpcApi(
 	engineFactory: HttpClientEngineFactory<*>,
-	config: ((HttpClientConfig<*>) -> Unit)? = null,
-	jsonBlock: Json = DEFAULT_JSON
+	config: ((HttpClientConfig<*>) -> Unit)
 ) : JsonrpcApiClient(
 	httpClientEngineFactory = engineFactory,
 	httpClientConfig = config,
-	jsonBlock = jsonBlock
 ) {
 	open suspend fun getMessagesOfDay(
 		apiUrl: String,

@@ -1,50 +1,32 @@
-package com.sapuseven.untis.core.api.mobile.client
+package com.sapuseven.untis.core.api.mobile.client.jsonrpc
 
 import com.sapuseven.untis.core.api.mobile.model.request.RequestData
 import io.ktor.client.HttpClient
 import io.ktor.client.HttpClientConfig
 import io.ktor.client.engine.HttpClientEngine
 import io.ktor.client.engine.HttpClientEngineFactory
-import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
 import io.ktor.client.statement.HttpResponse
 import io.ktor.http.ContentType
 import io.ktor.http.contentType
-import io.ktor.serialization.kotlinx.json.json
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import kotlinx.serialization.json.Json
 
 open class JsonrpcApiClient() {
 	private lateinit var client: HttpClient
 
 	constructor(
-		httpClientEngine: HttpClientEngine?,
-		httpClientConfig: ((HttpClientConfig<*>) -> Unit)? = null,
-		jsonBlock: Json,
-	) : this() {
-		val clientConfig: (HttpClientConfig<*>) -> Unit by lazy {
-			{
-				it.expectSuccess = true
-				it.install(ContentNegotiation) {
-					json(jsonBlock, contentType = ContentType.Application.Json)
-					json(jsonBlock, contentType = ContentType.Application.JsonRpc)
-				}
-				httpClientConfig?.invoke(it)
-			}
-		}
-
-		client = httpClientEngine?.let { HttpClient(it, clientConfig) } ?: HttpClient(clientConfig)
-	}
+		httpClientEngine: HttpClientEngine,
+		httpClientConfig: ((HttpClientConfig<*>) -> Unit)
+	) : this(
+		HttpClient(httpClientEngine, httpClientConfig)
+	)
 
 	constructor(
-		httpClientEngineFactory: HttpClientEngineFactory<*>?,
-		httpClientConfig: ((HttpClientConfig<*>) -> Unit)? = null,
-		jsonBlock: Json,
-	) : this(
-		httpClientEngineFactory?.create(), httpClientConfig, jsonBlock
-	)
+		httpClientEngineFactory: HttpClientEngineFactory<*>,
+		httpClientConfig: ((HttpClientConfig<*>) -> Unit)
+	) : this(httpClientEngineFactory.create(), httpClientConfig)
 
 	constructor(
 		httpClient: HttpClient
@@ -61,17 +43,8 @@ open class JsonrpcApiClient() {
 		}
 	}
 
-	private val ContentType.Application.JsonRpc: ContentType
-		get() = ContentType("application", "json-rpc")
-
 	companion object {
 		const val DEFAULT_SCHOOLSEARCH_URL = "https://schoolsearch.webuntis.com/schoolquery2"
-		val DEFAULT_JSON = Json {
-			ignoreUnknownKeys = true
-			isLenient = true
-			encodeDefaults = true
-			prettyPrint = true // TODO only for DEV
-		}
 
 		const val METHOD_CREATE_IMMEDIATE_ABSENCE = "createImmediateAbsence2017"
 		const val METHOD_DELETE_ABSENCE = "deleteAbsence2017"

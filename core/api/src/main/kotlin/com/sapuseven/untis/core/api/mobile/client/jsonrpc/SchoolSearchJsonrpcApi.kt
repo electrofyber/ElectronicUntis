@@ -1,4 +1,4 @@
-package com.sapuseven.untis.core.api.mobile.client
+package com.sapuseven.untis.core.api.mobile.client.jsonrpc
 
 import com.sapuseven.untis.core.api.mobile.exception.UntisApiException
 import com.sapuseven.untis.core.api.mobile.model.request.RequestData
@@ -9,16 +9,13 @@ import io.ktor.client.HttpClientConfig
 import io.ktor.client.call.body
 import io.ktor.client.engine.HttpClientEngineFactory
 import kotlinx.serialization.ExperimentalSerializationApi
-import kotlinx.serialization.json.Json
 
 open class SchoolSearchJsonrpcApi(
 	engineFactory: HttpClientEngineFactory<*>,
-	config: ((HttpClientConfig<*>) -> Unit)? = null,
-	jsonBlock: Json = JsonrpcApiClient.DEFAULT_JSON
+	config: ((HttpClientConfig<*>) -> Unit)
 ) : JsonrpcApiClient(
 	httpClientEngineFactory = engineFactory,
 	httpClientConfig = config,
-	jsonBlock = jsonBlock
 ) {
 	@OptIn(ExperimentalSerializationApi::class)
 	open suspend fun searchSchools(
@@ -27,7 +24,7 @@ open class SchoolSearchJsonrpcApi(
 		schoolName: String = ""
 	): SchoolSearchResult {
 		val body = RequestData(
-			method = JsonrpcApiClient.METHOD_SEARCH_SCHOOLS,
+			method = METHOD_SEARCH_SCHOOLS,
 			params = listOf(SchoolSearchParams(search, schoolId, schoolName))
 		)
 

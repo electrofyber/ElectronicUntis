@@ -1,6 +1,6 @@
 package com.sapuseven.untis.core.data.repository
 
-import com.sapuseven.untis.core.api.mobile.client.SchoolSearchJsonrpcApi
+import com.sapuseven.untis.core.api.mobile.client.jsonrpc.SchoolSearchJsonrpcApi
 import com.sapuseven.untis.core.api.mobile.model.untis.SchoolInfo
 import com.sapuseven.untis.core.data.mapper.toDomain
 import com.sapuseven.untis.core.domain.repository.SchoolRepository

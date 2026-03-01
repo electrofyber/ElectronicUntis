@@ -1,9 +1,9 @@
 package com.sapuseven.untis.core.data.repository
 
-import com.sapuseven.untis.core.api.mobile.client.AbsenceJsonrpcApi
-import com.sapuseven.untis.core.api.mobile.client.ClassRegJsonrpcApi
-import com.sapuseven.untis.core.api.mobile.client.MessagesJsonrpcApi
-import com.sapuseven.untis.core.api.mobile.client.OfficeHoursJsonrpcApi
+import com.sapuseven.untis.core.api.mobile.client.jsonrpc.AbsenceJsonrpcApi
+import com.sapuseven.untis.core.api.mobile.client.jsonrpc.ClassRegJsonrpcApi
+import com.sapuseven.untis.core.api.mobile.client.jsonrpc.MessagesJsonrpcApi
+import com.sapuseven.untis.core.api.mobile.client.jsonrpc.OfficeHoursJsonrpcApi
 import com.sapuseven.untis.core.api.mobile.model.response.ExamsResult
 import com.sapuseven.untis.core.api.mobile.model.response.HomeworkResult
 import com.sapuseven.untis.core.api.mobile.model.response.MessagesOfDayResult

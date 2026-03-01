@@ -1,6 +1,6 @@
 package com.sapuseven.untis.core.data.repository
 
-import com.sapuseven.untis.core.api.mobile.client.UserDataJsonrpcApi
+import com.sapuseven.untis.core.api.mobile.client.jsonrpc.UserDataJsonrpcApi
 import com.sapuseven.untis.core.api.mobile.exception.UntisApiException
 import com.sapuseven.untis.core.api.mobile.model.response.UntisErrorCode
 import com.sapuseven.untis.core.api.mobile.model.untis.MasterData

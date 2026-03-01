@@ -1,4 +1,4 @@
-package com.sapuseven.untis.core.api.mobile.client
+package com.sapuseven.untis.core.api.mobile.client.jsonrpc
 
 import com.sapuseven.untis.core.api.mobile.exception.UntisApiException
 import com.sapuseven.untis.core.api.mobile.model.request.AppSharedSecretParams
@@ -13,16 +13,13 @@ import com.sapuseven.untis.core.api.mobile.model.untis.Auth
 import io.ktor.client.HttpClientConfig
 import io.ktor.client.call.body
 import io.ktor.client.engine.HttpClientEngineFactory
-import kotlinx.serialization.json.Json
 
 open class UserDataJsonrpcApi(
 	engineFactory: HttpClientEngineFactory<*>,
-	config: ((HttpClientConfig<*>) -> Unit)? = null,
-	jsonBlock: Json = DEFAULT_JSON
+	config: ((HttpClientConfig<*>) -> Unit)
 ) : JsonrpcApiClient(
 	httpClientEngineFactory = engineFactory,
 	httpClientConfig = config,
-	jsonBlock = jsonBlock
 ) {
 	open suspend fun getAppSharedSecret(
 		apiUrl: String,

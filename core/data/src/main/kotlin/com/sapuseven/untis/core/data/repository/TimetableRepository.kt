@@ -1,6 +1,6 @@
 package com.sapuseven.untis.core.data.repository
 
-import com.sapuseven.untis.core.api.mobile.client.TimetableJsonrpcApi
+import com.sapuseven.untis.core.api.mobile.client.jsonrpc.TimetableJsonrpcApi
 import com.sapuseven.untis.core.api.mobile.model.response.PeriodDataResult
 import com.sapuseven.untis.core.api.mobile.model.response.TimetableResult
 import com.sapuseven.untis.core.data.cache.DiskCache
