@@ -1,26 +1,38 @@
 package com.sapuseven.untis.feature.infocenter.pages
 
 import android.widget.TextView
+import androidx.activity.compose.BackHandler
+import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.Crossfade
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionLayout
 import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -47,6 +59,8 @@ import coil.compose.rememberAsyncImagePainter
 import com.sapuseven.untis.core.model.messages.DirectMessage
 import com.sapuseven.untis.core.model.messages.MessageOfDay
 import com.sapuseven.untis.core.model.timetable.Attachment
+import com.sapuseven.untis.core.ui.common.MessageBubble
+import com.sapuseven.untis.core.ui.common.MessageBubbleDefaults
 import com.sapuseven.untis.core.ui.dialogs.AttachmentsDialog
 import com.sapuseven.untis.feature.infocenter.InfoCenterViewModel
 import com.sapuseven.untis.feature.infocenter.R
@@ -56,8 +70,11 @@ import io.github.fornewid.placeholder.foundation.placeholder
 import io.github.fornewid.placeholder.foundation.shimmer
 import io.github.fornewid.placeholder.material3.color
 import io.github.fornewid.placeholder.material3.shimmerHighlightColor
-import java.time.LocalDate
-import java.time.LocalDateTime
+import kotlinx.datetime.Clock
+import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toJavaLocalDateTime
+import kotlinx.datetime.todayIn
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
 
@@ -137,7 +154,7 @@ fun InfoCenterMessages(viewModel: InfoCenterViewModel = hiltViewModel()) {
 				}
 			}
 
-			/*MessageDetails(
+			MessageDetails(
 				message = selectedMessage,
 				messageContent = selectedMessageContent,
 				messageError = selectedMessageError,
@@ -149,7 +166,7 @@ fun InfoCenterMessages(viewModel: InfoCenterViewModel = hiltViewModel()) {
 
 			BackHandler(selectedMessage != null) {
 				viewModel.onMessageDismiss()
-			}*/
+			}
 		}
 	}
 
@@ -158,7 +175,6 @@ fun InfoCenterMessages(viewModel: InfoCenterViewModel = hiltViewModel()) {
 	}
 }
 
-/*
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 private fun SharedTransitionScope.MessageDetails(
@@ -194,6 +210,7 @@ private fun SharedTransitionScope.MessageDetails(
 								.clip(CardDefaults.shape)
 						) {
 							Column {
+								val sender = (targetMessage as? Message.Direct)?.sender
 								MessagePreview(
 									subject = targetMessage.subject ?: "",
 									modifier = Modifier
@@ -201,10 +218,10 @@ private fun SharedTransitionScope.MessageDetails(
 											sharedContentState = rememberSharedContentState(key = targetMessage.id),
 											animatedVisibilityScope = this@AnimatedContent,
 										),
-									sender = targetMessage.sender?.displayName,
-									imageUrl = targetMessage.sender?.imageUrl,
-									time = targetMessage.sentDateTime,
-									read = targetMessage.isMessageRead ?: true
+									sender = sender?.name,
+									imageUrl = sender?.avatarUrl,
+									time = targetMessage.dateTime,
+									unread = targetMessage.unread
 								)
 
 								MessageBubble(
@@ -213,8 +230,8 @@ private fun SharedTransitionScope.MessageDetails(
 										.padding(horizontal = 16.dp, vertical = 8.dp),
 									icon = {
 										Icon(
-											painter = painterResource(id = R.drawable.core_ui_error),
-											contentDescription = stringResource(id = R.string.all_error)
+											painter = painterResource(id = com.sapuseven.untis.core.ui.R.drawable.core_ui_error),
+											contentDescription = stringResource(id = com.sapuseven.untis.core.ui.R.string.all_error)
 										)
 									},
 									colors = MessageBubbleDefaults.errorColors(),
@@ -288,7 +305,7 @@ private fun SharedTransitionScope.MessageDetails(
 			}
 		}
 	}
-}*/
+}
 
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
@@ -299,7 +316,7 @@ private fun MessagePreview(
 	sender: String? = null,
 	imageUrl: String? = null,
 	time: LocalDateTime? = null,
-	read: Boolean = true,
+	unread: Boolean = false,
 	attachments: List<Attachment>? = null,
 	onShowAttachments: () -> Unit = {}
 ) {
@@ -311,7 +328,7 @@ private fun MessagePreview(
 					text = subject,
 					maxLines = 1,
 					overflow = TextOverflow.Ellipsis,
-					fontWeight = if (!read) FontWeight.Bold else null,
+					fontWeight = if (unread) FontWeight.Bold else null,
 					color = MaterialTheme.colorScheme.onSurface
 				)
 				body?.let {
@@ -319,7 +336,7 @@ private fun MessagePreview(
 						text = body,
 						maxLines = 1,
 						overflow = TextOverflow.Ellipsis,
-						fontWeight = if (!read) FontWeight.Bold else null,
+						fontWeight = if (unread) FontWeight.Bold else null,
 						color = MaterialTheme.colorScheme.onSurfaceVariant
 					)
 				}
@@ -384,15 +401,15 @@ private fun MessagePreview(
 		) {
 			time?.let {
 				Text(
-					text = if (time.toLocalDate().equals(LocalDate.now()))
-						time.format(DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT))
+					text = if (time.date == Clock.System.todayIn(TimeZone.currentSystemDefault())) // TODO use injected clock/timezone
+						time.toJavaLocalDateTime().format(DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT))
 					else
-						time.format(DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM)),
+						time.toJavaLocalDateTime().format(DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM)),
 					style = MaterialTheme.typography.bodySmall,
 					color = MaterialTheme.colorScheme.onSurfaceVariant
 				)
 			}
-			attachments?.let {
+			attachments?.takeIf { it.isNotEmpty() }?.let {
 				IconButton(onClick = {
 					onShowAttachments()
 				}) {
@@ -411,12 +428,16 @@ sealed interface Message {
 	val subject: String?
 	val content: String?
 	val attachments: List<Attachment>?
+	val dateTime: LocalDateTime?
+	val unread: Boolean
+		get() = false
 
 	data class Day(val messageOfDay: MessageOfDay) : Message {
 		override val id = "day-${messageOfDay.id}"
 		override val subject = messageOfDay.subject
 		override val content = messageOfDay.body
 		override val attachments = messageOfDay.attachments
+		override val dateTime = null
 	}
 
 	data class Direct(val directMessage: DirectMessage) : Message {
@@ -424,6 +445,9 @@ sealed interface Message {
 		override val subject = directMessage.subject
 		override val content = directMessage.body
 		override val attachments = directMessage.attachments
+		override val dateTime = directMessage.timestamp
+		override val unread = directMessage.unread
+		val sender = directMessage.sender
 	}
 }
 
