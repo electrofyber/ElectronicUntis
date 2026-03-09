@@ -1,12 +1,12 @@
 package com.sapuseven.untis.core.ui.common
 
 import androidx.annotation.StringRes
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
@@ -16,7 +16,6 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.Immutable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -34,46 +33,43 @@ fun MessageBubble(
 ) {
 	AnimatedValueVisibility(value = messageText) {
 		CompositionLocalProvider(LocalContentColor provides colors.contentColor) {
-			Row(
-				modifier = modifier
-					.clip(RoundedCornerShape(4.dp))
-					.background(colors.containerColor),
-				verticalAlignment = Alignment.CenterVertically
-			) {
-				if (icon != null) {
-					Box(
-						Modifier
-							.align(Alignment.CenterVertically)
-							.padding(start = 16.dp, top = 16.dp, bottom = 16.dp)
-					) { icon() }
-				}
-
-				Column(
-					modifier = Modifier
-						.weight(1f)
-						.padding(vertical = 8.dp)
-				) {
-					Box(
-						Modifier
-							.padding(start = 16.dp, end = 16.dp),
-						contentAlignment = Alignment.CenterStart
-					) {
-						Text(
-							text = stringResource(id = it),
-							style = MaterialTheme.typography.titleMedium
-						)
+			Card(colors = CardDefaults.cardColors(containerColor = colors.containerColor), modifier = modifier) {
+				Row(verticalAlignment = Alignment.CenterVertically) {
+					if (icon != null) {
+						Box(
+							Modifier
+								.align(Alignment.CenterVertically)
+								.padding(start = 16.dp, top = 16.dp, bottom = 16.dp)
+						) { icon() }
 					}
 
-					if (messageTextRaw?.isNotBlank() == true) {
+					Column(
+						modifier = Modifier
+							.weight(1f)
+							.padding(vertical = 8.dp)
+					) {
 						Box(
 							Modifier
 								.padding(start = 16.dp, end = 16.dp),
 							contentAlignment = Alignment.CenterStart
 						) {
 							Text(
-								text = messageTextRaw,
-								style = MaterialTheme.typography.bodyMedium
+								text = stringResource(id = it),
+								style = MaterialTheme.typography.titleMedium
 							)
+						}
+
+						if (messageTextRaw?.isNotBlank() == true) {
+							Box(
+								Modifier
+									.padding(start = 16.dp, end = 16.dp),
+								contentAlignment = Alignment.CenterStart
+							) {
+								Text(
+									text = messageTextRaw,
+									style = MaterialTheme.typography.bodyMedium
+								)
+							}
 						}
 					}
 				}
@@ -112,7 +108,13 @@ object MessageBubbleDefaults {
 @Composable
 fun MessageBubbleErrorPreview() {
 	MessageBubble(
-		icon = { Icon(painter = painterResource(id = R.drawable.core_ui_error), contentDescription = stringResource(id = R.string.all_error)) },
+		icon = {
+			Icon(
+				painter = painterResource(id = R.drawable.core_ui_error),
+				contentDescription = stringResource(id = R.string.all_error)
+			)
+		},
+		colors = MessageBubbleDefaults.primaryColors(),
 		messageText = R.string.errormessagedictionary_generic,
 		messageTextRaw = "Here can be some additional error details that can even be very long"
 	)
@@ -122,7 +124,12 @@ fun MessageBubbleErrorPreview() {
 @Composable
 fun MessageBubbleErrorColorPreview() {
 	MessageBubble(
-		icon = { Icon(painter = painterResource(id = R.drawable.core_ui_error), contentDescription = stringResource(id = R.string.all_error)) },
+		icon = {
+			Icon(
+				painter = painterResource(id = R.drawable.core_ui_error),
+				contentDescription = stringResource(id = R.string.all_error)
+			)
+		},
 		colors = MessageBubbleDefaults.errorColors(),
 		messageText = R.string.errormessagedictionary_generic,
 		messageTextRaw = "Here can be some additional error details that can even be very long"

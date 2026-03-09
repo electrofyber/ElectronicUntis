@@ -5,6 +5,7 @@ import com.sapuseven.untis.core.domain.repository.UserRepository
 import com.sapuseven.untis.core.model.timetable.ElementType
 import com.sapuseven.untis.core.model.timetable.Exam
 import com.sapuseven.untis.core.model.timetable.Homework
+import com.sapuseven.untis.core.model.user.User
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
@@ -15,22 +16,19 @@ import javax.inject.Inject
 
 
 class GetHomeworkUseCase @Inject constructor(
-	private val userRepository: UserRepository,
 	private val infoCenterRepository: InfoCenterRepository,
 	private val clock: Clock = Clock.System,
 	private val zone: TimeZone = TimeZone.currentSystemDefault(),
 	getCurrentSchoolYear: GetCurrentSchoolYearUseCase,
 ) {
-	private val currentUser = userRepository.getActiveUser()
-
 	private val currentSchoolYear =
 		getCurrentSchoolYear() ?: 0//SchoolYearEntity(startDate = LocalDate.now(), endDate = LocalDate.now())
 
-	operator fun invoke(): Flow<Result<List<Homework>>> = infoCenterRepository.getHomework(
-		currentUser,
+	operator fun invoke(user: User): Flow<Result<List<Homework>>> = infoCenterRepository.getHomework(
+		user,
 		InfoCenterRepository.EventsParams(
-			currentUser.element?.id ?: 0,
-			currentUser.element?.type ?: ElementType.STUDENT,
+			user.element?.id ?: 0,
+			user.element?.type ?: ElementType.STUDENT,
 			clock.todayIn(zone),
 			clock.todayIn(zone),
 			//currentSchoolYear.endDate

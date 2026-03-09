@@ -84,8 +84,6 @@ import java.time.format.FormatStyle
 fun InfoCenterMessages(viewModel: InfoCenterViewModel = hiltViewModel()) {
 	val uiState by viewModel.messagesState.collectAsStateWithLifecycle()
 	val selectedMessage by viewModel.selectedMessage.collectAsStateWithLifecycle()
-	val selectedMessageContent by viewModel.selectedMessageContent.collectAsStateWithLifecycle()
-	val selectedMessageError by viewModel.selectedMessageError.collectAsStateWithLifecycle()
 
 	var attachmentsDialog by remember { mutableStateOf<List<Attachment>?>(null) }
 
@@ -113,7 +111,7 @@ fun InfoCenterMessages(viewModel: InfoCenterViewModel = hiltViewModel()) {
 						} else {
 							items(state.messages) { message ->
 								AnimatedVisibility(
-									visible = message != selectedMessage,
+									visible = message != selectedMessage?.message,
 									modifier = Modifier.animateItem()
 								) {
 									Card(
@@ -156,8 +154,6 @@ fun InfoCenterMessages(viewModel: InfoCenterViewModel = hiltViewModel()) {
 
 			MessageDetails(
 				message = selectedMessage,
-				messageContent = selectedMessageContent,
-				messageError = selectedMessageError,
 				canReply = false, // TODO not yet implemented - selectedMessage?.isReplyAllowed == true,
 				canDelete = false, // TODO not yet implemented - selectedMessage?.allowMessageDeletion == true,
 				onReply = { viewModel.onMessageReply() },
@@ -178,9 +174,7 @@ fun InfoCenterMessages(viewModel: InfoCenterViewModel = hiltViewModel()) {
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 private fun SharedTransitionScope.MessageDetails(
-	message: Message?,
-	messageContent: String?,
-	messageError: String?,
+	message: SelectedMessageState?,
 	modifier: Modifier = Modifier,
 	canReply: Boolean = false,
 	canDelete: Boolean = false,
@@ -191,18 +185,18 @@ private fun SharedTransitionScope.MessageDetails(
 		modifier = modifier.fillMaxSize(),
 		targetState = message,
 		label = "MessageDetails"
-	) { targetMessage ->
+	) { targetState ->
 		Box(
 			modifier = Modifier.fillMaxSize()
 		) {
-			if (targetMessage != null) {
+			targetState?.let {
 				Surface(modifier = Modifier.fillMaxSize()) {
 					Column {
 						Card(
 							modifier = Modifier
 								.padding(horizontal = 16.dp, vertical = 8.dp)
 								.sharedBounds(
-									sharedContentState = rememberSharedContentState(key = "${targetMessage.id}-bounds"),
+									sharedContentState = rememberSharedContentState(key = "${targetState.message.id}-bounds"),
 									animatedVisibilityScope = this@AnimatedContent,
 									clipInOverlayDuringTransition = OverlayClip(CardDefaults.shape),
 									resizeMode = SharedTransitionScope.ResizeMode.RemeasureToBounds
@@ -210,18 +204,18 @@ private fun SharedTransitionScope.MessageDetails(
 								.clip(CardDefaults.shape)
 						) {
 							Column {
-								val sender = (targetMessage as? Message.Direct)?.sender
+								val sender = (targetState.message as? Message.Direct)?.sender
 								MessagePreview(
-									subject = targetMessage.subject ?: "",
+									subject = targetState.message.subject ?: "",
 									modifier = Modifier
 										.sharedElement(
-											sharedContentState = rememberSharedContentState(key = targetMessage.id),
+											sharedContentState = rememberSharedContentState(key = targetState.message.id),
 											animatedVisibilityScope = this@AnimatedContent,
 										),
 									sender = sender?.name,
 									imageUrl = sender?.avatarUrl,
-									time = targetMessage.dateTime,
-									unread = targetMessage.unread
+									time = targetState.message.dateTime,
+									unread = targetState.message.unread
 								)
 
 								MessageBubble(
@@ -235,25 +229,25 @@ private fun SharedTransitionScope.MessageDetails(
 										)
 									},
 									colors = MessageBubbleDefaults.errorColors(),
-									messageText = R.string.feature_infocenter_messages_details_error.takeIf { messageError != null },
-									messageTextRaw = messageError
+									messageText = R.string.feature_infocenter_messages_details_error.takeIf { targetState is SelectedMessageState.Error },
+									messageTextRaw = (targetState as? SelectedMessageState.Error)?.error
 								)
 
-								AnimatedVisibility(messageError == null) {
+								AnimatedVisibility(targetState !is SelectedMessageState.Error) {
 									Text(
 										modifier = Modifier
 											.fillMaxWidth()
 											.padding(horizontal = 16.dp)
 											.verticalScroll(rememberScrollState())
 											.placeholder(
-												visible = messageContent == null && messageError == null,
+												visible = targetState is SelectedMessageState.Loading,
 												color = PlaceholderDefaults.color(),
 												shape = RoundedCornerShape(4.dp),
 												highlight = PlaceholderHighlight.shimmer(
 													PlaceholderDefaults.shimmerHighlightColor()
 												)
 											),
-										text = messageContent ?: ""
+										text = (targetState as? SelectedMessageState.Success)?.fullContent ?: ""
 									)
 								}
 
@@ -458,4 +452,12 @@ sealed interface MessagesUiState {
 		val errors: List<Throwable>,
 		val messages: List<Message>,
 	) : MessagesUiState
+}
+
+sealed interface SelectedMessageState {
+	val message: Message
+
+	data class Loading(override val message: Message) : SelectedMessageState
+	data class Success(override val message: Message, val fullContent: String?) : SelectedMessageState
+	data class Error(override val message: Message, val error: String) : SelectedMessageState
 }

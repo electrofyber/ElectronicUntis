@@ -24,6 +24,7 @@ fun InfoCenterOfficeHours(uiState: OfficeHoursUiState) {
 	Crossfade(targetState = uiState, label = "InfoCenter Office Hours Content") { state ->
 		when (state) {
 			OfficeHoursUiState.Loading -> InfoCenterLoading()
+			OfficeHoursUiState.Hidden -> {}
 			is OfficeHoursUiState.Success -> {
 				state.officeHours.fold(
 					onSuccess = { officeHours ->
@@ -95,6 +96,8 @@ private fun formatOfficeHourTime(
 
 sealed interface OfficeHoursUiState {
 	data object Loading : OfficeHoursUiState
+
+	data object Hidden : OfficeHoursUiState
 
 	data class Success(val officeHours: Result<List<OfficeHour>>) : OfficeHoursUiState {
 		val isEmpty: Boolean get() = officeHours.getOrDefault(emptyList()).isEmpty()

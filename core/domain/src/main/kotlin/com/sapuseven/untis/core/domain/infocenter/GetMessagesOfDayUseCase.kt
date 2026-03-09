@@ -3,6 +3,7 @@ package com.sapuseven.untis.core.domain.infocenter
 import com.sapuseven.untis.core.domain.repository.InfoCenterRepository
 import com.sapuseven.untis.core.domain.repository.UserRepository
 import com.sapuseven.untis.core.model.messages.MessageOfDay
+import com.sapuseven.untis.core.model.user.User
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
@@ -18,10 +19,8 @@ class GetMessagesOfDayUseCase @Inject constructor(
 	private val clock: Clock = Clock.System,
 	private val zone: TimeZone = TimeZone.currentSystemDefault(),
 ) {
-	private val currentUser = userRepository.getActiveUser()
-
-	operator fun invoke(): Flow<Result<List<MessageOfDay>>> = infoCenterRepository
-		.getMessagesOfDay(currentUser, clock.todayIn(zone))
+	operator fun invoke(user: User): Flow<Result<List<MessageOfDay>>> = infoCenterRepository
+		.getMessagesOfDay(user, clock.todayIn(zone))
 		.map(Result.Companion::success)
 		.catch { emit(Result.failure(it)) }
 }

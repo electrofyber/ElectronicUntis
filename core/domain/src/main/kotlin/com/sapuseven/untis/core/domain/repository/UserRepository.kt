@@ -6,6 +6,8 @@ import kotlinx.coroutines.flow.Flow
 interface UserRepository {
 	/**
 	 * Returns the currently active user, or throws an exception if no user is active.
+	 * Note that in most cases it is preferable to observe the active user
+	 * using [observeActiveUser] instead of calling this method directly.
 	 *
 	 * @throws IllegalStateException If no user is active.
 	 * @see observeActiveUser

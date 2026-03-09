@@ -16,6 +16,7 @@ import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -49,6 +50,9 @@ fun InfoCenterScreen(
 	var absenceFilterDialog by rememberSaveable { mutableStateOf(false) }
 
 	val currentRoute by bottomNavController.currentBackStackEntryAsState()
+
+	val showAbsences by viewModel.shouldShowAbsences.collectAsState()
+	val showOfficeHours by viewModel.shouldShowOfficeHours.collectAsState()
 
 	fun <T : Any> isCurrentRoute(route: T) =
 		currentRoute?.destination?.route == route::class.qualifiedName
@@ -94,7 +98,7 @@ fun InfoCenterScreen(
 					onClick = bottomNavController::navigateToInfoCenterEvents
 				)
 
-				if (viewModel.shouldShowAbsences) {
+				if (showAbsences) {
 					NavBarItem(
 						icon = R.drawable.feature_infocenter_absences,
 						iconActive = R.drawable.feature_infocenter_absences_active,
@@ -104,7 +108,7 @@ fun InfoCenterScreen(
 					)
 				}
 
-				if (viewModel.shouldShowOfficeHours) {
+				if (showOfficeHours) {
 					NavBarItem(
 						icon = R.drawable.feature_infocenter_officehours,
 						iconActive = R.drawable.feature_infocenter_officehours_active,

@@ -35,7 +35,7 @@ class DiskCache<KeyType : Any, ValueType : Any>(
 				if (!cacheFile.exists()) return null
 
 				val decoded = cacheFile.readBytes().let { Cbor.decodeFromByteArray(valueSerializer, it) }
-				Log.d("DiskCache", "get: $key -> $decoded")
+				Log.d("DiskCache", "get: $cacheDir/$key -> $decoded")
 				return CachedData(decoded, cacheFile.lastModified())
 			}
 		}
@@ -46,7 +46,7 @@ class DiskCache<KeyType : Any, ValueType : Any>(
 		val key = CacheKey(params, additionalKey)
 		cacheLock.withLock {
 			val encoded = Cbor.encodeToByteArray(valueSerializer, value)
-			Log.d("DiskCache", "put: $key -> $encoded")
+			Log.d("DiskCache", "put: $cacheDir/$key -> $value")
 			getCacheFile(key).writeBytes(encoded)
 		}
 	}

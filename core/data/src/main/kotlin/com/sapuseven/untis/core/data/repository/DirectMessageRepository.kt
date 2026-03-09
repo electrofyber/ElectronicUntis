@@ -1,11 +1,11 @@
 package com.sapuseven.untis.core.data.repository
 
-import com.sapuseven.untis.core.api.rest.client.MessagesApi
 import com.sapuseven.untis.core.api.rest.model.Message
 import com.sapuseven.untis.core.api.rest.model.MessagesDraftsResponse
 import com.sapuseven.untis.core.api.rest.model.MessagesResponse
 import com.sapuseven.untis.core.api.rest.model.MessagesSentResponse
 import com.sapuseven.untis.core.data.mapper.toDomain
+import com.sapuseven.untis.core.data.service.factory.MessagesApiFactory
 import com.sapuseven.untis.core.domain.repository.DirectMessageRepository
 import com.sapuseven.untis.core.model.messages.DirectMessage
 import com.sapuseven.untis.core.model.user.User
@@ -17,31 +17,31 @@ import javax.inject.Inject
 import javax.inject.Named
 
 class UntisDirectMessageRepository @Inject constructor(
-	private val messagesApi: MessagesApi,
+	private val apiFactory: MessagesApiFactory,
 	@Named("cacheDir") cacheDir: File,
 	timeProvider: TimeProvider,
 ) : BaseCachedRepository(cacheDir, timeProvider), DirectMessageRepository {
 	override fun getMessage(user: User, id: Long): Flow<DirectMessage> =
-		cached<Long, Message>("messenger/message") { messagesApi.getMessage(it).body() }
+		cached<Long, Message>("messenger/message") { apiFactory.create(user).getMessage(it).body() }
 			.invoke(id, user.id)
 			.map(Message::toDomain)
 
 	override fun getMessages(user: User): Flow<List<DirectMessage>> =
-		cached<MessagesResponse>("messenger/messages") { messagesApi.getMessages().body() }
+		cached<MessagesResponse>("messenger/messages") { apiFactory.create(user).getMessages().body() }
 			.invoke(user.id)
 			.map { result ->
 				result.incomingMessages?.map { it.toDomain() } ?: emptyList()
 			}
 
 	override fun getMessagesSent(user: User): Flow<List<DirectMessage>> =
-		cached<MessagesSentResponse>("messenger/messagesSent") { messagesApi.getMessagesSent().body() }
+		cached<MessagesSentResponse>("messenger/messagesSent") { apiFactory.create(user).getMessagesSent().body() }
 			.invoke(user.id)
 			.map { result ->
 				result.sentMessages?.map { it.toDomain() } ?: emptyList()
 			}
 
 	override fun getMessagesDrafts(user: User): Flow<List<DirectMessage>> =
-		cached<MessagesDraftsResponse>("messenger/messagesDrafts") { messagesApi.getMessagesDrafts().body() }
+		cached<MessagesDraftsResponse>("messenger/messagesDrafts") { apiFactory.create(user).getMessagesDrafts().body() }
 			.invoke(user.id)
 			.map { result ->
 				result.draftMessages?.map { it.toDomain() } ?: emptyList()

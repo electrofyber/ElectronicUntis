@@ -1,6 +1,7 @@
 package com.sapuseven.untis.core.data.di
 
 import com.sapuseven.untis.core.api.mobile.client.base.BaseHttpClientConfig
+import com.sapuseven.untis.core.data.service.config.AuthHttpClientConfig
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -22,6 +23,12 @@ object HttpConfigModule {
 	@Singleton
 	fun provideBaseHttpClientConfig(json: Json): BaseHttpClientConfig =
 		BaseHttpClientConfig(json)
+
+	@Provides
+	@Singleton
+	fun provideAuthHttpClientConfig(
+		baseConfig: BaseHttpClientConfig
+	): AuthHttpClientConfig = AuthHttpClientConfig(baseConfig)
 
 	@Provides
 	@Singleton

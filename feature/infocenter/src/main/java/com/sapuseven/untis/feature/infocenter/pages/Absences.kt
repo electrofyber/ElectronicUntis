@@ -25,6 +25,7 @@ fun InfoCenterAbsences(uiState: AbsencesUiState) {
 	Crossfade(targetState = uiState, label = "InfoCenter Absences Content") { state ->
 		when (state) {
 			AbsencesUiState.Loading -> InfoCenterLoading()
+			AbsencesUiState.Hidden -> {}
 			is AbsencesUiState.Success -> {
 				state.absences.fold(
 					onSuccess = { absences ->
@@ -115,6 +116,8 @@ private fun AbsenceItem(item: Absence) {
 
 sealed interface AbsencesUiState {
 	data object Loading : AbsencesUiState
+
+	data object Hidden : AbsencesUiState
 
 	data class Success(
 		val absences: Result<List<Absence>>,

@@ -6,6 +6,7 @@ import com.sapuseven.untis.core.domain.repository.InfoCenterRepository
 import com.sapuseven.untis.core.domain.repository.UserRepository
 import com.sapuseven.untis.core.model.absences.Absence
 import com.sapuseven.untis.core.model.officehours.OfficeHour
+import com.sapuseven.untis.core.model.user.User
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
@@ -19,23 +20,18 @@ import kotlinx.datetime.todayIn
 import java.time.LocalDate
 import javax.inject.Inject
 
-
-
 class GetAbsencesUseCase @Inject constructor(
-	private val userRepository: UserRepository,
 	private val infoCenterRepository: InfoCenterRepository,
 	private val userSettingsRepository: UserSettingsDataSource,
 	private val clock: Clock = Clock.System,
 	private val zone: TimeZone = TimeZone.currentSystemDefault(),
 	getCurrentSchoolYear: GetCurrentSchoolYearUseCase
 ) {
-	private val currentUser = userRepository.getActiveUser()
-
 	//private val currentSchoolYear =
 		//getCurrentSchoolYear() ?: SchoolYearEntity(startDate = LocalDate.now(), endDate = LocalDate.now())
 
 	@OptIn(ExperimentalCoroutinesApi::class)
-	operator fun invoke(): Flow<Result<List<Absence>>> =
+	operator fun invoke(user: User): Flow<Result<List<Absence>>> =
 		userSettingsRepository.getSettings().flatMapLatest { settings ->
 			val daysAgo: Long = when (settings.infocenterAbsencesTimeRange) {
 				AbsencesTimeRange.SEVEN_DAYS -> 7
@@ -54,7 +50,7 @@ class GetAbsencesUseCase @Inject constructor(
 
 			infoCenterRepository
 				.getAbsences(
-					currentUser,
+					user,
 					InfoCenterRepository.AbsencesParams(
 						timeRange.first,
 						timeRange.second,
