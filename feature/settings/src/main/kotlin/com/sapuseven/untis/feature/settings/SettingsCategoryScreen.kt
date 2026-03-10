@@ -2,7 +2,9 @@ package com.sapuseven.untis.feature.settings
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.windowInsetsPadding
@@ -68,7 +70,7 @@ fun SettingsCategoryScreen(
 				.padding(innerPadding)
 				.fillMaxSize()
 				.verticalScroll(rememberScrollState())
-				.windowInsetsPadding(WindowInsets.safeDrawing)
+				.windowInsetsPadding(WindowInsets.safeDrawing.only(WindowInsetsSides.Bottom))
 		) {
 			content(viewModel)
 		}
