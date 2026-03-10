@@ -1,6 +1,7 @@
 package com.sapuseven.untis.core.domain.repository
 
 import com.sapuseven.untis.core.model.absences.Absence
+import com.sapuseven.untis.core.model.absences.Excuse
 import com.sapuseven.untis.core.model.messages.MessageOfDay
 import com.sapuseven.untis.core.model.officehours.OfficeHour
 import com.sapuseven.untis.core.model.timetable.ElementType
@@ -30,6 +31,10 @@ interface InfoCenterRepository {
 		user: User,
 		params: AbsencesParams,
 	): Flow<List<Absence>>
+
+	fun getExcuses(
+		user: User,
+	): Flow<List<Excuse>>
 
 	fun getOfficeHours(
 		user: User,

@@ -1,9 +1,9 @@
 package com.sapuseven.untis.core.data.repository
 
 import com.sapuseven.untis.core.data.mapper.toDomain
+import com.sapuseven.untis.core.database.dao.UserDao
 import com.sapuseven.untis.core.database.entity.ElementEntity
-import com.sapuseven.untis.core.database.entity.UserDao
-import com.sapuseven.untis.core.domain.repository.MasterDataRepository
+import com.sapuseven.untis.core.domain.repository.ElementRepository
 import com.sapuseven.untis.core.domain.repository.UserRepository
 import com.sapuseven.untis.core.model.timetable.Element
 import com.sapuseven.untis.core.model.timetable.ElementKey
@@ -21,7 +21,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class DefaultMasterDataRepository : MasterDataRepository {
+class DefaultElementRepository : ElementRepository {
 	override val classes: Flow<List<Element>> = flowOf(emptyList())
 	override val teachers: Flow<List<Element>> = flowOf(emptyList())
 	override val subjects: Flow<List<Element>> = flowOf(emptyList())
@@ -36,10 +36,10 @@ class DefaultMasterDataRepository : MasterDataRepository {
 
 @Singleton
 @OptIn(ExperimentalCoroutinesApi::class)
-class UntisMasterDataRepository @Inject constructor(
+class UntisElementRepository @Inject constructor(
 	private val userDao: UserDao,
 	private val userRepository: UserRepository
-) : MasterDataRepository {
+) : ElementRepository {
 	private val userIdFlow = userRepository.observeActiveUser()
 		.map { it?.id }
 		.distinctUntilChanged()

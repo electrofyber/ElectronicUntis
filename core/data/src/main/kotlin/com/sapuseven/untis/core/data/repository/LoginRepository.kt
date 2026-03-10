@@ -6,7 +6,7 @@ import com.sapuseven.untis.core.api.mobile.model.response.UntisErrorCode
 import com.sapuseven.untis.core.api.mobile.model.untis.MasterData
 import com.sapuseven.untis.core.api.mobile.model.untis.enumeration.Right
 import com.sapuseven.untis.core.data.mapper.toDomain
-import com.sapuseven.untis.core.database.entity.UserDao
+import com.sapuseven.untis.core.database.dao.UserDao
 import com.sapuseven.untis.core.domain.exception.LoginException
 import com.sapuseven.untis.core.domain.repository.LoginRepository
 import com.sapuseven.untis.core.domain.repository.UserRepository

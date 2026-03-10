@@ -8,6 +8,9 @@ import androidx.room.TypeConverters
 import com.sapuseven.untis.core.api.mobile.model.untis.SchoolInfo
 import com.sapuseven.untis.core.api.mobile.model.untis.Settings
 import com.sapuseven.untis.core.api.mobile.model.untis.UserData
+import com.sapuseven.untis.core.database.dao.ExcuseDao
+import com.sapuseven.untis.core.database.dao.SchoolYearDao
+import com.sapuseven.untis.core.database.dao.UserDao
 import com.sapuseven.untis.core.database.entity.AbsenceReasonEntity
 import com.sapuseven.untis.core.database.entity.DepartmentEntity
 import com.sapuseven.untis.core.database.entity.DutyEntity
@@ -21,7 +24,6 @@ import com.sapuseven.untis.core.database.entity.SchoolYearEntity
 import com.sapuseven.untis.core.database.entity.SubjectEntity
 import com.sapuseven.untis.core.database.entity.TeacherEntity
 import com.sapuseven.untis.core.database.entity.TeachingMethodEntity
-import com.sapuseven.untis.core.database.entity.UserDao
 import com.sapuseven.untis.core.database.entity.UserEntity
 import com.sapuseven.untis.core.model.timetable.TimeGrid
 import kotlinx.datetime.LocalDate
@@ -58,6 +60,10 @@ import kotlinx.serialization.json.Json
 @TypeConverters(UserConverters::class)
 abstract class UserDatabase : RoomDatabase() {
 	abstract fun userDao(): UserDao
+
+	abstract fun excuseDao(): ExcuseDao
+
+	abstract fun schoolYearDao(): SchoolYearDao
 }
 
 internal class UserConverters {

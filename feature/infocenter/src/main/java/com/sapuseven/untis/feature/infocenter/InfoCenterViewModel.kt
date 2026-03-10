@@ -44,7 +44,7 @@ class InfoCenterViewModel @Inject constructor(
 	private val currentUser = userRepository.observeActiveUser()
 
 	private fun hasRight(right: UserRight): StateFlow<Boolean> = currentUser
-		.map { it?.rights?.contains(right) ?: false }
+		.map { it?.hasRight(right) ?: false }
 		.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), false)
 
 	val shouldShowAbsences = hasRight(UserRight.R_MY_ABSENCES)

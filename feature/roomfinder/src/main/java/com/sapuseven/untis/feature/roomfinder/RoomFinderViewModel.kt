@@ -2,7 +2,7 @@ package com.sapuseven.untis.feature.roomfinder
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.sapuseven.untis.core.domain.repository.MasterDataRepository
+import com.sapuseven.untis.core.domain.repository.ElementRepository
 import com.sapuseven.untis.core.domain.roomfinder.AddRoomFinderItemUseCase
 import com.sapuseven.untis.core.domain.roomfinder.DeleteRoomFinderItemUseCase
 import com.sapuseven.untis.core.domain.roomfinder.GetRoomFinderItemsUseCase
@@ -35,7 +35,7 @@ import javax.inject.Inject
 class RoomFinderViewModel @Inject constructor(
 	clock: Clock,
 	zone: TimeZone,
-	masterDataRepository: MasterDataRepository,
+	elementRepository: ElementRepository,
 	getHourListUseCase: GetTimeGridItemListUseCase,
 	getRoomFinderItemsUseCase: GetRoomFinderItemsUseCase,
 	private val addRoomFinderItemUseCase: AddRoomFinderItemUseCase,
@@ -44,7 +44,7 @@ class RoomFinderViewModel @Inject constructor(
 	private val _selectedHourIndex = MutableStateFlow(0)
 
 	private val _elements: Flow<Map<ElementType, List<Element>>> =
-		masterDataRepository.rooms.map { mapOf(ElementType.ROOM to it) } // TODO: Move to usecase (domain layer)
+		elementRepository.rooms.map { mapOf(ElementType.ROOM to it) } // TODO: Move to usecase (domain layer)
 
 	private val _hourList: Flow<List<TimeGridItem>> = getHourListUseCase()
 		.stateIn(

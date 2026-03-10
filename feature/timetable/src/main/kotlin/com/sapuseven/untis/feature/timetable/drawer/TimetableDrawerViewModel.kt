@@ -8,7 +8,7 @@ import androidx.lifecycle.viewModelScope
 import com.sapuseven.untis.core.domain.bookmarks.AddBookmarkUseCase
 import com.sapuseven.untis.core.domain.bookmarks.GetBookmarksUseCase
 import com.sapuseven.untis.core.domain.bookmarks.RemoveBookmarkUseCase
-import com.sapuseven.untis.core.domain.repository.MasterDataRepository
+import com.sapuseven.untis.core.domain.repository.ElementRepository
 import com.sapuseven.untis.core.model.timetable.Element
 import com.sapuseven.untis.core.model.timetable.ElementType
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -22,7 +22,7 @@ import javax.inject.Inject
 class TimetableDrawerViewModel @Inject constructor(
 	private val addBookmark: AddBookmarkUseCase,
 	private val removeBookmark: RemoveBookmarkUseCase,
-	masterDataRepository: MasterDataRepository,
+	elementRepository: ElementRepository,
 	getBookmarks: GetBookmarksUseCase,
 ) : ViewModel() {
 	var enableDrawerGestures: Boolean = true
@@ -31,7 +31,7 @@ class TimetableDrawerViewModel @Inject constructor(
 	var bookmarkDeleteDialog by mutableStateOf<Element?>(null)
 		private set
 
-	val elements: StateFlow<Map<ElementType, List<Element>>> = masterDataRepository.timetableElements.stateIn(
+	val elements: StateFlow<Map<ElementType, List<Element>>> = elementRepository.timetableElements.stateIn(
 		scope = viewModelScope,
 		started = SharingStarted.WhileSubscribed(5_000),
 		initialValue = emptyMap()

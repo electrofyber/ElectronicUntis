@@ -11,9 +11,12 @@ import com.sapuseven.untis.core.api.mobile.model.response.OfficeHoursResult
 import com.sapuseven.untis.core.api.mobile.model.response.StudentAbsencesResult
 import com.sapuseven.untis.core.data.mapper.toData
 import com.sapuseven.untis.core.data.mapper.toDomain
+import com.sapuseven.untis.core.database.dao.ExcuseDao
+import com.sapuseven.untis.core.database.entity.ExcuseStatusEntity
 import com.sapuseven.untis.core.domain.repository.InfoCenterRepository
-import com.sapuseven.untis.core.domain.repository.MasterDataRepository
+import com.sapuseven.untis.core.domain.repository.ElementRepository
 import com.sapuseven.untis.core.model.absences.Absence
+import com.sapuseven.untis.core.model.absences.Excuse
 import com.sapuseven.untis.core.model.messages.MessageOfDay
 import com.sapuseven.untis.core.model.officehours.OfficeHour
 import com.sapuseven.untis.core.model.timetable.ElementKey
@@ -29,11 +32,12 @@ import javax.inject.Inject
 import javax.inject.Named
 
 class UntisInfoCenterRepository @Inject constructor(
-	private val masterDataRepository: MasterDataRepository,
+	private val elementRepository: ElementRepository,
 	private val messagesApi: MessagesJsonrpcApi,
 	private val classRegApi: ClassRegJsonrpcApi,
 	private val absenceApi: AbsenceJsonrpcApi,
 	private val officeHoursApi: OfficeHoursJsonrpcApi,
+	private val excuseDao: ExcuseDao,
 	@Named("cacheDir") cacheDir: File,
 	timeProvider: TimeProvider,
 ) : BaseCachedRepository(cacheDir, timeProvider), InfoCenterRepository {
@@ -134,6 +138,10 @@ class UntisInfoCenterRepository @Inject constructor(
 				result.absences.map { it.toDomain(allElements(), students) }
 			}
 
+	override fun getExcuses(
+		user: User,
+	): Flow<List<Excuse>> = excuseDao.getByUserId(user.id).map { it.map(ExcuseStatusEntity::toDomain) }
+
 	private suspend fun allElements() =
-		masterDataRepository.getAllElements().associateBy { ElementKey(it.id, it.type) }
+		elementRepository.getAllElements().associateBy { ElementKey(it.id, it.type) }
 }

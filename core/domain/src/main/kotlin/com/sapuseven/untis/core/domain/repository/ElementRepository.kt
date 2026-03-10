@@ -5,7 +5,7 @@ import com.sapuseven.untis.core.model.timetable.ElementKey
 import com.sapuseven.untis.core.model.timetable.ElementType
 import kotlinx.coroutines.flow.Flow
 
-interface MasterDataRepository {
+interface ElementRepository {
 	/**
 	 * This flow provides all active classes for the active user, sorted by name.
 	 *

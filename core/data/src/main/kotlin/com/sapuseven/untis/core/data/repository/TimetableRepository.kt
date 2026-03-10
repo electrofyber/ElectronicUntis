@@ -6,9 +6,9 @@ import com.sapuseven.untis.core.api.mobile.model.response.TimetableResult
 import com.sapuseven.untis.core.data.cache.DiskCache
 import com.sapuseven.untis.core.data.mapper.toData
 import com.sapuseven.untis.core.data.mapper.toDomain
-import com.sapuseven.untis.core.database.entity.UserDao
+import com.sapuseven.untis.core.database.dao.UserDao
 import com.sapuseven.untis.core.domain.cache.FromCache
-import com.sapuseven.untis.core.domain.repository.MasterDataRepository
+import com.sapuseven.untis.core.domain.repository.ElementRepository
 import com.sapuseven.untis.core.domain.repository.TimetableRepository
 import com.sapuseven.untis.core.model.absences.Absence
 import com.sapuseven.untis.core.model.timetable.ElementKey
@@ -34,7 +34,7 @@ class UntisTimetableRepository @Inject constructor(
 	private val api: TimetableJsonrpcApi,
 	private val timeProvider: TimeProvider,
 	private val userDao: UserDao,
-	private val masterDataRepository: MasterDataRepository,
+	private val elementRepository: ElementRepository,
 ) : TimetableRepository {
 	override fun getTimetable(
 		user: User,
@@ -66,7 +66,7 @@ class UntisTimetableRepository @Inject constructor(
 			if (!result.fromCache) {
 				userDao.upsertMasterData(user.id, result.value.masterData)
 			}
-			val allElements = masterDataRepository.getAllElements().associateBy { ElementKey(it.id, it.type) }
+			val allElements = elementRepository.getAllElements().associateBy { ElementKey(it.id, it.type) }
 			result.value.timetable.toDomain(allElements).copy(
 				timestamp = result.originTimeStamp?.let(Instant::fromEpochMilliseconds) ?: Clock.System.now()
 			)
@@ -90,7 +90,7 @@ class UntisTimetableRepository @Inject constructor(
 				.get(periods, FromCache.IF_FAILED.toData(), additionalKey = user.id)
 				.map { result ->
 					// TODO block is untested
-					val allElements = masterDataRepository.getAllElements().associateBy { ElementKey(it.id, it.type) }
+					val allElements = elementRepository.getAllElements().associateBy { ElementKey(it.id, it.type) }
 					val students = user.element?.let { mapOf(it.id to it) } ?: emptyMap()
 					result.dataByTTId.mapValues { it.value.toDomain(allElements, students) }
 				}
@@ -118,7 +118,7 @@ class UntisTimetableRepository @Inject constructor(
 		endTime: LocalTime
 	): Result<List<Absence>> {
 		// TODO block is untested
-		val allElements = masterDataRepository.getAllElements().associateBy { ElementKey(it.id, it.type) }
+		val allElements = elementRepository.getAllElements().associateBy { ElementKey(it.id, it.type) }
 		val students = user.element?.let { mapOf(it.id to it) } ?: emptyMap()
 		return runCatching {
 			api.postAbsence(

@@ -6,7 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sapuseven.untis.core.datastore.GlobalSettingsDataSource
 import com.sapuseven.untis.core.datastore.UserSettingsDataSource
-import com.sapuseven.untis.core.domain.repository.MasterDataRepository
+import com.sapuseven.untis.core.domain.repository.ElementRepository
 import com.sapuseven.untis.core.model.timetable.Element
 import com.sapuseven.untis.core.model.timetable.ElementType
 import dagger.assisted.Assisted
@@ -23,7 +23,7 @@ import kotlinx.coroutines.launch
 class SettingsViewModel @AssistedInject constructor(
 	internal val globalSettingsDataSource: GlobalSettingsDataSource,
 	internal val userSettingsDataSource: UserSettingsDataSource,
-	masterDataRepository: MasterDataRepository,
+	elementRepository: ElementRepository,
 	//internal val autoMuteService: AutoMuteService,
 	//@Named("json") private val httpClient: HttpClient,
 	@Assisted val colorScheme: ColorScheme,
@@ -39,7 +39,7 @@ class SettingsViewModel @AssistedInject constructor(
 		}*/
 	}
 
-	val elements: StateFlow<Map<ElementType, List<Element>>> = masterDataRepository.timetableElements.stateIn(
+	val elements: StateFlow<Map<ElementType, List<Element>>> = elementRepository.timetableElements.stateIn(
 		scope = viewModelScope,
 		started = SharingStarted.WhileSubscribed(5_000),
 		initialValue = emptyMap()

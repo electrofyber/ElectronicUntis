@@ -35,6 +35,14 @@ object UserDatabaseModule {
 	@Provides
 	@Singleton
 	fun provideUserDao(db: UserDatabase) = db.userDao()
+
+	@Provides
+	@Singleton
+	fun provideExcuseDao(db: UserDatabase) = db.excuseDao()
+
+	@Provides
+	@Singleton
+	fun provideSchoolYearDao(db: UserDatabase) = db.schoolYearDao()
 }
 
 @Module

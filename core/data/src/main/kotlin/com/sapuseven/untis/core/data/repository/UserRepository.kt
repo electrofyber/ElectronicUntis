@@ -4,7 +4,7 @@ import androidx.datastore.core.DataStore
 import com.sapuseven.untis.core.data.di.ApplicationScope
 import com.sapuseven.untis.core.data.mapper.toDomain
 import com.sapuseven.untis.core.data.mapper.toEntity
-import com.sapuseven.untis.core.database.entity.UserDao
+import com.sapuseven.untis.core.database.dao.UserDao
 import com.sapuseven.untis.core.database.entity.UserEntity
 import com.sapuseven.untis.core.datastore.model.Settings
 import com.sapuseven.untis.core.domain.repository.UserRepository

@@ -17,23 +17,23 @@ import javax.inject.Inject
 
 class GetHomeworkUseCase @Inject constructor(
 	private val infoCenterRepository: InfoCenterRepository,
+	private val getCurrentSchoolYear: GetCurrentSchoolYearUseCase,
 	private val clock: Clock = Clock.System,
 	private val zone: TimeZone = TimeZone.currentSystemDefault(),
-	getCurrentSchoolYear: GetCurrentSchoolYearUseCase,
 ) {
-	private val currentSchoolYear =
-		getCurrentSchoolYear() ?: 0//SchoolYearEntity(startDate = LocalDate.now(), endDate = LocalDate.now())
+	suspend operator fun invoke(user: User): Flow<Result<List<Homework>>> = getCurrentSchoolYear(user).let { currentSchoolYear ->
+		val today = clock.todayIn(zone)
 
-	operator fun invoke(user: User): Flow<Result<List<Homework>>> = infoCenterRepository.getHomework(
-		user,
-		InfoCenterRepository.EventsParams(
-			user.element?.id ?: 0,
-			user.element?.type ?: ElementType.STUDENT,
-			clock.todayIn(zone),
-			clock.todayIn(zone),
-			//currentSchoolYear.endDate
-		),
-	)
-		.map(Result.Companion::success)
-		.catch { emit(Result.failure(it)) }
+		infoCenterRepository.getHomework(
+			user,
+			InfoCenterRepository.EventsParams(
+				user.element?.id ?: 0,
+				user.element?.type ?: ElementType.STUDENT,
+				today,
+				currentSchoolYear?.endDate ?: today,
+			)
+		)
+			.map(Result.Companion::success)
+			.catch { emit(Result.failure(it)) }
+	}
 }

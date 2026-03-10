@@ -6,7 +6,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sapuseven.untis.core.datastore.UserSettingsDataSource
-import com.sapuseven.untis.core.domain.repository.MasterDataRepository
+import com.sapuseven.untis.core.domain.repository.ElementRepository
 import com.sapuseven.untis.core.domain.repository.UserRepository
 import com.sapuseven.untis.core.domain.timetable.GetTimeGridUnitListUseCase
 import com.sapuseven.untis.core.domain.timetable.GetTimetableUseCase
@@ -50,7 +50,7 @@ class TimetableViewModel @AssistedInject constructor(
 	private val getTimetable: GetTimetableUseCase,
 	internal val weekLogicService: WeekLogicService,
 	clock: Clock,
-	masterDataRepository: MasterDataRepository,
+	elementRepository: ElementRepository,
 	getHourList: GetTimeGridUnitListUseCase,
 	@Assisted val elementId: Long?,
 	@Assisted val elementType: ElementType?,
@@ -133,7 +133,7 @@ class TimetableViewModel @AssistedInject constructor(
 	init {
 		viewModelScope.launch {
 			activeUser.filterNotNull().collect { user ->
-				setupCurrentElement(elementId, elementType, masterDataRepository, user)
+				setupCurrentElement(elementId, elementType, elementRepository, user)
 			}
 		}
 		setupTimeUpdates(clock)
@@ -143,12 +143,12 @@ class TimetableViewModel @AssistedInject constructor(
 	private fun setupCurrentElement(
 		elementId: Long?,
 		elementType: ElementType?,
-		masterDataRepository: MasterDataRepository,
+		elementRepository: ElementRepository,
 		user: User
 	) {
 		viewModelScope.launch {
 			val elementFromArgs = if (elementId != null && elementType != null) {
-				masterDataRepository.getElement(ElementKey(elementId, elementType))
+				elementRepository.getElement(ElementKey(elementId, elementType))
 			} else {
 				null
 			}

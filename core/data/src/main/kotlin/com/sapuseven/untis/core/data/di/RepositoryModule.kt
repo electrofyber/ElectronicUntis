@@ -2,18 +2,20 @@ package com.sapuseven.untis.core.data.di
 
 import com.sapuseven.untis.core.data.repository.GenericRoomFinderRepository
 import com.sapuseven.untis.core.data.repository.UntisDirectMessageRepository
+import com.sapuseven.untis.core.data.repository.UntisElementRepository
 import com.sapuseven.untis.core.data.repository.UntisInfoCenterRepository
 import com.sapuseven.untis.core.data.repository.UntisLoginRepository
-import com.sapuseven.untis.core.data.repository.UntisMasterDataRepository
 import com.sapuseven.untis.core.data.repository.UntisSchoolRepository
+import com.sapuseven.untis.core.data.repository.UntisSchoolYearRepository
 import com.sapuseven.untis.core.data.repository.UntisTimetableRepository
 import com.sapuseven.untis.core.data.repository.UserRepositoryImpl
 import com.sapuseven.untis.core.domain.repository.DirectMessageRepository
+import com.sapuseven.untis.core.domain.repository.ElementRepository
 import com.sapuseven.untis.core.domain.repository.InfoCenterRepository
 import com.sapuseven.untis.core.domain.repository.LoginRepository
-import com.sapuseven.untis.core.domain.repository.MasterDataRepository
 import com.sapuseven.untis.core.domain.repository.RoomFinderRepository
 import com.sapuseven.untis.core.domain.repository.SchoolRepository
+import com.sapuseven.untis.core.domain.repository.SchoolYearRepository
 import com.sapuseven.untis.core.domain.repository.TimetableRepository
 import com.sapuseven.untis.core.domain.repository.UserRepository
 import dagger.Binds
@@ -46,9 +48,14 @@ internal interface RepositoryModule {
 	): LoginRepository
 
 	@Binds
-	fun bindMasterDataRepository(
-		impl: UntisMasterDataRepository,
-	): MasterDataRepository
+	fun bindElementRepository(
+		impl: UntisElementRepository,
+	): ElementRepository
+
+	@Binds
+	fun bindSchoolYearRepository(
+		impl: UntisSchoolYearRepository,
+	): SchoolYearRepository
 
 	@Binds
 	fun bindRoomFinderRepository(

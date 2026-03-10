@@ -3,7 +3,7 @@ package com.sapuseven.untis.feature.timetable.details
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sapuseven.untis.core.domain.cache.FromCache
-import com.sapuseven.untis.core.domain.repository.MasterDataRepository
+import com.sapuseven.untis.core.domain.repository.ElementRepository
 import com.sapuseven.untis.core.domain.repository.UserRepository
 import com.sapuseven.untis.core.domain.timetable.GetTimetableUseCase
 import com.sapuseven.untis.core.model.timetable.Element
@@ -28,7 +28,7 @@ class PeriodDetailsViewModel @AssistedInject constructor(
 	@Assisted("periodIds") private val periodIds: List<Long>,
 	@Assisted("initialPeriod") private val initialPeriod: Int,
 	private val userRepository: UserRepository,
-	private val masterDataRepository: MasterDataRepository,
+	private val elementRepository: ElementRepository,
 	private val getTimetable: GetTimetableUseCase,
 ) : ViewModel() {
 	@AssistedFactory
@@ -52,7 +52,7 @@ class PeriodDetailsViewModel @AssistedInject constructor(
 
 	init {
 		viewModelScope.launch {
-			val element = ElementKey(id, type).let { masterDataRepository.getElement(it) ?: Element.basic(it) }
+			val element = ElementKey(id, type).let { elementRepository.getElement(it) ?: Element.basic(it) }
 
 			val timetable = getTimetable(
 				user = userRepository.getActiveUser(),
