@@ -1,4 +1,4 @@
-package com.sapuseven.untis.services
+package com.sapuseven.untis.feature.login
 
 import android.content.Context
 import android.util.Log
@@ -7,7 +7,6 @@ import androidx.activity.result.ActivityResultLauncher
 import com.journeyapps.barcodescanner.ScanIntentResult
 import com.journeyapps.barcodescanner.ScanOptions
 import com.sapuseven.untis.core.ui.R
-import com.sapuseven.untis.feature.login.CodeScanService
 import dagger.hilt.android.qualifiers.ActivityContext
 import javax.inject.Inject
 
