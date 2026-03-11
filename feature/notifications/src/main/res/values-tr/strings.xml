@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<string name="feature_notifications_channel_backgrounderrors">Arkaplan hataları</string>
+    <string name="feature_notifications_text_message_rooms">Oda : %1$s</string>
+	<string name="feature_notifications_channel_breakinfo">Teneffüs bilgisi</string>
+	<string name="feature_notifications_text_title">%1$s\'a kadar teneffüs</string>
+    <string name="feature_notifications_text_first_title">Ders başlama saati: %1$s</string>
+    <string name="feature_notifications_text_message_subjects">Ders başlama saati: %1$s</string>
+    <string name="feature_notifications_text_message_teachers">Öğretmen: %1$s</string>
+    <string name="feature_notifications_text_message_classes">Sınıf: %1$s</string>
+    <string name="feature_notifications_text_message_separator">/</string>
+	<string name="feature_notifications_channel_backgrounderrors_desc">Arkaplan görevlerinin hata mesajlarını gösterir</string>
+	<string name="feature_notifications_channel_breakinfo_desc">Şu anki teneffüs ve bir dahaki ders hakkında bilgi gösterir</string>
+	<string name="feature_notifications_channel_firstlesson">İlk ders</string>
+    <string name="feature_notifications_channel_firstlesson_desc">İlk ders ve günlük mesajlar hakkında bilgi verir</string>
+    <string name="feature_notifications_text_motd_title">Bugünün okul mesajları</string>
+    <string name="feature_notifications_text_motd_message">%1$d mesajları</string>
+</resources>

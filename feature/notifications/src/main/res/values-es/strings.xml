@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<string name="feature_notifications_channel_backgrounderrors">Errores en segundo plano</string>
+    <string name="feature_notifications_text_message_rooms">Aula: %1$s</string>
+	<string name="feature_notifications_text_message_classes">Clase: %1$s</string>
+    <string name="feature_notifications_text_message_teachers">Profesor(a): %1$s</string>
+</resources>

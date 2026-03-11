@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<string name="feature_notifications_channel_breakinfo_desc">Információkat jelenít meg az aktuális szünetről és a következő leckéről</string>
+	<string name="feature_notifications_channel_backgrounderrors">Háttérhibák</string>
+    <string name="feature_notifications_channel_backgrounderrors_desc">Megjeleníti a háttérben futó feladatok hibaüzeneteit</string>
+    <string name="feature_notifications_channel_breakinfo">Szünet információ</string>
+	<string name="feature_notifications_text_first_title">Iskolakezdés: %1$s</string>
+    <string name="feature_notifications_text_message_classes">Osztály: %1$s</string>
+    <string name="feature_notifications_text_message_rooms">Szoba: %1$s</string>
+    <string name="feature_notifications_text_message_separator">/</string>
+    <string name="feature_notifications_text_message_subjects">Következő lecke: %1$s</string>
+    <string name="feature_notifications_text_title">Szünet %1$s-ig</string>
+	<string name="feature_notifications_text_message_teachers">Tanár: %1$s</string>
+</resources>

@@ -1,4 +1,4 @@
-package com.sapuseven.untis.module
+package com.sapuseven.untis.di
 
 import android.content.Context
 import com.sapuseven.untis.feature.login.CodeScanService

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<string name="feature_notifications_text_message_separator">"/ "</string>
+    <string name="feature_notifications_text_message_classes">Klasea: %1$s</string>
+    <string name="feature_notifications_text_message_teachers">Irakaslea: %1$s</string>
+    <string name="feature_notifications_text_message_rooms">Gela: %1$s</string>
+    <string name="feature_notifications_text_message_subjects">Hurrengo eskola: %1$s</string>
+    <string name="feature_notifications_text_first_title">Eskola noiz hasten da: %1$s</string>
+    <string name="feature_notifications_text_title">Atsedena noiz arte: %1$s</string>
+	<string name="feature_notifications_channel_breakinfo_desc">Uneko atsedenaldiari eta hurrengo eskolari buruzko informazioa erakusten du</string>
+    <string name="feature_notifications_channel_breakinfo">Atsedenaren informazioa</string>
+	<string name="feature_notifications_channel_backgrounderrors_desc">Atzeko planoko zereginen errore mezuak erakusten ditu</string>
+    <string name="feature_notifications_channel_backgrounderrors">Atzeko planoko erroreak</string>
+</resources>

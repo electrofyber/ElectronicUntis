@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<string name="feature_notifications_channel_breakinfo_desc">显示当前休息及随后课程的信息</string>
+    <string name="feature_notifications_channel_breakinfo">信息中断</string>
+	<string name="feature_notifications_text_message_classes">课程： %1$s</string>
+    <string name="feature_notifications_text_message_teachers">教师： %1$s</string>
+    <string name="feature_notifications_text_message_rooms">教室： %1$s</string>
+    <string name="feature_notifications_text_message_subjects">下一节课：%1$s</string>
+    <string name="feature_notifications_text_first_title">学校%1$s开学</string>
+    <string name="feature_notifications_text_title">休息到%1$s</string>
+	<string name="feature_notifications_channel_backgrounderrors_desc">显示后台任务错误信息</string>
+    <string name="feature_notifications_channel_backgrounderrors">后台错误</string>
+	<string name="feature_notifications_text_message_separator">"/ "</string>
+</resources>

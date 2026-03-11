@@ -7,11 +7,15 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.withStyle
 import com.sapuseven.untis.core.datastore.UserSettingsDataSource
 import com.sapuseven.untis.core.domain.repository.UserRepository
+import com.sapuseven.untis.core.domain.timetable.ELEMENT_NAME_SEPARATOR
+import com.sapuseven.untis.core.domain.timetable.classes
+import com.sapuseven.untis.core.domain.timetable.rooms
+import com.sapuseven.untis.core.domain.timetable.subjects
+import com.sapuseven.untis.core.domain.timetable.teachers
 import com.sapuseven.untis.core.domain.timetable.toShortString
 import com.sapuseven.untis.core.model.timetable.Element
 import com.sapuseven.untis.core.model.timetable.ElementType
 import com.sapuseven.untis.core.model.timetable.Period
-import com.sapuseven.untis.core.model.timetable.Period.Companion.ELEMENT_NAME_SEPARATOR
 import com.sapuseven.untis.feature.timetable.weekview.EventStyle
 import com.sapuseven.untis.feature.timetable.weekview.WeekViewEvent
 import javax.inject.Inject

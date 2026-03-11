@@ -94,6 +94,7 @@ dependencies {
 	//implementation(projects.feature.glance)
 	implementation(projects.feature.infocenter)
 	implementation(projects.feature.login)
+	implementation(projects.feature.notifications)
 	implementation(projects.feature.roomfinder)
 	implementation(projects.feature.settings)
 	implementation(projects.feature.timetable)

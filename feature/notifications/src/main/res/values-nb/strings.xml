@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<string name="feature_notifications_channel_breakinfo">Pause-info</string>
+    <string name="feature_notifications_channel_breakinfo_desc">Viser informasjon om den gjeldende pausen og den følgende leksjonen</string>
+    <string name="feature_notifications_channel_backgrounderrors">Feil fra bakgrunnsoppgaver</string>
+    <string name="feature_notifications_channel_backgrounderrors_desc">Viser feilmeldinger for bakgrunnsoppgaver</string>
+	<string name="feature_notifications_text_title">Pause til %1$s</string>
+    <string name="feature_notifications_text_first_title">Skolen starter %1$s</string>
+    <string name="feature_notifications_text_message_subjects">Neste leksjon: %1$s</string>
+    <string name="feature_notifications_text_message_rooms">Rom: %1$s</string>
+    <string name="feature_notifications_text_message_teachers">Lærer: %1$s</string>
+    <string name="feature_notifications_text_message_classes">Klasse: %1$s</string>
+    <string name="feature_notifications_text_message_separator"> / </string>
+</resources>

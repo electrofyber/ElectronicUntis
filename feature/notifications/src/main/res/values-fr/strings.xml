@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<string name="feature_notifications_text_message_separator">"/ "</string>
+    <string name="feature_notifications_text_message_classes">Classe : %1$s</string>
+    <string name="feature_notifications_text_message_teachers">Enseignant·e : %1$s</string>
+    <string name="feature_notifications_text_message_rooms">Salle : %1$s</string>
+    <string name="feature_notifications_text_message_subjects">Prochain cours : %1$s</string>
+    <string name="feature_notifications_text_first_title">Les cours commencent à %1$s</string>
+    <string name="feature_notifications_text_title">Pause jusqu’à %1$s</string>
+	<string name="feature_notifications_channel_backgrounderrors_desc">Affiche les messages d’erreur des tâches en arrière-plan</string>
+    <string name="feature_notifications_channel_backgrounderrors">Erreurs d’arrière-plan</string>
+    <string name="feature_notifications_channel_breakinfo_desc">Affiche des infos à propos de la pause actuelle et sur le cours suivant</string>
+    <string name="feature_notifications_channel_breakinfo">Infos sur la pause</string>
+	<string name="feature_notifications_channel_firstlesson">Première leçon</string>
+</resources>

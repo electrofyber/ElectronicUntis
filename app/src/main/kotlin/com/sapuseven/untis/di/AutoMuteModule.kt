@@ -1,4 +1,4 @@
-package com.sapuseven.untis.module
+package com.sapuseven.untis.di
 
 import android.app.NotificationManager
 import android.content.Context

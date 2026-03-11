@@ -45,8 +45,9 @@ interface UserRepository {
 	fun observeAllUsers(): Flow<List<User>>
 
 	/**
-	 * Switches to another user.
-	 * @param userId The ID of the user to switch to.
+	 * Gets a user by their ID.
+	 *
+	 * @param userId The ID of the user to retrieve.
 	 */
 	suspend fun getUserById(userId: Long): User?
 

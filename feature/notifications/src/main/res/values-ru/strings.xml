@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<string name="feature_notifications_text_first_title">Школа начинается в %1$s</string>
+    <string name="feature_notifications_text_title">Перерыв до %1$s</string>
+	<string name="feature_notifications_text_message_subjects">Следующий урок: %1$s</string>
+	<string name="feature_notifications_text_message_classes">Класс: %1$s</string>
+	<string name="feature_notifications_channel_backgrounderrors_desc">Ошибки, происходящие при выполнении фоновых задач</string>
+	<string name="feature_notifications_channel_backgrounderrors">Фоновые ошибки</string>
+	<string name="feature_notifications_text_message_separator">/</string>
+	<string name="feature_notifications_text_message_teachers">Учитель: %1$s</string>
+	<string name="feature_notifications_text_message_rooms">Кабинет: %1$s</string>
+	<string name="feature_notifications_channel_breakinfo">Информация о перерыве</string>
+    <string name="feature_notifications_channel_breakinfo_desc">Показывает информацию о текущем перерыве и следующем уроке</string>
+</resources>

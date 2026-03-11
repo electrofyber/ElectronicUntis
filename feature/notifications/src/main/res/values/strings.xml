@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<string name="feature_notifications_channel_backgrounderrors">Background errors</string>
+    <string name="feature_notifications_channel_backgrounderrors_desc">Shows error messages of background tasks</string>
+    <string name="feature_notifications_channel_breakinfo">Break info</string>
+    <string name="feature_notifications_channel_breakinfo_desc">Shows information about the current break and the following lesson</string>
+	<string name="feature_notifications_channel_firstlesson">First lesson</string>
+	<string name="feature_notifications_channel_firstlesson_desc">Shows information about the first lesson and daily messages</string>
+	<string name="feature_notifications_text_first_title">School starts at %1$s</string>
+    <string name="feature_notifications_text_message_classes">Class: %1$s</string>
+    <string name="feature_notifications_text_message_rooms">Room: %1$s</string>
+    <string name="feature_notifications_text_message_separator"> / </string>
+    <string name="feature_notifications_text_message_subjects">Next lesson: %1$s</string>
+    <string name="feature_notifications_text_message_teachers">Teacher: %1$s</string>
+    <string name="feature_notifications_text_title">Break until %1$s</string>
+    <string name="feature_notifications_text_motd_title">Today\'s school messages</string>
+    <string name="feature_notifications_text_motd_message">%1$d messages</string>
+</resources>

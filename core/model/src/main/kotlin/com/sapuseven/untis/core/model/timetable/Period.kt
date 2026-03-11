@@ -2,6 +2,7 @@ package com.sapuseven.untis.core.model.timetable
 
 import kotlinx.datetime.LocalDateTime
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.Transient
 
 /**
  * Represents a period in a [Timetable].
@@ -49,54 +50,5 @@ data class Period(
 	val onlinePeriod: Boolean? = null,
 	val onlinePeriodLink: String? = null,
 ) {
-	@Transient val classes = elements.filter { it.type == ElementType.CLASS }
-	@Transient val teachers = elements.filter { it.type == ElementType.TEACHER }
-	@Transient val subjects = elements.filter { it.type == ElementType.SUBJECT }
-	@Transient val rooms = elements.filter { it.type == ElementType.ROOM }
-
 	@Transient var forceIrregular = false
-
-	companion object {
-		const val ELEMENT_NAME_SEPARATOR = ", "
-	}
-
-	fun isCancelled(): Boolean = states.contains(PeriodState.CANCELLED)
-
-	fun isIrregular(): Boolean = forceIrregular || states.contains(PeriodState.IRREGULAR)
-
-	fun isExam(): Boolean = states.contains(PeriodState.EXAM)
-
-	/**
-	 * Checks if this period equals another period, ignoring the start and end time, as well as the id.
-	 *
-	 * This can be used to check if two periods represent the same lesson, even if they are at different times.
-	 *
-	 * @param other The other period to compare with.
-	 * @return `true` if the periods are equal ignoring time and id, `false` otherwise.
-	 */
-	fun equalsIgnoreTime(other: Period): Boolean {
-		if (this === other) return true
-
-		if (lessonId != other.lessonId) return false
-		if (onlinePeriod != other.onlinePeriod) return false
-		if (foreColor != other.foreColor) return false
-		if (backColor != other.backColor) return false
-		if (innerForeColor != other.innerForeColor) return false
-		if (innerBackColor != other.innerBackColor) return false
-		if (infoTexts != other.infoTexts) return false
-		if (elements != other.elements) return false
-		if (rights != other.rights) return false
-		if (states != other.states) return false
-		if (attachments != other.attachments) return false
-		if (homeworks != other.homeworks) return false
-		if (exam != other.exam) return false
-		if (onlinePeriodLink != other.onlinePeriodLink) return false
-
-		return true
-	}
-
-	/*operator fun plus(other: Period) =
-		copy(
-			elements = this.elements + other.elements,
-		)*/
 }

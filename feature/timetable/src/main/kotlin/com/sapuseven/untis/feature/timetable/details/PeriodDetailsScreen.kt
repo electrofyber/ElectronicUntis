@@ -47,6 +47,13 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.sapuseven.untis.core.domain.timetable.classes
+import com.sapuseven.untis.core.domain.timetable.isCancelled
+import com.sapuseven.untis.core.domain.timetable.isExam
+import com.sapuseven.untis.core.domain.timetable.isIrregular
+import com.sapuseven.untis.core.domain.timetable.rooms
+import com.sapuseven.untis.core.domain.timetable.subjects
+import com.sapuseven.untis.core.domain.timetable.teachers
 import com.sapuseven.untis.core.domain.timetable.toLongString
 import com.sapuseven.untis.core.model.timetable.Attachment
 import com.sapuseven.untis.core.model.timetable.Element

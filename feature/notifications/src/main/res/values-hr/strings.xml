@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<string name="feature_notifications_text_message_separator">/</string>
+    <string name="feature_notifications_text_message_classes">Razred: %1$s</string>
+    <string name="feature_notifications_text_message_teachers">Nastavnik/ica: %1$s</string>
+    <string name="feature_notifications_text_message_rooms">Prostorija: %1$s</string>
+    <string name="feature_notifications_text_message_subjects">Sljedeći sat: %1$s</string>
+    <string name="feature_notifications_text_first_title">Škola počinje u %1$s</string>
+    <string name="feature_notifications_text_title">Pauza do %1$s</string>
+	<string name="feature_notifications_channel_backgrounderrors_desc">Prikazuje poruke grešaka pozadinskih zadataka</string>
+    <string name="feature_notifications_channel_backgrounderrors">Greške u pozadini</string>
+    <string name="feature_notifications_channel_breakinfo_desc">Prikazuje podatke o trenutačnoj pauzi i sljedećem satu nastave</string>
+    <string name="feature_notifications_channel_breakinfo">Podaci pauze</string>
+	<string name="feature_notifications_channel_firstlesson">Prva nastava</string>
+    <string name="feature_notifications_channel_firstlesson_desc">Prikazuje informacije o prvoj nastavi i dnevne poruke</string>
+    <string name="feature_notifications_text_motd_title">Današnje školske poruke</string>
+    <string name="feature_notifications_text_motd_message">%1$d poruke(a)</string>
+</resources>
