@@ -4,7 +4,7 @@ plugins {
 }
 
 android {
-	namespace = "com.sapuseven.untis.feature.timetable"
+	namespace = "com.electrofyber.untis.feature.timetable"
 }
 
 dependencies {

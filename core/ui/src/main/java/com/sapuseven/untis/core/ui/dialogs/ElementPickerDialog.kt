@@ -59,7 +59,6 @@ import androidx.compose.ui.window.Dialog
 import com.sapuseven.untis.core.model.timetable.Element
 import com.sapuseven.untis.core.model.timetable.ElementType
 import com.sapuseven.untis.core.ui.R
-import com.sapuseven.untis.core.ui.common.AbbreviatedText
 import com.sapuseven.untis.core.ui.common.NavigationBarInset
 import com.sapuseven.untis.core.ui.common.disabled
 import com.sapuseven.untis.core.ui.functional.None
@@ -149,7 +148,7 @@ fun ElementPickerDialogFullscreen(
 						IconButton(onClick = { onDismiss(false) }) {
 							Icon(
 								imageVector = Icons.Outlined.Close,
-								contentDescription = "TODO"
+								contentDescription = "Close"
 							)
 						}
 				},
@@ -158,7 +157,7 @@ fun ElementPickerDialogFullscreen(
 						IconButton(onClick = { showSearch = true }) {
 							Icon(
 								imageVector = Icons.Outlined.Search,
-								contentDescription = "TODO"
+								contentDescription = "Search"
 							)
 						}
 					}
@@ -170,7 +169,7 @@ fun ElementPickerDialogFullscreen(
 							onMultiSelect(selection.toList())
 							onDismiss(true)
 						}) {
-							Icon(Icons.Outlined.Check, "TODO")
+							Icon(Icons.Outlined.Check, "Confirm")
 						}
 					}
 				}
@@ -200,10 +199,7 @@ fun ElementPickerDialogFullscreen(
 			if (!hideTypeSelection)
 				ElementPickerTypeSelection(
 					selectedType = selectedType,
-					hideTypeSelectionPersonal = hideTypeSelectionPersonal,
-					onTypeChange = { selectedType = it },
-					onDismiss = onDismiss,
-					onSelect = onSelect
+					onTypeChange = { selectedType = it }
 				)
 		}
 	}
@@ -257,10 +253,7 @@ fun ElementPickerDialog(
 				if (!hideTypeSelection)
 					ElementPickerTypeSelection(
 						selectedType = selectedType,
-						hideTypeSelectionPersonal = hideTypeSelectionPersonal,
-						onTypeChange = { selectedType = it },
-						onDismiss = onDismiss,
-						onSelect = onSelect
+						onTypeChange = { selectedType = it }
 					)
 			}
 		}
@@ -298,7 +291,7 @@ fun ElementPickerElements(
 			) {
 				items(
 					items = visibleItems,
-					key = { it.id }          // ← your Element must have a stable id
+					key = { it.id }
 				) { item ->
 					val interactionSource = remember { MutableInteractionSource() }
 
@@ -366,55 +359,9 @@ fun ElementPickerElements(
 @Composable
 fun ElementPickerTypeSelection(
 	selectedType: ElementType?,
-	hideTypeSelectionPersonal: Boolean = false,
-	onTypeChange: (ElementType?) -> Unit,
-	onDismiss: (success: Boolean) -> Unit = {},
-	onSelect: (selectedItem: Element?) -> Unit = {}
+	onTypeChange: (ElementType?) -> Unit
 ) {
 	NavigationBarInset {
-		if (!hideTypeSelectionPersonal)
-			NavigationBarItem(
-				icon = {
-					Icon(
-						painterResource(id = R.drawable.core_ui_personal),
-						contentDescription = null
-					)
-				},
-				label = {
-					AbbreviatedText(
-						text = stringResource(id = R.string.all_personal),
-						abbreviatedText = stringResource(id = R.string.all_personal_abbr)
-					)
-				},
-				selected = false,
-				onClick = {
-					onSelect(null)
-					onDismiss(true)
-				}
-			)
-
-		NavigationBarItem(
-			icon = {
-				Icon(
-					painterResource(id = R.drawable.core_ui_classes),
-					contentDescription = null
-				)
-			},
-			label = { Text(stringResource(id = R.string.all_classes)) },
-			selected = selectedType == ElementType.CLASS,
-			onClick = { onTypeChange(ElementType.CLASS) }
-		)
-		NavigationBarItem(
-			icon = {
-				Icon(
-					painterResource(id = R.drawable.core_ui_teachers),
-					contentDescription = null
-				)
-			},
-			label = { Text(stringResource(id = R.string.all_teachers)) },
-			selected = selectedType == ElementType.TEACHER,
-			onClick = { onTypeChange(ElementType.TEACHER) }
-		)
 		NavigationBarItem(
 			icon = {
 				Icon(

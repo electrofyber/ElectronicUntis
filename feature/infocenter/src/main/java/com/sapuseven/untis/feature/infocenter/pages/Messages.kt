@@ -56,6 +56,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImagePainter
 import coil.compose.rememberAsyncImagePainter
+import com.electrofyber.untis.feature.infocenter.R
 import com.sapuseven.untis.core.model.messages.DirectMessage
 import com.sapuseven.untis.core.model.messages.MessageOfDay
 import com.sapuseven.untis.core.model.timetable.Attachment
@@ -63,7 +64,6 @@ import com.sapuseven.untis.core.ui.common.MessageBubble
 import com.sapuseven.untis.core.ui.common.MessageBubbleDefaults
 import com.sapuseven.untis.core.ui.dialogs.AttachmentsDialog
 import com.sapuseven.untis.feature.infocenter.InfoCenterViewModel
-import com.sapuseven.untis.feature.infocenter.R
 import io.github.fornewid.placeholder.foundation.PlaceholderDefaults
 import io.github.fornewid.placeholder.foundation.PlaceholderHighlight
 import io.github.fornewid.placeholder.foundation.placeholder
@@ -229,7 +229,7 @@ private fun SharedTransitionScope.MessageDetails(
 										)
 									},
 									colors = MessageBubbleDefaults.errorColors(),
-									messageText = R.string.feature_infocenter_messages_details_error.takeIf { targetState is SelectedMessageState.Error },
+									messageText = R.string.feature_infocenter_messages_details_error.takeIf { targetState is SelectedMessageState.Error } ?: 0,
 									messageTextRaw = (targetState as? SelectedMessageState.Error)?.error
 								)
 

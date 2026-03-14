@@ -142,7 +142,7 @@ mockito = { module = "org.mockito:mockito-core", version.ref = "mockito" }
 fornewid-placeholder-material3 = { module = "io.github.fornewid:placeholder-material3", version.ref = "placeholder-material3" }
 protobuf-kotlin-lite = { group = "com.google.protobuf", name = "protobuf-kotlin-lite", version.ref = "protobuf" }
 protobuf-protoc = { module = "com.google.protobuf:protoc", version.ref = "protobuf" }
-sapuseven-protostore = { module = "com.sapuseven.compose:protostore", version.ref = "protostore" }
+electrofyber-protostore = { module = "com.sapuseven.compose:protostore", version.ref = "protostore" }
 sentry-android = { module = "io.sentry:sentry-android", version.ref = "sentry" }
 sentry-compose-android = { module = "io.sentry:sentry-compose-android", version.ref = "sentry" }
 zxing = { module = "com.journeyapps:zxing-android-embedded", version.ref = "journeyapps-zxing" }
@@ -154,6 +154,7 @@ plugin-compose = { module = "org.jetbrains.kotlin:compose-compiler-gradle-plugin
 plugin-kotlin = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin", version.ref = "kotlin" }
 plugin-ksp = { group = "com.google.devtools.ksp", name = "com.google.devtools.ksp.gradle.plugin", version.ref = "ksp" }
 plugin-room = { group = "androidx.room", name = "room-gradle-plugin", version.ref = "androidx-room" }
+plugin-room-2 = { group = "androidx.room", name = "room-gradle-plugin", version.ref = "androidx-room" }
 plugin-sentry = { group = "io.sentry", name = "sentry-android-gradle-plugin", version.ref = "sentry-gradle" }
 androidx-animation = { group = "androidx.compose.animation", name = "animation", version.ref = "animation" }
 

@@ -2,18 +2,12 @@ package com.sapuseven.untis.activity.main
 
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.NavigationDrawerItem
-import androidx.compose.material3.NavigationDrawerItemDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.painter.Painter
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import com.sapuseven.untis.R
 import com.sapuseven.untis.core.database.entity.ElementEntity
 import com.sapuseven.untis.core.model.timetable.ElementType
 
@@ -25,63 +19,9 @@ fun DrawerItems(
 	onTimetableClick: (item: NavItemTimetable) -> Unit,
 	onNavigationClick: (item: NavItemNavigation) -> Unit,
 ) {
-	val navItemsElementTypes = listOf(
-		NavItemTimetable(
-			icon = painterResource(id = com.sapuseven.untis.core.ui.R.drawable.core_ui_classes),
-			label = stringResource(id = R.string.all_classes),
-			elementType = ElementType.CLASS
-		),
-		NavItemTimetable(
-			icon = painterResource(id = com.sapuseven.untis.core.ui.R.drawable.core_ui_teachers),
-			label = stringResource(id = R.string.all_teachers),
-			elementType = ElementType.TEACHER
-		),
-		NavItemTimetable(
-			icon = painterResource(id = com.sapuseven.untis.core.ui.R.drawable.core_ui_rooms),
-			label = stringResource(id = R.string.all_rooms),
-			elementType = ElementType.ROOM
-		),
-	)
-
-	/*val navItemsNavigation = listOf(
-		NavItemNavigation(
-			icon = painterResource(id = R.drawable.all_infocenter),
-			label = stringResource(id = R.string.activity_title_info_center),
-			route = AppRoutes.InfoCenter
-		),
-		NavItemNavigation(
-			icon = painterResource(id = R.drawable.all_search_rooms),
-			label = stringResource(id = R.string.activity_title_free_rooms),
-			route = AppRoutes.RoomFinder
-		),
-		NavItemNavigation(
-			icon = painterResource(id = R.drawable.all_settings),
-			label = stringResource(id = R.string.activity_title_settings),
-			route = AppRoutes.Settings
-		)
-	)*/
-
-	navItemsElementTypes.forEach { item ->
-		NavigationDrawerItem(
-			icon = { Icon(item.icon, contentDescription = null) },
-			label = { Text(item.label) },
-			selected = !disableTypeSelection && item.elementType == displayedElement?.type,
-			onClick = { onTimetableClick(item) },
-			modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding)
-		)
-	}
+	// All element type navigation (Classes, Teachers, Rooms) has been removed.
 
 	DrawerDivider()
-
-	/*navItemsNavigation.forEach { item ->
-		NavigationDrawerItem(
-			icon = { Icon(item.icon, contentDescription = null) },
-			label = { Text(item.label) },
-			selected = false,
-			onClick = { onNavigationClick(item) },
-			modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding)
-		)
-	}*/
 }
 
 @Composable

@@ -4,7 +4,7 @@ plugins {
 }
 
 android {
-	namespace = "com.sapuseven.untis.feature.infocenter"
+	namespace = "com.electrofyber.untis.feature.infocenter"
 }
 
 dependencies {

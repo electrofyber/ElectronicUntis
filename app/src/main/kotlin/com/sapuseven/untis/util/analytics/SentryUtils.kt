@@ -2,7 +2,7 @@ package com.sapuseven.untis.util.analytics
 
 import android.app.Application
 import android.util.Log
-import com.sapuseven.untis.BuildConfig
+import com.electrofyber.untis.BuildConfig
 import io.sentry.android.core.SentryAndroid
 
 fun Application.initSentry(

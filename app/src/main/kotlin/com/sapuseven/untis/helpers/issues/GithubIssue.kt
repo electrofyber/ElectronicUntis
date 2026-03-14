@@ -5,7 +5,7 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Build
 import androidx.core.content.pm.PackageInfoCompat
-import com.sapuseven.untis.R
+import com.electrofyber.untis.R
 
 
 class GithubIssue(type: Type, log: String) : Issue(type, log) {
@@ -43,8 +43,13 @@ class GithubIssue(type: Type, log: String) : Issue(type, log) {
 		}
 
 	private val installationSource: String
+		@Suppress("DEPRECATION")
 		get() {
-			return c.packageManager.getInstallerPackageName(c.packageName) ?: "(unknown)"
+			return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+				c.packageManager.getInstallSourceInfo(c.packageName).installingPackageName
+			} else {
+				c.packageManager.getInstallerPackageName(c.packageName)
+			} ?: "(unknown)"
 		}
 
 	private fun generateBody() =

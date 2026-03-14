@@ -28,7 +28,7 @@ dependencyResolutionManagement {
 	}
 }
 
-rootProject.name = "betteruntis"
+rootProject.name = "electronicuntis"
 
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 
@@ -52,7 +52,7 @@ include(":material-color-utils")
 
 check(JavaVersion.current().isCompatibleWith(JavaVersion.VERSION_17)) {
 	"""
-    BetterUntis requires JDK 17+ but it is currently using JDK ${JavaVersion.current()}.
+    ElectronicUntis requires JDK 17+ but it is currently using JDK ${JavaVersion.current()}.
     Java Home: [${System.getProperty("java.home")}]
     https://developer.android.com/build/jdks#jdk-config-in-studio
     """.trimIndent()

@@ -1,5 +1,6 @@
 package com.sapuseven.untis.feature.roomfinder
 
+import com.electrofyber.untis.feature.roomfinder.R
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.fadeIn

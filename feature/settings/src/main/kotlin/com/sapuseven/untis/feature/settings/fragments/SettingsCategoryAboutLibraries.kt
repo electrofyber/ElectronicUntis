@@ -15,10 +15,10 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavController
+import com.electrofyber.untis.feature.settings.R
 import com.mikepenz.aboutlibraries.ui.compose.android.rememberLibraries
 import com.mikepenz.aboutlibraries.ui.compose.m3.LibrariesContainer
 import com.sapuseven.untis.core.ui.functional.insetsPaddingValues
-import com.sapuseven.untis.feature.settings.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

@@ -47,6 +47,7 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.electrofyber.untis.feature.timetable.R
 import com.sapuseven.untis.core.domain.timetable.classes
 import com.sapuseven.untis.core.domain.timetable.isCancelled
 import com.sapuseven.untis.core.domain.timetable.isExam
@@ -63,7 +64,6 @@ import com.sapuseven.untis.core.ui.common.ClickableUrlText
 import com.sapuseven.untis.core.ui.common.HorizontalPagerIndicator
 import com.sapuseven.untis.core.ui.functional.None
 import com.sapuseven.untis.core.ui.functional.bottomInsets
-import com.sapuseven.untis.feature.timetable.R
 import kotlinx.datetime.toJavaLocalDate
 import kotlinx.datetime.toJavaLocalDateTime
 import java.time.format.DateTimeFormatter

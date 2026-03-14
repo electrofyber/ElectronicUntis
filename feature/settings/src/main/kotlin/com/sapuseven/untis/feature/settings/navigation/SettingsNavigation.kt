@@ -8,10 +8,10 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import androidx.navigation.toRoute
+import com.electrofyber.untis.feature.settings.R
 import com.sapuseven.untis.core.domain.navigation.FeatureRoute
 import com.sapuseven.untis.core.domain.navigation.FeatureRouteDsl
 import com.sapuseven.untis.core.domain.navigation.FeatureRouteItem
-import com.sapuseven.untis.feature.settings.R
 import com.sapuseven.untis.feature.settings.SettingsCategoryScreen
 import com.sapuseven.untis.feature.settings.fragments.SettingsCategoryAbout
 import com.sapuseven.untis.feature.settings.fragments.SettingsCategoryAboutContributors

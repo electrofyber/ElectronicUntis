@@ -15,7 +15,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import com.sapuseven.untis.core.model.absences.Absence
 import com.sapuseven.untis.core.model.absences.Excuse
-import com.sapuseven.untis.feature.infocenter.R
+import com.electrofyber.untis.feature.infocenter.R
 import kotlinx.datetime.toJavaLocalDateTime
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle

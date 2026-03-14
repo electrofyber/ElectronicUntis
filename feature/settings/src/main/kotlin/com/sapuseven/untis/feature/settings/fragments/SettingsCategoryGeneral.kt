@@ -12,10 +12,10 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.core.net.toUri
+import com.electrofyber.untis.feature.settings.R
 import com.sapuseven.compose.protostore.ui.preferences.Preference
 import com.sapuseven.compose.protostore.ui.preferences.PreferenceGroup
 import com.sapuseven.compose.protostore.ui.preferences.SwitchPreference
-import com.sapuseven.untis.feature.settings.R
 import com.sapuseven.untis.feature.settings.SettingsViewModel
 import kotlinx.coroutines.flow.map
 

@@ -8,11 +8,11 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.electrofyber.untis.feature.settings.R
 import com.sapuseven.compose.protostore.ui.preferences.NumericInputPreference
 import com.sapuseven.compose.protostore.ui.preferences.PreferenceGroup
 import com.sapuseven.compose.protostore.ui.preferences.RangeInputPreference
 import com.sapuseven.compose.protostore.ui.preferences.SwitchPreference
-import com.sapuseven.untis.feature.settings.R
 import com.sapuseven.untis.feature.settings.SettingsViewModel
 import com.sapuseven.untis.feature.settings.preference.ElementPickerPreference
 import kotlin.math.roundToInt

@@ -19,6 +19,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
+import com.electrofyber.untis.feature.settings.R
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
@@ -29,7 +30,6 @@ import com.sapuseven.compose.protostore.ui.preferences.PreferenceGroup
 import com.sapuseven.compose.protostore.ui.preferences.SwitchPreference
 import com.sapuseven.untis.core.datastore.model.NotificationVisibility
 import com.sapuseven.untis.core.ui.common.disabled
-import com.sapuseven.untis.feature.settings.R
 import com.sapuseven.untis.feature.settings.SettingsViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.map

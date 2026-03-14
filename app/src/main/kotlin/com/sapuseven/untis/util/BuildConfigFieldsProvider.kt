@@ -1,6 +1,6 @@
 package com.sapuseven.untis.util
 
-import com.sapuseven.untis.BuildConfig
+import com.electrofyber.untis.BuildConfig
 
 data class BuildConfigFields(
 	val isDebug: Boolean,

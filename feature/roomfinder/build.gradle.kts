@@ -4,7 +4,7 @@ plugins {
 }
 
 android {
-	namespace = "com.sapuseven.untis.feature.roomfinder"
+	namespace = "com.electrofyber.untis.feature.roomfinder"
 }
 
 dependencies {

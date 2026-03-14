@@ -42,7 +42,7 @@ import com.sapuseven.untis.core.model.timetable.ElementType
 import com.sapuseven.untis.core.ui.animation.fullscreenDialogAnimationEnter
 import com.sapuseven.untis.core.ui.animation.fullscreenDialogAnimationExit
 import com.sapuseven.untis.core.ui.dialogs.ElementPickerDialogFullscreen
-import com.sapuseven.untis.feature.timetable.R
+import com.electrofyber.untis.feature.timetable.R
 import kotlinx.coroutines.launch
 
 @Composable
@@ -72,20 +72,6 @@ fun TimetableDrawer(
 	}
 
 	val elements by viewModel.elements.collectAsStateWithLifecycle()
-
-	/*val shortcutLauncher =
-		rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) { activityResult ->
-			val periodElement: PeriodElement? = activityResult.data?.let { intent ->
-				Json.decodeFromString(
-					PeriodElement.serializer(),
-					intent.getStringExtra(MainActivity.EXTRA_STRING_PERIOD_ELEMENT) ?: ""
-				)
-			}
-
-			periodElement?.let {
-				//onShowTimetable(it to state.timetableDatabaseInterface.getLongName(it))
-			}
-		}*/
 
 	BackHandler(enabled = drawerState.isOpen) {
 		scope.launch {
@@ -135,9 +121,6 @@ fun TimetableDrawer(
 							Icon(
 								painter = painterResource(
 									id = when (bookmark.type) {
-										ElementType.CLASS -> com.sapuseven.untis.core.ui.R.drawable.core_ui_classes
-										ElementType.TEACHER -> com.sapuseven.untis.core.ui.R.drawable.core_ui_teachers
-										ElementType.SUBJECT -> com.sapuseven.untis.core.ui.R.drawable.core_ui_subject
 										ElementType.ROOM -> com.sapuseven.untis.core.ui.R.drawable.core_ui_rooms
 										else -> com.sapuseven.untis.core.ui.R.drawable.core_ui_personal
 									}
@@ -152,7 +135,7 @@ fun TimetableDrawer(
 								Icon(
 									painter = painterResource(id = R.drawable.feature_timetable_bookmark_remove),
 									contentDescription = "Remove Bookmark"
-								) //TODO: Extract String resource
+								)
 							}
 						},
 						label = { Text(text = viewModel.getBookmarkDisplayName(bookmark)) },
@@ -177,7 +160,7 @@ fun TimetableDrawer(
 					label = { Text(stringResource(id = R.string.feature_timetable_add_bookmark)) },
 					selected = false,
 					onClick = {
-						bookmarksElementPicker = ElementType.CLASS
+						bookmarksElementPicker = ElementType.ROOM
 					},
 					modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding)
 				)
@@ -269,32 +252,11 @@ fun DrawerItems(
 ) {
 	val navItemsElementTypes = listOf(
 		NavItemTimetable(
-			icon = painterResource(id = com.sapuseven.untis.core.ui.R.drawable.core_ui_classes),
-			label = stringResource(id = R.string.feature_timetable_classes),
-			elementType = ElementType.CLASS
-		),
-		NavItemTimetable(
-			icon = painterResource(id = com.sapuseven.untis.core.ui.R.drawable.core_ui_teachers),
-			label = stringResource(id = R.string.feature_timetable_teachers),
-			elementType = ElementType.TEACHER
-		),
-		NavItemTimetable(
 			icon = painterResource(id = com.sapuseven.untis.core.ui.R.drawable.core_ui_rooms),
 			label = stringResource(id = R.string.feature_timetable_rooms),
 			elementType = ElementType.ROOM
 		),
 	)
-
-		/*NavItemNavigation(
-			icon = painterResource(id = R.drawable.all_infocenter),
-			label = stringResource(id = R.string.activity_title_info_center),
-			route = AppRoutes.InfoCenter
-		),
-		NavItemNavigation(
-			icon = painterResource(id = R.drawable.all_search_rooms),
-			label = stringResource(id = R.string.activity_title_free_rooms),
-			route = AppRoutes.RoomFinder
-		),*/
 
 	navItemsElementTypes.forEach { item ->
 		NavigationDrawerItem(
@@ -348,7 +310,7 @@ fun NavigationDrawerItemWithBadgePreview() {
 				Icon(
 					painter = painterResource(id = R.drawable.feature_timetable_bookmark_remove),
 					contentDescription = "Remove Bookmark"
-				) //TODO: Extract String resource
+				)
 			}
 		},
 		label = { Text(text = "Drawer item") },

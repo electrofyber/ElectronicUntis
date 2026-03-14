@@ -2,32 +2,18 @@
 <resources>
 	<string-array name="feature_settings_preference_themes">
 		<item>@string/preference_theme_stock</item>
-		<item>@string/preference_theme_untis</item>
-		<item>@string/preference_theme_blue</item>
-		<item>@string/preference_theme_green</item>
-		<item>@string/preference_theme_pink</item>
-		<item>@string/preference_theme_cyan</item>
-		<item>@string/preference_theme_pixel</item>
 	</string-array>
 
 	<string-array name="feature_settings_preference_theme_values" translatable="false">
 		<item>default</item>
-		<item>untis</item>
-		<item>blue</item>
-		<item>green</item>
-		<item>pink</item>
-		<item>cyan</item>
-		<item>pixel</item>
 	</string-array>
 
 	<string-array name="feature_settings_preference_dark_theme">
-		<item>@string/preference_dark_theme_auto</item>
-		<item>@string/preference_dark_theme_on</item>
-		<item>@string/preference_dark_theme_off</item>
+		<item>@string/all_yes</item>
+		<item>@string/all_no</item>
 	</string-array>
 
 	<string-array name="feature_settings_preference_dark_theme_values" translatable="false">
-		<item>0</item>
 		<item>2</item>
 		<item>1</item>
 	</string-array>
@@ -73,5 +59,4 @@
 		<item>4</item>
 		<item>0</item>
 	</string-array>
-	
 </resources>

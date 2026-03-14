@@ -51,7 +51,7 @@ dependencies {
 
 	api(libs.androidx.datastore)
 	api(libs.protobuf.kotlin.lite)
-	api(libs.sapuseven.protostore)
+	api(libs.electrofyber.protostore)
 	api(projects.core.model)
 	/*
 	api(projects.core.datastoreProto)

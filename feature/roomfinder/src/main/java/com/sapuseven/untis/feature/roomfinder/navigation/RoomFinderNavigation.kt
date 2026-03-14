@@ -10,7 +10,7 @@ import androidx.navigation.compose.composable
 import com.sapuseven.untis.core.domain.navigation.FeatureRoute
 import com.sapuseven.untis.core.domain.navigation.FeatureRouteDsl
 import com.sapuseven.untis.core.domain.navigation.FeatureRouteItem
-import com.sapuseven.untis.feature.roomfinder.R
+import com.electrofyber.untis.feature.roomfinder.R
 import com.sapuseven.untis.feature.roomfinder.RoomFinderScreen
 import kotlinx.serialization.Serializable
 

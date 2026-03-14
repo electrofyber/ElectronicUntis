@@ -21,7 +21,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.sapuseven.untis.core.ui.functional.bottomInsets
-import com.sapuseven.untis.feature.settings.R
+import com.electrofyber.untis.feature.settings.R
 import com.sapuseven.untis.feature.settings.SettingsCategory
 
 @OptIn(ExperimentalMaterial3Api::class)

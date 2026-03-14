@@ -12,8 +12,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
+import com.electrofyber.untis.feature.infocenter.R
 import com.sapuseven.untis.core.model.officehours.OfficeHour
-import com.sapuseven.untis.feature.infocenter.R
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.toJavaLocalDateTime
 import java.time.format.DateTimeFormatter

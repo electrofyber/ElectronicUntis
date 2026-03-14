@@ -15,7 +15,7 @@ import com.sapuseven.untis.core.domain.navigation.FeatureRouteDsl
 import com.sapuseven.untis.core.domain.navigation.FeatureRouteItem
 import com.sapuseven.untis.feature.infocenter.InfoCenterScreen
 import com.sapuseven.untis.feature.infocenter.InfoCenterViewModel
-import com.sapuseven.untis.feature.infocenter.R
+import com.electrofyber.untis.feature.infocenter.R
 import com.sapuseven.untis.feature.infocenter.pages.InfoCenterAbsences
 import com.sapuseven.untis.feature.infocenter.pages.InfoCenterEvents
 import com.sapuseven.untis.feature.infocenter.pages.InfoCenterMessages

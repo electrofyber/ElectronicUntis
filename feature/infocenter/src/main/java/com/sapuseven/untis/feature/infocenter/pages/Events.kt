@@ -15,9 +15,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.electrofyber.untis.feature.infocenter.R
 import com.sapuseven.untis.core.model.timetable.Exam
 import com.sapuseven.untis.core.model.timetable.Homework
-import com.sapuseven.untis.feature.infocenter.R
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.toJavaLocalDate
 import kotlinx.datetime.toJavaLocalDateTime

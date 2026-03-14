@@ -20,14 +20,14 @@ fun generateVersionCode(): Int {
 }
 
 android {
-	namespace = "com.sapuseven.untis"
+	namespace = "com.electrofyber.untis"
 
 	defaultConfig {
-		applicationId = "com.sapuseven.untis"
+		applicationId = "com.electrofyber.electrountis"
 		versionCode = generateVersionCode()
 		versionName = "5.0.0-beta04"
 
-		testInstrumentationRunner = "com.sapuseven.untis.HiltTestRunner"
+		testInstrumentationRunner = "com.electrofyber.untis.HiltTestRunner"
 	}
 
 	signingConfigs {
@@ -135,58 +135,4 @@ dependencies {
 	ksp(libs.hilt.compiler)
 
 	kspTest(libs.hilt.compiler)
-
-	//implementation(libs.accompanist.swiperefresh)
-	//implementation(libs.accompanist.systemuicontroller)
-	//implementation(libs.accompanist.permissions)
-	//implementation(libs.androidx.appcompat)
-	//implementation(platform(libs.androidx.compose.bom))
-	//implementation(libs.androidx.compose.animation)
-	//implementation(libs.androidx.compose.runtime.livedata)
-	//implementation(libs.androidx.compose.ui)
-	//implementation(libs.androidx.compose.ui.tooling)
-	//implementation(libs.androidx.constraintlayout)
-	//implementation(libs.androidx.datastore)
-	//implementation(libs.androidx.fragment)
-	//implementation(libs.androidx.lifecycle.viewModelCompose)
-	//implementation(libs.androidx.navigation.compose)
-	//implementation(libs.androidx.preference)
-	//implementation(libs.androidx.recyclerview)
-	//implementation(libs.androidx.swiperefreshlayout)
-	//implementation(libs.colormath)
-	//implementation(libs.fuel)
-	//implementation(libs.fuel.coroutines)
-	//implementation(libs.fuel.serialization)
-	//implementation(libs.hilt.android)
-	//implementation(libs.hilt.compiler)
-	//implementation(libs.kotlin.reflect)
-	//implementation(libs.kotlinx.coroutines)
-	//implementation(libs.kotlinx.serialization.cbor)
-	//implementation(libs.material)
-	//implementation(libs.material.theme.adapter)
-	//implementation(libs.androidx.transition.ktx)
-	//implementation(libs.fornewid.placeholder.material3)
-	//implementation(libs.fornewid.material.motion.compose.core)
-
-	//coreLibraryDesugaring(libs.android.desugarJdkLibs)
-
-	//ksp(libs.androidx.hilt.compiler)
-	//ksp(libs.dagger.compiler)
-
-	//testImplementation(libs.junit.jupiter.api)
-	//testImplementation(libs.junit.jupiter.params)
-	//testRuntimeOnly(libs.junit.jupiter.engine)
-	//testRuntimeOnly(libs.junit.vintage.engine)
-
-	//testImplementation(libs.junit)
-	//testImplementation(libs.mock)
-	//testImplementation(libs.mockito)
-	//testImplementation(libs.hamcrest)
-	//testImplementation(libs.hamcrest.library)
-
-	//androidTestImplementation(libs.androidx.test)
-	//androidTestImplementation(libs.androidx.test.runner)
-	//androidTestImplementation(libs.androidx.compose.ui.test)
-	//androidTestImplementation(libs.hilt.android.testing)
-	//debugImplementation(libs.androidx.compose.ui.test.manifest)
 }

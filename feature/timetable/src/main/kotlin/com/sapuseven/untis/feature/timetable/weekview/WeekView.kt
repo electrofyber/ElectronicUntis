@@ -77,13 +77,13 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.fastAny
 import androidx.compose.ui.util.fastForEach
+import com.electrofyber.untis.feature.timetable.R
 import com.sapuseven.untis.core.domain.timetable.WeekLogicService
 import com.sapuseven.untis.core.model.timetable.TimeGridUnit
 import com.sapuseven.untis.core.ui.common.conditional
 import com.sapuseven.untis.core.ui.common.ifNotNull
 import com.sapuseven.untis.core.ui.dialogs.DatePickerDialog
 import com.sapuseven.untis.core.ui.functional.useDebounce
-import com.sapuseven.untis.feature.timetable.R
 import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
 import kotlinx.datetime.TimeZone

@@ -34,6 +34,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.electrofyber.untis.feature.timetable.R
 import com.sapuseven.untis.core.domain.navigation.FeatureRoute
 import com.sapuseven.untis.core.domain.navigation.FeatureRouteItem
 import com.sapuseven.untis.core.model.timetable.ElementType

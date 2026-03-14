@@ -75,7 +75,6 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.journeyapps.barcodescanner.ScanContract
-import com.sapuseven.untis.core.ui.R
 import com.sapuseven.untis.core.ui.common.LabeledSwitch
 import com.sapuseven.untis.core.ui.common.MessageBubble
 import com.sapuseven.untis.core.ui.common.SmallCircularProgressIndicator
@@ -84,6 +83,8 @@ import com.sapuseven.untis.core.ui.functional.None
 import com.sapuseven.untis.feature.login.schoolsearch.SchoolSearchResults
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import com.electrofyber.untis.feature.login.R as FeatureR
+import com.sapuseven.untis.core.ui.R as CoreR
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
 @Composable
@@ -131,7 +132,7 @@ fun LoginDataInputScreen(
 							else
 								Icon(Icons.AutoMirrored.Outlined.ArrowForward, contentDescription = null)
 						},
-						text = { Text(stringResource(id = R.string.logindatainput_login)) },
+						text = { Text(stringResource(id = CoreR.string.logindatainput_login)) },
 						onClick = { viewModel.onLoginClick() }
 					)
 				}
@@ -141,16 +142,16 @@ fun LoginDataInputScreen(
 					title = {
 						Text(
 							if (uiState.isExistingUser)
-								stringResource(id = R.string.logindatainput_title_edit)
+								stringResource(id = CoreR.string.logindatainput_title_edit)
 							else
-								stringResource(id = R.string.logindatainput_title_add)
+								stringResource(id = CoreR.string.logindatainput_title_add)
 						)
 					},
 					actions = {
 						IconButton(onClick = { viewModel.onCodeScanClick() }) {
 							Icon(
-								painter = painterResource(id = com.sapuseven.untis.feature.login.R.drawable.feature_login_scan_code),
-								contentDescription = stringResource(id = R.string.login_scan_code)
+								painter = painterResource(id = FeatureR.drawable.feature_login_scan_code),
+								contentDescription = stringResource(id = CoreR.string.login_scan_code)
 							)
 						}
 					},
@@ -158,7 +159,7 @@ fun LoginDataInputScreen(
 						IconButton(onClick = onBackClick) {
 							Icon(
 								imageVector = Icons.AutoMirrored.Outlined.ArrowBack,
-								contentDescription = stringResource(id = R.string.all_back)
+								contentDescription = stringResource(id = CoreR.string.all_back)
 							)
 						}
 					}
@@ -195,10 +196,10 @@ fun LoginDataInputScreen(
 					InputField(
 						value = uiState.formData.schoolName,
 						onValueChange = viewModel.onSchoolNameChanged,
-						label = { Text(stringResource(id = R.string.logindatainput_school)) },
+						label = { Text(stringResource(id = CoreR.string.logindatainput_school)) },
 						enabled = !uiState.isLoading,
 						valid = !uiState.validate || uiState.formData.isSchoolNameValid,
-						errorText = stringResource(id = R.string.logindatainput_error_field_empty),
+						errorText = stringResource(id = CoreR.string.logindatainput_error_field_empty),
 						trailingIcon = {
 							IconButton(
 								enabled = !uiState.isLoading,
@@ -206,7 +207,7 @@ fun LoginDataInputScreen(
 							) {
 								Icon(
 									imageVector = Icons.Outlined.Search,
-									contentDescription = stringResource(R.string.login_search_by_school_name_or_address)
+									contentDescription = stringResource(CoreR.string.login_search_by_school_name_or_address)
 								)
 							}
 						},
@@ -231,14 +232,14 @@ fun LoginDataInputScreen(
 				) {
 					if (LocalConfiguration.current.orientation != Configuration.ORIENTATION_LANDSCAPE)
 						Icon(
-							painter = painterResource(id = com.sapuseven.untis.feature.login.R.drawable.feature_login_profile),
+							painter = painterResource(id = FeatureR.drawable.feature_login_profile),
 							contentDescription = null,
 							tint = MaterialTheme.colorScheme.primary,
 							modifier = Modifier
-								.width(dimensionResource(id = com.sapuseven.untis.feature.login.R.dimen.feature_login_size_icon))
-								.height(dimensionResource(id = com.sapuseven.untis.feature.login.R.dimen.feature_login_size_icon))
+								.width(dimensionResource(id = FeatureR.dimen.feature_login_size_icon))
+								.height(dimensionResource(id = FeatureR.dimen.feature_login_size_icon))
 								.align(Alignment.CenterHorizontally)
-								.padding(bottom = dimensionResource(id = com.sapuseven.untis.feature.login.R.dimen.feature_login_margin_pleaselogin_top))
+								.padding(bottom = dimensionResource(id = FeatureR.dimen.feature_login_margin_pleaselogin_top))
 						)
 
 					// TODO: Better error text handling
@@ -248,28 +249,28 @@ fun LoginDataInputScreen(
 							.padding(horizontal = 16.dp, vertical = 8.dp),
 						icon = {
 							Icon(
-								painter = painterResource(id = R.drawable.core_ui_error),
-								contentDescription = stringResource(id = R.string.all_error)
+								painter = painterResource(id = CoreR.drawable.core_ui_error),
+								contentDescription = stringResource(id = CoreR.string.all_error)
 							)
 						},
-						messageText = if (uiState.isSecondFactorRequired) R.string.errormessagedictionary_second_factor_requried else uiState.errorText,
+						messageText = if (uiState.isSecondFactorRequired) CoreR.string.errormessagedictionary_second_factor_requried else uiState.errorText,
 						messageTextRaw = uiState.errorTextRaw
 					)
 
 					InputField(
 						value = uiState.formData.profileName,
 						onValueChange = viewModel.onProfileNameChanged,
-						label = { Text(stringResource(id = R.string.logindatainput_profilename)) },
+						label = { Text(stringResource(id = CoreR.string.logindatainput_profilename)) },
 						enabled = !uiState.isLoading,
 						focusManager = focusManager
 					)
 					InputField(
 						value = uiState.formData.schoolName,
 						onValueChange = viewModel.onSchoolNameChanged,
-						label = { Text(stringResource(id = R.string.logindatainput_school)) },
+						label = { Text(stringResource(id = CoreR.string.logindatainput_school)) },
 						enabled = !uiState.isLoading,
 						valid = !uiState.validate || uiState.formData.isSchoolNameValid,
-						errorText = stringResource(id = R.string.logindatainput_error_field_empty),
+						errorText = stringResource(id = CoreR.string.logindatainput_error_field_empty),
 						trailingIcon = {
 							IconButton(
 								enabled = !uiState.isLoading,
@@ -277,7 +278,7 @@ fun LoginDataInputScreen(
 							) {
 								Icon(
 									imageVector = Icons.Outlined.Search,
-									contentDescription = stringResource(R.string.login_search_by_school_name_or_address)
+									contentDescription = stringResource(CoreR.string.login_search_by_school_name_or_address)
 								)
 							}
 						},
@@ -289,7 +290,7 @@ fun LoginDataInputScreen(
 					InputSwitch(
 						value = uiState.formData.anonymous,
 						onValueChange = viewModel.onAnonymousToggled,
-						label = { Text(stringResource(id = R.string.logindatainput_anonymous_login)) },
+						label = { Text(stringResource(id = CoreR.string.logindatainput_anonymous_login)) },
 						enabled = !uiState.isLoading
 					)
 					AnimatedVisibility(visible = !uiState.formData.anonymous) {
@@ -297,10 +298,10 @@ fun LoginDataInputScreen(
 							InputField(
 								value = uiState.formData.username,
 								onValueChange = viewModel.onUsernameChanged,
-								label = { Text(stringResource(id = R.string.logindatainput_username)) },
+								label = { Text(stringResource(id = CoreR.string.logindatainput_username)) },
 								enabled = !uiState.isLoading,
 								valid = !uiState.validate || uiState.formData.isUsernameValid,
-								errorText = stringResource(id = R.string.logindatainput_error_field_empty),
+								errorText = stringResource(id = CoreR.string.logindatainput_error_field_empty),
 								contentType = ContentType.Username,
 								focusManager = focusManager
 							)
@@ -311,9 +312,9 @@ fun LoginDataInputScreen(
 								label = {
 									Text(
 										if (uiState.formData.storedPassword != null)
-											stringResource(id = R.string.logindatainput_key_saved)
+											stringResource(id = CoreR.string.logindatainput_key_saved)
 										else
-											stringResource(id = R.string.logindatainput_key)
+											stringResource(id = CoreR.string.logindatainput_key)
 									)
 								},
 								enabled = !uiState.isLoading,
@@ -327,7 +328,7 @@ fun LoginDataInputScreen(
 									type = KeyboardType.NumberPassword,
 									label = {
 										Text(
-											stringResource(id = R.string.logindatainput_2fa)
+											stringResource(id = CoreR.string.logindatainput_2fa)
 										)
 									},
 									enabled = !uiState.isLoading,
@@ -342,7 +343,7 @@ fun LoginDataInputScreen(
 						}
 					}
 					LabeledSwitch(
-						label = { Text(stringResource(id = R.string.logindatainput_show_advanced)) },
+						label = { Text(stringResource(id = CoreR.string.logindatainput_show_advanced)) },
 						modifier = Modifier
 							.fillMaxWidth()
 							.padding(horizontal = 16.dp),
@@ -365,10 +366,10 @@ fun LoginDataInputScreen(
 								value = uiState.formData.apiUrl,
 								onValueChange = viewModel.onApiUrlChanged,
 								type = KeyboardType.Uri,
-								label = { Text(stringResource(id = R.string.logindatainput_api_url)) },
+								label = { Text(stringResource(id = CoreR.string.logindatainput_api_url)) },
 								enabled = !uiState.isLoading,
 								valid = !uiState.validate || uiState.formData.isApiUrlValid,
-								errorText = stringResource(id = R.string.logindatainput_error_invalid_url),
+								errorText = stringResource(id = CoreR.string.logindatainput_error_invalid_url),
 								focusManager = focusManager
 							)
 						}
@@ -383,17 +384,17 @@ fun LoginDataInputScreen(
 								viewModel.dismissQrCodeError()
 							},
 							title = {
-								Text(stringResource(id = R.string.logindatainput_dialog_qrcodeinvalid_title))
+								Text(stringResource(id = CoreR.string.logindatainput_dialog_qrcodeinvalid_title))
 							},
 							text = {
-								Text(stringResource(id = R.string.logindatainput_dialog_qrcodeinvalid_text))
+								Text(stringResource(id = CoreR.string.logindatainput_dialog_qrcodeinvalid_text))
 							},
 							confirmButton = {
 								TextButton(
 									onClick = {
 										viewModel.dismissQrCodeError()
 									}) {
-									Text(stringResource(id = R.string.all_ok))
+									Text(stringResource(id = CoreR.string.all_ok))
 								}
 							}
 						)

@@ -6,8 +6,8 @@ import kotlinx.serialization.Serializable
 // TODO: This belongs to the domain module
 object GitHubApi {
 	const val URL_GITHUB_PRIVACY_POLICY = "https://docs.github.com/en/github/site-policy/github-privacy-statement"
-	const val URL_GITHUB_REPOSITORY = "https://github.com/SapuSeven/BetterUntis"
-	const val URL_GITHUB_REPOSITORY_API = "https://api.github.com/repos/SapuSeven/BetterUntis"
+	const val URL_GITHUB_REPOSITORY = "https://github.com/electrofyber/ElectronicUntis/"
+	const val URL_GITHUB_REPOSITORY_API = "https://api.github.com/repos/electrofyber/ElectronicUntis/"
 }
 
 @Serializable

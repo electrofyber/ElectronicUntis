@@ -27,6 +27,7 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import com.electrofyber.untis.feature.settings.R
 import com.sapuseven.untis.core.ui.functional.None
 
 @OptIn(ExperimentalMaterial3Api::class)

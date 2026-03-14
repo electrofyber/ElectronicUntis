@@ -21,7 +21,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.sapuseven.compose.protostore.ui.preferences.Preference
 import com.sapuseven.compose.protostore.ui.preferences.PreferenceGroup
-import com.sapuseven.untis.feature.settings.R
+import com.electrofyber.untis.feature.settings.R
 import com.sapuseven.untis.feature.settings.model.GitHubApi.URL_GITHUB_PRIVACY_POLICY
 import com.sapuseven.untis.feature.settings.model.GitHubApi.URL_GITHUB_REPOSITORY
 import com.sapuseven.untis.feature.settings.navigation.SettingsRoute

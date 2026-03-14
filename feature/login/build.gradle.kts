@@ -5,7 +5,7 @@ plugins {
 }
 
 android {
-	namespace = "com.sapuseven.untis.feature.login"
+	namespace = "com.electrofyber.untis.feature.login"
 }
 
 dependencies {

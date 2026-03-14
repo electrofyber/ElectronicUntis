@@ -14,7 +14,7 @@
 	<string name="feature_timetable_classes">Classes</string>
 	<string name="feature_timetable_close">Close</string>
 	<string name="feature_timetable_save">Save</string>
-	<string name="feature_timetable_contact_email" translatable="false">betteruntis@sapuseven.com</string>
+	<string name="feature_timetable_contact_email" translatable="false">electrofyber@example.com</string>
 	<string name="feature_timetable_delete">Delete</string>
 	<string name="feature_timetable_dialog_absences_checked">Absences checked.</string>
 	<string name="feature_timetable_dialog_absences_not_checked">Absences not checked.</string>
@@ -36,7 +36,7 @@
 	<string name="feature_timetable_failed">failed</string>
 	<string name="feature_timetable_hint_tap_to_edit">(Tap to edit)</string>
 	<string name="feature_timetable_homework">Homework</string>
-	<string name="feature_timetable_lesson_cancelled">%1$s (cancelled)</string>
+	<string name="feature_timetable_lesson_cancelled">Cancelled</string>
 	<string name="feature_timetable_lesson_details">Lesson details</string>
 	<string name="feature_timetable_lesson_exam">%1$s (exam!)</string>
 	<string name="feature_timetable_lesson_info">Info</string>
@@ -56,8 +56,8 @@
 	<string name="feature_timetable_success">success</string>
 	<string name="feature_timetable_teachers">Teachers</string>
 	<string name="feature_timetable_yes">Yes</string>
-	<string name="feature_timetable_app_desc">An alternative mobile client for the Untis timetable system.</string>
-	<string name="feature_timetable_app_name" translatable="false">BetterUntis</string>
+	<string name="feature_timetable_app_desc">ElectronicUntis: A specialized timetable client. Modified by Electrofyber.</string>
+	<string name="feature_timetable_app_name" translatable="false">ElectronicUntis</string>
 	<string name="feature_timetable_elementpicker_hint_search">Search…</string>
 	<string name="feature_timetable_elementpicker_hint_search_classes">Search for classes…</string>
 	<string name="feature_timetable_elementpicker_hint_search_rooms">Search for rooms…</string>
@@ -77,9 +77,9 @@
 	<string name="feature_timetable_errors_button_dismiss">Dismiss all</string>
 	<string name="feature_timetable_errors_button_report">Report all</string>
 	<string name="feature_timetable_errors_crash_message">Sorry for that.</string>
-	<string name="feature_timetable_errors_crash_title">It looks like BetterUntis crashed.</string>
+	<string name="feature_timetable_errors_crash_title">ElectronicUntis crashed.</string>
 	<string name="feature_timetable_errors_github_attach_file_message">Please attach the compressed log files to this issue.\nThey have been saved to `%1$s`</string>
-	<string name="feature_timetable_errors_report">Please help to fix the app by reporting the errors below:</string>
+	<string name="feature_timetable_errors_report">Please help fix the app by reporting the errors below:</string>
 	<string name="feature_timetable_homeworks_due_time">due %1$s</string>
 	<string name="feature_timetable_homeworks_due_time_format">EEE, dd. MMM</string>
 	<string name="feature_timetable_infocenter_absence_excused">Excused</string>
@@ -133,7 +133,7 @@
 	<string name="feature_timetable_login_please_log_in">Choose one of the following options to login:</string>
 	<string name="feature_timetable_login_scan_code">Scan QR code</string>
 	<string name="feature_timetable_login_search_by_school_name_or_address">Search by school name or address</string>
-	<string name="feature_timetable_login_welcome">Welcome to BetterUntis!</string>
+	<string name="feature_timetable_login_welcome">Welcome to ElectronicUntis!</string>
 	<string name="feature_timetable_logindatainput_adding_user_unknown_error">An unknown error happened while adding the user.</string>
 	<string name="feature_timetable_logindatainput_anonymous_login">Anonymous login</string>
 	<string name="feature_timetable_logindatainput_api_url">Untis API path</string>
@@ -142,7 +142,7 @@
 	<string name="feature_timetable_logindatainput_connecting">Connecting…</string>
 	<string name="feature_timetable_logindatainput_data_loaded">Data loaded.</string>
 	<string name="feature_timetable_logindatainput_delete">Delete profile</string>
-	<string name="feature_timetable_logindatainput_dialog_qrcodeinvalid_text">The scanned QR code either has an invalid format or is not supported by BetterUntis.</string>
+	<string name="feature_timetable_logindatainput_dialog_qrcodeinvalid_text">The scanned QR code either has an invalid format or is not supported by ElectronicUntis.</string>
 	<string name="feature_timetable_logindatainput_dialog_qrcodeinvalid_title">Invalid QR code</string>
 	<string name="feature_timetable_logindatainput_error_field_empty">This field cannot be empty!</string>
 	<string name="feature_timetable_logindatainput_error_invalid_format">Invalid format!</string>
@@ -174,7 +174,7 @@
 	<string name="feature_timetable_main_dialog_update_profile_message">A recent app update has changed the way user data is saved. Please update your current profile to continue using the app.</string>
 	<string name="feature_timetable_main_dialog_update_profile_title">Profile update required</string>
 	<string name="feature_timetable_main_drawer_close">Close navigation drawer</string>
-	<string name="feature_timetable_main_drawer_image_logo">BetterUntis Logo</string>
+	<string name="feature_timetable_main_drawer_image_logo">ElectronicUntis Logo</string>
 	<string name="feature_timetable_main_drawer_open">Open navigation drawer</string>
 	<string name="feature_timetable_main_go_to_settings">Go to settings</string>
 	<string name="feature_timetable_last_refreshed">Last refreshed: %1$s</string>
@@ -251,11 +251,11 @@
 	<string name="feature_timetable_preference_double_tap_to_exit">Double tap back button to exit</string>
 	<string name="feature_timetable_preference_flinging_enable">Enable flinging</string>
 	<string name="feature_timetable_preference_info_app_version">App version</string>
-	<string name="feature_timetable_preference_info_app_version_desc">Version %1$s (%2$d)</string>
+	<string name="feature_timetable_preference_info_app_version_desc">Electronic %1$s (%2$d)</string>
 	<string name="feature_timetable_preference_info_contributors">Contributors</string>
 	<string name="feature_timetable_preference_info_contributors_desc">A list of the contributors</string>
 	<string name="feature_timetable_preference_info_general">General</string>
-	<string name="feature_timetable_preference_info_github">GitHub repository</string>
+	<string name="feature_timetable_preference_info_github">Source code</string>
 	<string name="feature_timetable_preference_info_libraries">Libraries</string>
 	<string name="feature_timetable_preference_info_libraries_desc">A list of all used libraries</string>
 	<string name="feature_timetable_preference_info_license">License</string>
@@ -278,7 +278,7 @@
 	<string name="feature_timetable_preference_notifications_visibility_short">Short name</string>
 	<string name="feature_timetable_preference_school_background">Use school-provided subject colors</string>
 	<string name="feature_timetable_preference_school_background_desc">Some schools send their own background colors</string>
-	<string name="feature_timetable_preference_schoolcolors_cancelled">For cancelled lessons</string>
+	<string name="feature_timetable_preference_schoolcolors_cancelled">Cancelled</string>
 	<string name="feature_timetable_preference_schoolcolors_exam">For lessons with tests</string>
 	<string name="feature_timetable_preference_schoolcolors_irregular">For irregular lessons</string>
 	<string name="feature_timetable_preference_schoolcolors_regular">For regular lessons</string>
@@ -297,7 +297,7 @@
 	<string name="feature_timetable_preference_timetable_colors_reset">Reset item colors</string>
 	<string name="feature_timetable_preference_timetable_colors_reset_desc">This will match them to your active theme color.</string>
 	<string name="feature_timetable_preference_timetable_colors_reset_button_positive">Reset</string>
-	<string name="feature_timetable_preference_timetable_hide_cancelled">Hide cancelled lessons</string>
+	<string name="feature_timetable_preference_timetable_hide_cancelled">Hide Cancelled Lessons</string>
 	<string name="feature_timetable_preference_timetable_hide_timestamps">Hide timestamps</string>
 	<string name="feature_timetable_preference_timetable_hide_timestamps_desc">Hide the timestamps next to the timetable</string>
 	<string name="feature_timetable_preference_timetable_item_corner_radius">Item corner radius</string>
@@ -348,12 +348,12 @@
 	<string name="feature_timetable_roomfinder_loading_data">Loading data…</string>
 	<string name="feature_timetable_roomfinder_no_rooms">No rooms to display.\nTap + to add one!</string>
 	<string name="feature_timetable_settings_recommend_hide">Don\'t show again</string>
-	<string name="feature_timetable_settings_recommend_message">If you are enjoying BetterUntis, spread the word and tell your friends!</string>
+	<string name="feature_timetable_settings_recommend_message">If you are enjoying ElectronicUntis, spread the word and tell your friends!</string>
 	<string name="feature_timetable_settings_recommend_share">Share</string>
-	<string name="feature_timetable_settings_recommend_text">Try BetterUntis - A better alternative to Untis Mobile! Download at %1$s</string>
-	<string name="feature_timetable_settings_recommend_title">Recommend BetterUntis</string>
+	<string name="feature_timetable_settings_recommend_text">Try ElectronicUntis - A better alternative to Untis Mobile! Download at %1$s</string>
+	<string name="feature_timetable_settings_recommend_title">Recommend ElectronicUntis</string>
 	<string name="feature_timetable_settings_dialog_url_open_title">No compatible app found</string>
-	<string name="feature_timetable_settings_dialog_url_open_text">BetterUntis could not find an app that can handle opening links.\nPlease ensure you have a web browser installed or open the link on another device:</string>
+	<string name="feature_timetable_settings_dialog_url_open_text">ElectronicUntis could not find an app that can handle opening links.\nPlease ensure you have a web browser installed or open the link on another device:</string>
 	<string name="feature_timetable_widget_configuration">Widget Configuration</string>
 	<string name="feature_timetable_widget_daily_messages">Daily Messages</string>
 	<string name="feature_timetable_widget_select_profile">Please select a profile for the widget</string>
@@ -392,7 +392,7 @@
 	<string name="feature_timetable_lesson_online">Taking place online</string>
 	<string name="feature_timetable_open_link">Open link</string>
 	<string name="feature_timetable_preference_dialog_permission_alarms_title">Permission needed</string>
-	<string name="feature_timetable_preference_dialog_permission_alarms_text">This feature requires additional permissions. Please allow BetterUntis access to schedule exact alarms.</string>
+	<string name="feature_timetable_preference_dialog_permission_alarms_text">This feature requires additional permissions. Please allow ElectronicUntis access to schedule exact alarms.</string>
 	<string name="feature_timetable_dialog_open_settings">Open settings</string>
 	<string name="feature_timetable_preference_category_reports">Error Reporting</string>
 	<string name="feature_timetable_preference_reports_info">About error reporting</string>
@@ -400,7 +400,7 @@
 	<string name="feature_timetable_preference_reports_breadcrumbs">Send detailed errors</string>
 	<string name="feature_timetable_preference_reports_breadcrumbs_desc">Include additional information about what happened before an error occurred.</string>
 	<string name="feature_timetable_main_dialog_reports_info_2">You can always change these values later in the app settings.</string>
-	<string name="feature_timetable_main_dialog_reports_info_1">BetterUntis uses Sentry to collect information about crashes and other errors.</string>
+	<string name="feature_timetable_main_dialog_reports_info_1">ElectronicUntis uses Sentry to collect information about crashes and other errors.</string>
 	<string name="feature_timetable_main_dialog_reports_title">Error Reporting</string>
 	<string name="feature_timetable_main_dialog_reports_save">Save</string>
 	<string name="feature_timetable_infocenter_absences_list_seven_days">Show last 7 days</string>
@@ -418,7 +418,7 @@
 	<string name="feature_timetable_preference_timetable_range_index_reset_desc">Ensure hour labels always start at 1</string>
 	<string name="feature_timetable_preference_timetable_zoom_gesture">Enable zoom gesture</string>
 	<string name="feature_timetable_preference_timetable_zoom_level">Timetable zoom level</string>
-	<string name="feature_timetable_preference_info_contributors_error">Error loading contributors from GitHub.</string>
+	<string name="feature_timetable_preference_info_contributors_error">Error loading credits.</string>
 	<string name="feature_timetable_preference_category_notifications_break">Break notifications</string>
 	<string name="feature_timetable_warning">Warning</string>
 	<string name="feature_timetable_preference_notifications_exact_alarms_unavailable">Exact notifications are unavailable</string>

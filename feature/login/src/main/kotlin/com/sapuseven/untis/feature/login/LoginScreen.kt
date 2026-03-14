@@ -43,6 +43,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.electrofyber.untis.feature.login.R
 import com.journeyapps.barcodescanner.ScanContract
 import com.sapuseven.untis.core.model.timetable.School
 import com.sapuseven.untis.core.ui.common.conditional

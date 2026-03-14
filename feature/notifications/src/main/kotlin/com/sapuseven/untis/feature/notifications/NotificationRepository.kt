@@ -10,6 +10,7 @@ import android.content.Context.ALARM_SERVICE
 import android.content.Intent
 import android.os.Build
 import android.util.Log
+import com.electrofyber.untis.feature.notifications.R
 import com.sapuseven.untis.core.data.system.setBest
 import com.sapuseven.untis.core.domain.timetable.classes
 import com.sapuseven.untis.core.domain.timetable.rooms

@@ -71,6 +71,18 @@ fun Scheme.toColorScheme(): ColorScheme =
 		surfaceContainerHighest = Color(surfaceContainerHighest),
 		surfaceContainerLow = Color(surfaceContainerLow),
 		surfaceContainerLowest = Color(surfaceContainerLowest),
+		primaryFixed = Color(primary), // Fallback
+		onPrimaryFixed = Color(onPrimary), // Fallback
+		primaryFixedDim = Color(primary), // Fallback
+		onPrimaryFixedVariant = Color(onPrimary), // Fallback
+		secondaryFixed = Color(secondary), // Fallback
+		onSecondaryFixed = Color(onSecondary), // Fallback
+		secondaryFixedDim = Color(secondary), // Fallback
+		onSecondaryFixedVariant = Color(onSecondary), // Fallback
+		tertiaryFixed = Color(tertiary), // Fallback
+		onTertiaryFixed = Color(onTertiary), // Fallback
+		tertiaryFixedDim = Color(tertiary), // Fallback
+		onTertiaryFixedVariant = Color(onTertiary), // Fallback
 	)
 
 @Composable
@@ -118,4 +130,16 @@ fun ColorScheme.animated(): ColorScheme = copy(
 	surfaceContainerHighest = animateColor(surfaceContainerHighest),
 	surfaceContainerLow = animateColor(surfaceContainerLow),
 	surfaceContainerLowest = animateColor(surfaceContainerLowest),
+	primaryFixed = animateColor(primaryFixed),
+	onPrimaryFixed = animateColor(onPrimaryFixed),
+	primaryFixedDim = animateColor(primaryFixedDim),
+	onPrimaryFixedVariant = animateColor(onPrimaryFixedVariant),
+	secondaryFixed = animateColor(secondaryFixed),
+	onSecondaryFixed = animateColor(onSecondaryFixed),
+	secondaryFixedDim = animateColor(secondaryFixedDim),
+	onSecondaryFixedVariant = animateColor(onSecondaryFixedVariant),
+	tertiaryFixed = animateColor(tertiaryFixed),
+	onTertiaryFixed = animateColor(onTertiaryFixed),
+	tertiaryFixedDim = animateColor(tertiaryFixedDim),
+	onTertiaryFixedVariant = animateColor(onTertiaryFixedVariant),
 )

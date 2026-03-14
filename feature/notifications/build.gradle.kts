@@ -4,7 +4,7 @@ plugins {
 }
 
 android {
-	namespace = "com.sapuseven.untis.feature.notifications"
+	namespace = "com.electrofyber.untis.feature.notifications"
 }
 
 dependencies {

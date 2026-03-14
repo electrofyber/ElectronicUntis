@@ -5,7 +5,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
-import com.sapuseven.untis.feature.timetable.R
+import com.electrofyber.untis.feature.timetable.R
 
 @Composable
 fun UserDeleteDialog(

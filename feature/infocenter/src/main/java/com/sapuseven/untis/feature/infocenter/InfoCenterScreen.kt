@@ -29,6 +29,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.electrofyber.untis.feature.infocenter.R
 import com.sapuseven.untis.core.ui.animation.fullscreenDialogAnimationEnter
 import com.sapuseven.untis.core.ui.animation.fullscreenDialogAnimationExit
 import com.sapuseven.untis.core.ui.common.NavigationBarInset

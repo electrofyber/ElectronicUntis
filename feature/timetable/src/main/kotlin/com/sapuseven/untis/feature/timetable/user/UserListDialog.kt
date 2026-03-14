@@ -28,9 +28,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.electrofyber.untis.feature.timetable.R
 import com.sapuseven.untis.core.ui.functional.None
 import com.sapuseven.untis.core.ui.functional.insetsPaddingValues
-import com.sapuseven.untis.feature.timetable.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

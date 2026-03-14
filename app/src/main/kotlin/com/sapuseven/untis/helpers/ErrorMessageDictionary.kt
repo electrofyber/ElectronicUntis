@@ -1,6 +1,6 @@
 package com.sapuseven.untis.helpers
 
-import com.sapuseven.untis.R
+import com.electrofyber.untis.R
 import com.sapuseven.untis.core.api.mobile.model.response.UntisErrorCode
 
 // TODO: Move from app module
